@@ -1,3 +1,3 @@
-public Database {
+public class Database {
 
 }
