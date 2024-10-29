@@ -1,3 +1,4 @@
-public class textMessage {
+public class textMessage extends message {
+
 
 }
