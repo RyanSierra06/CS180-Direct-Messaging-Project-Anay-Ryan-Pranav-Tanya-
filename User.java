@@ -3,6 +3,8 @@ public class User {
     ArrayList<Message> thisUsersMessages;
     ArrayList<Message> otherUsersMessages;
     ArrayList<User> friends;
+    String profileDescription;
+    String profilePicture;
 
     public User() {
         blockedUsers = new ArrayList<User>();
@@ -48,8 +50,8 @@ public class User {
     public void readMessages() {
 
     }
-    public void displayProfile() {
-
+    public String displayProfile() {
+        return profileDescription + " , " + profilePicture;
     }
     public void modifyProfile() {
 
