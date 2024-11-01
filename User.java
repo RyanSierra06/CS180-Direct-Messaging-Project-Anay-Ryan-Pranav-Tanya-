@@ -3,7 +3,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 
 import java.io.File;
 import java.io.FileReader;
@@ -18,6 +17,7 @@ public class User {
     String profileDescription;
     String profilePicture;
     String userFileName;
+    boolean reciveAnyone; 
 
     public User(String userName, String password) {
         try(BufferedReader br = new BufferedReader(new FileReader("userNameAndPasswords.txt"))) {
@@ -32,6 +32,7 @@ public class User {
                         this.name = personalArr[1];
                         this.profileDescription = personalArr[2];
                         this.profilePicture = personalArr[3];
+                        this.reciveAnyone = Boolean.parseBoolean(personalArr[4]);
                         return;
                     } catch(IOException e) {
                         e.printStackTrace();
@@ -52,10 +53,11 @@ public class User {
         this.name = null;
         this.profileDescription = null;
         this.profilePicture = null;
+        this.reciveAnyone = false;
         this.userFileName = userName + ".txt";
         try(PrintWriter pw = new PrintWriter(new FileWriter(new File(this.userFileName)));
             PrintWriter pw2 = new PrintWriter(new FileWriter(new File("userNameAndPasswords.txt"), true))) {
-            pw.println(userName + "-" + name + "-" + profileDescription + "-" + profilePicture); // personal identifiers
+            pw.println(userName + "-" + name + "-" + profileDescription + "-" + profilePicture + "-" + reciveAnyone); // personal identifiers
             pw.println(); // blocked users
             pw.println(); // friends
             pw2.println(userName + " " + password);
@@ -98,6 +100,33 @@ public class User {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public boolean getReciveAnyone() {
+        return this.reciveAnyone;
+    }
+
+    public void setReciveAnyone(Boolean reciveAnyone) {
+        this.reciveAnyone = reciveAnyone;
+    }
+
+    public boolean canReciveFrom(String senderUsername) {
+        try(BufferedReader br = new BufferedReader(new FileReader(new File(this.userFileName)))) {
+            br.readLine();
+            br.readLine();
+            String friends = br.readLine();
+            if(friends.contains(senderUsername)) {
+                return true;
+            } else if(this.reciveAnyone) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch(IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public void sendMessage(Message message, String reciver) {
@@ -217,7 +246,7 @@ public class User {
             e.printStackTrace();
         }
     }
-    
+
     public String readMessages(String receiver) {
         //go through the file and just print the messages sent per each person 
         //we probably need some implementation to print them in the correct order
@@ -258,8 +287,6 @@ public class User {
     }
 
     public void addFriend(String newFriend) {
-        // TODO finish this method
-        // friends.add(newFriend);
         try(BufferedReader br = new BufferedReader(new FileReader(this.userFileName));
             BufferedWriter bw = new BufferedWriter(new FileWriter(new File(this.userFileName), false))) {
             String line1 = br.readLine();
@@ -274,13 +301,11 @@ public class User {
         
     }
     public void removeFriend(String oldFriend) {
-        // TODO finish this method
-        // friends.remove(oldFriend);
         try(BufferedReader br = new BufferedReader(new FileReader(this.userFileName));
             BufferedWriter bw = new BufferedWriter(new FileWriter(new File(this.userFileName), false))) {
             String line1 = br.readLine();
             String line2 = br.readLine();
-            String line3 = br.readLine().split("-");
+            String[] line3 = br.readLine().split("-");
             String newLine3 = "";
             for(String parts : line3) {
                 if(parts == oldFriend) {
@@ -295,5 +320,4 @@ public class User {
             e.printStackTrace();
         }
     }
-
 }
