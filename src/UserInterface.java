@@ -8,7 +8,7 @@ public interface UserInterface {
     String getProfileDescription();
     void setProfilePicture(String setProfilePicture);
     String getProfilePicture();
-    boolean getReciveAnyone();
+    boolean canReceiveAnyone();
     void setReciveAnyone(boolean reciveAnyone);
     boolean canReciveFrom(String senderUsername);
     void sendMessage(Message message, String reciver);
