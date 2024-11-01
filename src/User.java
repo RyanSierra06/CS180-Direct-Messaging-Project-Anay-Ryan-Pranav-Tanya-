@@ -20,7 +20,6 @@ import java.io.FileReader;
 // senderUserame-reciverUsername-message 
 // these are 2 people dm's and firstUsername-secondUsername are in lexographic order
 
-
 public class User implements UserInterface{
     // profile information
     String name;
