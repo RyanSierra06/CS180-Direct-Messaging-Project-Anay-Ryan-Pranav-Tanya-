@@ -34,8 +34,10 @@ public class Message implements MessageInterface {
             //......
             if(checkMessageType(type)) {
                 pw.println(message);
+                return true;
             } else  {
                 pw.println("Invalid Message Type");
+                return false;
                 //this should never actually run since were going to add JButtons, but for a command line test taking user text input, we need these
             }
         } catch (IOException e) {
