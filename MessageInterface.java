@@ -1,11 +1,9 @@
 public interface MessageInterface {
-    boolean assignToUser(User user);
-    boolean deleteMessage();
-    boolean checkBlocked();
-    String getMessage();
-    String getUser();
+    boolean assignToUser(String message, String type, String userName);
+    boolean checkMessageType(String type);
+    String getMessageText();
+    String getMessageImage();
     String getType();
-    ArrayList<String> getMessageList();
-    ArrayList<User> getUserList();
+    User getMainUser();
 
 }
