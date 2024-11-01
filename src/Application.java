@@ -14,8 +14,19 @@ public class Application {
         System.out.println(CHOICE_1);
         System.out.println(CHOICE_2);
 
-        choice = sc.read
+        String choice = sc.nextLine();
+
+        switch(choice) {
+            case "1":
+                System.out.println("Enter username (can't include the : ");
+                String user =  sc.nextLine();
+
+                System.out.println("Enter password: ");
+                String user =  sc.nextLine();
+
+        }
 
     }
+
 
 }
