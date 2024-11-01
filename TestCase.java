@@ -17,11 +17,17 @@ public class TestCase {
   }
 
   private static void testUserClass() {
+    System.out.println("Testing User Class: ");
+    
   }
 
   private static void testMessageClass() {
+    System.out.println("Testing Message Class: ");
+    
   }
 
   private static void testDatabaseClass() {
+    System.out.println("Testing Database Class: ");
+    
   }
 }
