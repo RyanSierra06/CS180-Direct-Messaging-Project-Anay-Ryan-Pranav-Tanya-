@@ -1,6 +1,12 @@
 import java.util.*;
 import java.io.*;
 
+//usernameMessages.txt
+//message1
+//message2
+//message3
+
+
 public class Message implements MessageInterface {
     String type;
     User mainUser;

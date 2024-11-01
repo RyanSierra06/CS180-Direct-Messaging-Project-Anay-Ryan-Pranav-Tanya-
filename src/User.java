@@ -31,7 +31,7 @@ public class User implements UserInterface{
     boolean reciveAnyone; 
 
     public User(String username, String password) {
-        try(BufferedReader br = new BufferedReader(new FileReader("usernameAndPasswords.txt"))) {
+        try(BufferedReader br = new BufferedReader(new FileReader("files/usernameAndPasswords.txt"))) {
             String line = br.readLine();
             while(line != null) {
                 String[] vars = line.split("-");
@@ -87,7 +87,6 @@ public class User implements UserInterface{
             String line1 = br.readLine();
             String line2 = br.readLine();
             String line3 = br.readLine();
-
             String[] params = line1.split("-");
             params[1] = name;
             line1 = "";
