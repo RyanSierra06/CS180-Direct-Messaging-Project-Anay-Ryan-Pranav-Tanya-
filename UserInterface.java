@@ -1,3 +1,28 @@
 public interface UserInterface {
+    void createUsee(String username, String password);
+    void setName(String name);
+    String getName();
+    String getPassword();
+    String getUsername();
+    void setProfileDescription(String profileDescription);
+    String getProfileDescription();
+    void setProfilePicture(String setProfilePicture);
+    String getProfilePicture();
+    boolean getReciveAnyone();
+    void setReciveAnyone(boolean reciveAnyone);
+    boolean canReciveFrom();
+    void sendMessage(Message message, String reciver);
+    void blockUser(String blockUser);
+    void deleteMessage(String reciver, Message message);
+    String getBlockedUsers();
+    String getFriends();
+    void unblockUser(String previouslyBlockedUser);
+    String readMessages(String reciver);
+    String findUser(String userName);
+    void addFriend(String newFriend);
+    void removeFriend(String oldFriend);
+
+
+
      
 }
