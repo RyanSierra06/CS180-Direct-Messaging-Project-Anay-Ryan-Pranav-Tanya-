@@ -143,7 +143,12 @@ public class User {
         try(BufferedReader br = new BufferedReader(new FileReader(this.userFileName));
             BufferedWriter bw = new BufferedWriter(new FileWriter(new File(this.userFileName), false))) {
             String line1 = br.readLine();
-            String line2 = br.readLine() + "-" + blockedUser;
+            String line2 = br.readLine();
+            if(line2 == null || line2.isEmpty()) {
+                line2 = blockedUser;
+            } else {
+                line2 += "-" + blockedUser;
+            }
             String line3 = br.readLine();
             bw.write(line1 + "\n");
             bw.write(line2 + "\n");
@@ -248,8 +253,6 @@ public class User {
     }
 
     public String readMessages(String receiver) {
-        //go through the file and just print the messages sent per each person 
-        //we probably need some implementation to print them in the correct order
         String first = "";
         String second = "";
         StringBuilder sb = new StringBuilder();
@@ -291,7 +294,12 @@ public class User {
             BufferedWriter bw = new BufferedWriter(new FileWriter(new File(this.userFileName), false))) {
             String line1 = br.readLine();
             String line2 = br.readLine();
-            String line3 = br.readLine() + "-" + newFriend;
+            String line3 = br.readLine();
+            if(line3 == null || line3.isEmpty()) {
+                line3 = newFriend;
+            } else {
+                line3 += "-" + newFriend;
+            }
             bw.write(line1 + "\n");
             bw.write(line2 + "\n");
             bw.write(line3 + "\n");
