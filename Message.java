@@ -10,11 +10,11 @@ public class Message implements MessageInterface {
     public Message(User user, String type, String message) {
         this.mainUser = user;
         if (type.equalsIgnoreCase("text")) {
-            this.messageText = message; // will be the actual text message to be sent
+            this.messageText = message;
             this.messageImage = "";
             this.type = type;
         } else if (type.equalsIgnoreCase("image")) {
-            this.messageImage = message; // will be the jpg or img file in a string fom (basically the directory location)
+            this.messageImage = message;
             this.messageText = "";
             this.type = type;
         } else {
@@ -25,7 +25,6 @@ public class Message implements MessageInterface {
     }
 
     public boolean assignToUser(String message, String type, String userName) {
-        // TODO change user parameter to username of type string and modify messages in that method
         try {
             PrintWriter pw = new PrintWriter(new File(userName + "Messages.txt"));
             //message
@@ -38,14 +37,10 @@ public class Message implements MessageInterface {
             } else  {
                 pw.println("Invalid Message Type");
                 return false;
-                //this should never actually run since were going to add JButtons, but for a command line test taking user text input, we need these
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //basically your addMessage class
-        //since the index of both arrays will be the same, their user and message are stored at the same spot
-
     }
 
     public boolean checkMessageType(String type) {
