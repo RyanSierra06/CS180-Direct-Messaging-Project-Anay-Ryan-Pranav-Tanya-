@@ -23,7 +23,7 @@ public class User implements UserInterface{
         try(BufferedReader br = new BufferedReader(new FileReader("userNameAndPasswords.txt"))) {
             String line = br.readLine();
             while(line != null) {
-                String[] vars = line.split(" ");
+                String[] vars = line.split("-");
                 if(vars[0].equals(userName)) {
                     try(BufferedReader br2 = new BufferedReader(new FileReader(userName + ".txt"))) {
                         String personalIdentifiers = br2.readLine();
@@ -71,15 +71,31 @@ public class User implements UserInterface{
     }
 
     public void setName(String name) {
-        this.name = name;
+        try(BufferedReader br = new BufferedReader(new FileReader(this.userFileName));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(new File(this.userFileName), false))) {
+            String line1 = br.readLine();
+            String line2 = br.readLine();
+            String line3 = br.readLine();
+
+            String[] params = line1.split("-");
+            params[1] = name;
+            line1 = "";
+            for(String s : params) {
+                line1 += s + "-";
+            }
+            line1 = line1.substring(0, line1.length()-1);
+
+            bw.write(line1 + "\n");
+            bw.write(line2 + "\n");
+            bw.write(line3 + "\n");
+            this.name = name;
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getUsername() {
         return userName;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getPassword() {
@@ -87,7 +103,27 @@ public class User implements UserInterface{
     }
 
     public void setProfileDescription(String profileDescription) {
-        this.profileDescription = profileDescription;
+        try(BufferedReader br = new BufferedReader(new FileReader(this.userFileName));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(new File(this.userFileName), false))) {
+            String line1 = br.readLine();
+            String line2 = br.readLine();
+            String line3 = br.readLine();
+
+            String[] params = line1.split("-");
+            params[2] = profileDescription;
+            line1 = "";
+            for(String s : params) {
+                line1 += s + "-";
+            }
+            line1 = line1.substring(0, line1.length()-1);
+
+            bw.write(line1 + "\n");
+            bw.write(line2 + "\n");
+            bw.write(line3 + "\n");
+            this.profileDescription = profileDescription;
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getProfileDescription() {
@@ -99,15 +135,55 @@ public class User implements UserInterface{
     }
 
     public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
+        try(BufferedReader br = new BufferedReader(new FileReader(this.userFileName));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(new File(this.userFileName), false))) {
+            String line1 = br.readLine();
+            String line2 = br.readLine();
+            String line3 = br.readLine();
+
+            String[] params = line1.split("-");
+            params[3] = profilePicture;
+            line1 = "";
+            for(String s : params) {
+                line1 += s + "-";
+            }
+            line1 = line1.substring(0, line1.length()-1);
+
+            bw.write(line1 + "\n");
+            bw.write(line2 + "\n");
+            bw.write(line3 + "\n");
+            this.profilePicture = profilePicture;
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean getReciveAnyone() {
         return this.reciveAnyone;
     }
 
-    public void setReciveAnyone(Boolean reciveAnyone) {
-        this.reciveAnyone = reciveAnyone;
+    public void setReciveAnyone(boolean reciveAnyone) {
+        try(BufferedReader br = new BufferedReader(new FileReader(this.userFileName));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(new File(this.userFileName), false))) {
+            String line1 = br.readLine();
+            String line2 = br.readLine();
+            String line3 = br.readLine();
+
+            String[] params = line1.split("-");
+            params[4] = Boolean.toString(reciveAnyone);
+            line1 = "";
+            for(String s : params) {
+                line1 += s + "-";
+            }
+            line1 = line1.substring(0, line1.length()-1);
+
+            bw.write(line1 + "\n");
+            bw.write(line2 + "\n");
+            bw.write(line3 + "\n");
+            this.reciveAnyone = reciveAnyone;
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean canReciveFrom(String senderUsername) {
@@ -282,7 +358,7 @@ public class User implements UserInterface{
             try(BufferedReader br = new BufferedReader(new FileReader(userName + ".txt"))) {
                 return br.readLine();
             } catch(IOException e) {
-                return "User not found - exception";
+                return "User not found " + e.getMessage();
             }
         } else {
             return "User not found";
