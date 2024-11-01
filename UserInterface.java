@@ -1,4 +1,8 @@
 public interface UserInterface {
+    void setPassword(String password);
+    String getPassword();
+    void setUsername(String userName);
+    String getUsername();
     void sendMessage(User reciver);
     void blockUser(User blockedUser);
     void deleteMessage(User reciver);
