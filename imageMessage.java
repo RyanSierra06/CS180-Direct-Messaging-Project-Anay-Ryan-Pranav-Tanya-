@@ -1,3 +1,3 @@
-public class imageMessage {
+public class imageMessage extens message {
 
 }
