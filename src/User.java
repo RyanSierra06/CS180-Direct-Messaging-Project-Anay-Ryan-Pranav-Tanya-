@@ -50,9 +50,8 @@ public class User implements UserInterface {
                     }
                 }
             }
-
             createUser(username, password);
-
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
