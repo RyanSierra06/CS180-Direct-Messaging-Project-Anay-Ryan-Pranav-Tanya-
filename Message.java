@@ -1,15 +1,14 @@
 import java.util.*;
+import java.io.*;
 
 public class Message implements MessageInterface {
     String type;
-    User user;
+    User mainUser;
     String messageText;
     String messageImage;
-    ArrayList<User> userList; // switch these to a hashMap if theyre allowed
-    ArrayList<String> messageList; //switch these to a hashMap if they're allowed
 
     public Message(User user, String type, String message) {
-        this.user = user;
+        this.mainUser = user;
         if (type.equalsIgnoreCase("text")) {
             this.messageText = message; // will be the actual text message to be sent
             this.messageImage = "";
@@ -23,19 +22,28 @@ public class Message implements MessageInterface {
             this.messageText = "";
             this.type = "Invalid Message Type";
         }
-        userList = new ArrayList<User>();
-        messageList = new ArrayList<String>();
     }
 
-    public boolean assignToUser(String message, String type, User user) {
+    public boolean assignToUser(String message, String type, String userName) {
+        // TODO change user parameter to username of type string and modify messages in that method
+        try {
+            PrintWriter pw = new PrintWriter(new File(userName + "Messages.txt"));
+            //message
+            //message
+            //message
+            //......
+            if(checkMessageType(type)) {
+                pw.println(message);
+            } else  {
+                pw.println("Invalid Message Type");
+                //this should never actually run since were going to add JButtons, but for a command line test taking user text input, we need these
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         //basically your addMessage class
         //since the index of both arrays will be the same, their user and message are stored at the same spot
-        if(checkMessageType(type)) {
-            messageList.add(message);
-        } else  {
-            messageList.add("Invalid Message Type");
-        }
-        userList.add(user);
+
     }
 
     public boolean checkMessageType(String type) {
@@ -54,15 +62,7 @@ public class Message implements MessageInterface {
         return type;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public ArrayList<String> getMessageList() {
-        return messageList;
-    }
-
-    public ArrayList<User> getUserList() {
-        return userList;
+    public User getMainUser() {
+        return mainUser;
     }
 }
