@@ -136,8 +136,34 @@ public class User {
     }
 
     public void deleteMessage(User reciver, Message message) {
-        reciver.getOtherUsersMessages().remove(message);
-        this.thisUsersMessages.remove(message);
+        String first = "";
+        String second = "";
+        File inputFile = new File(first + "-" + second + ".txt");
+        File tempFile = new File("tempFile.txt");
+
+        if(receiver.compareTo(userName) < 0) {
+            first = receiver;
+            second = this.userName;
+        } else if(receiver.compareTo(userName) > 0) {
+            second = receiver;
+            first = this.userName;
+        }
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(first + "-" + second + ".txt"));
+            BufferedWriter bw = new bufferedWriter(new FileWriter(tempFile));
+            String line = "";
+            while((line = br.readLine()) != null) {
+                bw.write(line);
+                if(line.equals(message)) {
+                   continue;
+                }
+            }
+            if (inputFile.delete()) {
+                tempFile.renameTo(inputFile);
+            }
+
+        }
 
     }
 
@@ -157,10 +183,30 @@ public class User {
         BlockedUsers.remove(previouslyBlockedUser);
 
     }
-    public void readMessages() {
+    public String readMessages(String receiver) {
         //go through the file and just print the messages sent per each person 
         //we probably need some implementation to print them in the correct order
+        String first = "";
+        String second = "";
+        StringBuilder sb = new StringBuilder();
+        if(receiver.compareTo(userName) < 0) {
+            first = receiver;
+            second = this.userName;
+        } else if(receiver.compareTo(userName) > 0) {
+            second = receiver;
+            first = this.userName;
+        }
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(first + "-" + second + ".txt"));
+            String line = "";
+            while((line = br.readLine()) != null) {
+                sb.append(line + "\n");
+            }
 
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
     }
     public String displayProfile() {
         return profileDescription + " , " + profilePicture;
