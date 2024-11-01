@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.io.File;
 import java.io.FileReader;
 
+//TODO GO BACK TO THE ADD METHODS AND CHECK TO MAKE SURE THAT THE - IS NOT AT THE BEGINNING
 
 public class User {
     // profile information
@@ -126,8 +127,6 @@ public class User {
     public void deleteMessage(String reciver, Message message) {
         String first = "";
         String second = "";
-        File inputFile = new File(first + "-" + second + ".txt");
-        File tempFile = new File("tempFile.txt");
 
         if(reciver.compareTo(userName) < 0) {
             first = reciver;
@@ -136,6 +135,9 @@ public class User {
             second = reciver;
             first = this.userName;
         }
+
+        File inputFile = new File(first + "-" + second + ".txt");
+        File tempFile = new File("tempFile.txt");
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(first + "-" + second + ".txt"));
@@ -258,14 +260,40 @@ public class User {
     public void addFriend(String newFriend) {
         // TODO finish this method
         // friends.add(newFriend);
+        try(BufferedReader br = new BufferedReader(new FileReader(this.userFileName));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(new File(this.userFileName), false))) {
+            String line1 = br.readLine();
+            String line2 = br.readLine();
+            String line3 = br.readLine() + "-" + newFriend;
+            bw.write(line1 + "\n");
+            bw.write(line2 + "\n");
+            bw.write(line3 + "\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
     }
     public void removeFriend(String oldFriend) {
         // TODO finish this method
         // friends.remove(oldFriend);
-    }
-
-    public void modifyMessageRecivingLimit() {
-        // if you can see messages from anybody or just messages from friends
+        try(BufferedReader br = new BufferedReader(new FileReader(this.userFileName));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(new File(this.userFileName), false))) {
+            String line1 = br.readLine();
+            String line2 = br.readLine();
+            String line3 = br.readLine().split("-");
+            String newLine3 = "";
+            for(String parts : line3) {
+                if(parts == oldFriend) {
+                    continue;
+                }
+                newLine3 += parts + "-";
+            }
+            bw.write(line1 + "\n");
+            bw.write(line2 + "\n");
+            bw.write(newLine3 + "\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
