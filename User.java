@@ -228,6 +228,7 @@ public class User {
     public void removeFriend(User oldFriend) {
         friends.remove(oldFriend);
     }
+
     public void modifyMessageRecivingLimit() {
         // if you can see messages from anybody or just messages from friends
     }
