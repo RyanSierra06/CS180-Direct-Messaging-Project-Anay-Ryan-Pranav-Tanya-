@@ -9,11 +9,19 @@
  *
  */
 
-
 public class TestCase {
   public static void main(String[] args) {
         testUserClass();
         testMessageClass();
         testDatabaseClass();
-    }
+  }
+
+  private static void testUserClass() {
+  }
+
+  private static void testMessageClass() {
+  }
+
+  private static void testDatabaseClass() {
+  }
 }
