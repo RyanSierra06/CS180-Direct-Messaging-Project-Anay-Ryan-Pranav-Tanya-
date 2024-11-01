@@ -1,4 +1,4 @@
-import java.uitl.*;
+import java.util.*;
 
 public class Message implements MessageInterface {
     String type;
