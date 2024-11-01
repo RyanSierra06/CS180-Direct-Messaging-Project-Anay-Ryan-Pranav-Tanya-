@@ -9,7 +9,7 @@ import java.io.FileReader;
 
 //TODO GO BACK TO THE ADD METHODS AND CHECK TO MAKE SURE THAT THE - IS NOT AT THE BEGINNING
 
-public class User {
+public class User implements UserInterface{
     // profile information
     String name;
     String userName;
