@@ -3,32 +3,44 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import java.io.File;
 import java.io.FileReader;
 
-//TODO GO BACK TO THE ADD METHODS AND CHECK TO MAKE SURE THAT THE - IS NOT AT THE BEGINNING
+// Example usernameAndPasswords.txt
+// username-password
+// username-password
+// username-password
+
+// Example "username".txt
+// username-name-profileDescription-profilePicture-reciveAnyone
+// blockedUsername1-blockedUsername2-blockedUsername3
+// friendUsername1-friendUsername2-friendUsername3
+
+// Example "firstUsername-secondUsername".txt
+// senderUserame-reciverUsername-message 
+// these are 2 people dm's and firstUsername-secondUsername are in lexographic order
+
 
 public class User implements UserInterface{
     // profile information
     String name;
-    String userName;
+    String username;
     String password;
     String profileDescription;
     String profilePicture;
     String userFileName;
     boolean reciveAnyone; 
 
-    public User(String userName, String password) {
-        try(BufferedReader br = new BufferedReader(new FileReader("userNameAndPasswords.txt"))) {
+    public User(String username, String password) {
+        try(BufferedReader br = new BufferedReader(new FileReader("usernameAndPasswords.txt"))) {
             String line = br.readLine();
             while(line != null) {
                 String[] vars = line.split("-");
-                if(vars[0].equals(userName)) {
-                    try(BufferedReader br2 = new BufferedReader(new FileReader(userName + ".txt"))) {
+                if(vars[0].equals(username)) {
+                    try(BufferedReader br2 = new BufferedReader(new FileReader(username + ".txt"))) {
                         String personalIdentifiers = br2.readLine();
                         String[] personalArr = personalIdentifiers.split("-");
-                        this.userName = personalArr[0];
+                        this.username = personalArr[0];
                         this.name = personalArr[1];
                         this.profileDescription = personalArr[2];
                         this.profilePicture = personalArr[3];
@@ -40,27 +52,27 @@ public class User implements UserInterface{
                 }
             }
 
-            createUser(userName, password);
+            createUser(username, password);
 
         } catch(IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void createUser(String userName, String password) {
-        this.userName = userName;
+    public void createUser(String username, String password) {
+        this.username = username;
         this.password = password;
         this.name = null;
         this.profileDescription = null;
         this.profilePicture = null;
         this.reciveAnyone = false;
-        this.userFileName = userName + ".txt";
+        this.userFileName = username + ".txt";
         try(PrintWriter pw = new PrintWriter(new FileWriter(new File(this.userFileName)));
-            PrintWriter pw2 = new PrintWriter(new FileWriter(new File("userNameAndPasswords.txt"), true))) {
-            pw.println(userName + "-" + name + "-" + profileDescription + "-" + profilePicture + "-" + reciveAnyone); // personal identifiers
+            PrintWriter pw2 = new PrintWriter(new FileWriter(new File("usernameAndPasswords.txt"), true))) {
+            pw.println(username + "-" + name + "-" + profileDescription + "-" + profilePicture + "-" + reciveAnyone); // personal identifiers
             pw.println(); // blocked users
             pw.println(); // friends
-            pw2.println(userName + " " + password);
+            pw2.println(username + "-" + password);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -95,7 +107,7 @@ public class User implements UserInterface{
     }
 
     public String getUsername() {
-        return userName;
+        return username;
     }
 
     public String getPassword() {
@@ -206,10 +218,10 @@ public class User implements UserInterface{
     }
 
     public void sendMessage(Message message, String reciver) {
-        String first = (this.userName.compareTo(reciver) < 0 ? reciver : this.userName);
-        String second = (this.userName.equals(first) ? reciver : this.userName);
+        String first = (this.username.compareTo(reciver) < 0 ? reciver : this.username);
+        String second = (this.username.equals(first) ? reciver : this.username);
         try(PrintWriter pw = new PrintWriter(new FileWriter(new File(first + "-" + second + ".txt"), true))) {
-            pw.println(this.userName + "-" + reciver + "-" + message);
+            pw.println(this.username + "-" + reciver + "-" + message);
         } catch(IOException e) {
             e.printStackTrace();
         }
@@ -238,20 +250,19 @@ public class User implements UserInterface{
         String first = "";
         String second = "";
 
-        if(reciver.compareTo(userName) < 0) {
+        if(reciver.compareTo(username) < 0) {
             first = reciver;
-            second = this.userName;
-        } else if(reciver.compareTo(userName) > 0) {
+            second = this.username;
+        } else if(reciver.compareTo(username) > 0) {
             second = reciver;
-            first = this.userName;
+            first = this.username;
         }
 
         File inputFile = new File(first + "-" + second + ".txt");
         File tempFile = new File("tempFile.txt");
 
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(first + "-" + second + ".txt"));
-            BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile));
+        try(BufferedReader br = new BufferedReader(new FileReader(first + "-" + second + ".txt"));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile))) {
             String line = "";
             while((line = br.readLine()) != null) {
                 bw.write(line);
@@ -262,6 +273,7 @@ public class User implements UserInterface{
             if (inputFile.delete()) {
                 tempFile.renameTo(inputFile);
             }
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -332,15 +344,14 @@ public class User implements UserInterface{
         String first = "";
         String second = "";
         StringBuilder sb = new StringBuilder();
-        if(receiver.compareTo(userName) < 0) {
+        if(receiver.compareTo(username) < 0) {
             first = receiver;
-            second = this.userName;
-        } else if(receiver.compareTo(userName) > 0) {
+            second = this.username;
+        } else if(receiver.compareTo(username) > 0) {
             second = receiver;
-            first = this.userName;
+            first = this.username;
         }
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(first + "-" + second + ".txt"));
+        try(BufferedReader br = new BufferedReader(new FileReader(first + "-" + second + ".txt"))) {
             String line = "";
             while((line = br.readLine()) != null) {
                 sb.append(line + "\n");
@@ -352,10 +363,10 @@ public class User implements UserInterface{
         return sb.toString();
     }
 
-    public String findUser(String userName) {
-        File f = new File(userName + ".txt");
+    public String findUser(String username) {
+        File f = new File(username + ".txt");
         if(f.exists()) {
-            try(BufferedReader br = new BufferedReader(new FileReader(userName + ".txt"))) {
+            try(BufferedReader br = new BufferedReader(new FileReader(username + ".txt"))) {
                 return br.readLine();
             } catch(IOException e) {
                 return "User not found " + e.getMessage();
@@ -384,6 +395,7 @@ public class User implements UserInterface{
         }
         
     }
+    
     public void removeFriend(String oldFriend) {
         try(BufferedReader br = new BufferedReader(new FileReader(this.userFileName));
             BufferedWriter bw = new BufferedWriter(new FileWriter(new File(this.userFileName), false))) {

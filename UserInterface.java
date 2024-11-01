@@ -1,5 +1,5 @@
 public interface UserInterface {
-    void createUsee(String username, String password);
+    void createUser(String username, String password);
     void setName(String name);
     String getName();
     String getPassword();
@@ -10,7 +10,7 @@ public interface UserInterface {
     String getProfilePicture();
     boolean getReciveAnyone();
     void setReciveAnyone(boolean reciveAnyone);
-    boolean canReciveFrom();
+    boolean canReciveFrom(String senderUsername);
     void sendMessage(Message message, String reciver);
     void blockUser(String blockUser);
     void deleteMessage(String reciver, Message message);
@@ -18,11 +18,7 @@ public interface UserInterface {
     String getFriends();
     void unblockUser(String previouslyBlockedUser);
     String readMessages(String reciver);
-    String findUser(String userName);
+    String findUser(String username);
     void addFriend(String newFriend);
     void removeFriend(String oldFriend);
-
-
-
-     
 }

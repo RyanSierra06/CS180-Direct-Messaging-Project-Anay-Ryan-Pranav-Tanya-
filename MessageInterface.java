@@ -5,5 +5,4 @@ public interface MessageInterface {
     String getMessageImage();
     String getType();
     User getMainUser();
-
 }

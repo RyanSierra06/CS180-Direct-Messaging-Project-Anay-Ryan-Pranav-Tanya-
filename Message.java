@@ -25,8 +25,7 @@ public class Message implements MessageInterface {
     }
 
     public boolean assignToUser(String message, String type, String userName) {
-        try {
-            PrintWriter pw = new PrintWriter(new File(userName + "Messages.txt"));
+        try(PrintWriter pw = new PrintWriter(new File(userName + "Messages.txt"))) {
             //message
             //message
             //message
@@ -40,11 +39,12 @@ public class Message implements MessageInterface {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            return  false;
         }
     }
 
     public boolean checkMessageType(String type) {
-        return type.equalsIgnoreCase("text") || type.equalsIgnoreCase("image"))
+        return type.equalsIgnoreCase("text") || type.equalsIgnoreCase("image");
     }
 
     public String getMessageText() {
