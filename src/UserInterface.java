@@ -11,9 +11,9 @@ public interface UserInterface {
     boolean canReceiveAnyone();
     void setReceiveAnyone(boolean receiveAnyone);
     boolean canReceiveFrom(String senderUsername);
-    void sendMessage(Message message, String reciver);
+    void sendMessage(Message message, String receiver);
     void blockUser(String blockUser);
-    void deleteMessage(String reciver, Message message);
+    void deleteMessage(String receiver, Message message);
     String getBlockedUsers();
     String getFriends();
     void unblockUser(String previouslyBlockedUser);
