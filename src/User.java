@@ -167,11 +167,11 @@ public class User implements UserInterface {
         }
     }
 
-    public boolean getReciveAnyone() {
+    public boolean getReceiveAnyone() {
         return this.reciveAnyone;
     }
 
-    public void setReciveAnyone(boolean reciveAnyone) {
+    public void setReceiveAnyone(boolean receiveAnyone) {
         try (BufferedReader br = new BufferedReader(new FileReader("files/" + this.userFileName));
              BufferedWriter bw = new BufferedWriter(new FileWriter(new File("files/" + this.userFileName), false))) {
             String line1 = br.readLine();
@@ -179,7 +179,7 @@ public class User implements UserInterface {
             String line3 = br.readLine();
 
             String[] params = line1.split("-");
-            params[4] = Boolean.toString(reciveAnyone);
+            params[4] = Boolean.toString(receiveAnyone);
             line1 = "";
             for (String s : params) {
                 line1 += s + "-";
@@ -189,7 +189,7 @@ public class User implements UserInterface {
             bw.write(line1 + "\n");
             bw.write(line2 + "\n");
             bw.write(line3 + "\n");
-            this.reciveAnyone = reciveAnyone;
+            this.receiveAnyone = receiveAnyone;
         } catch (IOException e) {
             e.printStackTrace();
         }

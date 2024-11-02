@@ -10,7 +10,7 @@ public interface UserInterface {
     String getProfilePicture();
     boolean canReceiveAnyone();
     void setReceiveAnyone(boolean receiveAnyone);
-    boolean canReciveFrom(String senderUsername);
+    boolean canReceiveFrom(String senderUsername);
     void sendMessage(Message message, String reciver);
     void blockUser(String blockUser);
     void deleteMessage(String reciver, Message message);
