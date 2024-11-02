@@ -12,12 +12,12 @@ import java.io.FileReader;
 // username-password
 
 // Example "username".txt
-// username-name-profileDescription-profilePicture-reciveAnyone
+// username-name-profileDescription-profilePicture-receiveAnyone
 // blockedUsername1-blockedUsername2-blockedUsername3
 // friendUsername1-friendUsername2-friendUsername3
 
 // Example "firstUsername-secondUsername".txt
-// senderUserame-reciverUsername-message 
+// senderUserame-receiverUsername-message 
 // these are 2 people dm's and firstUsername-secondUsername are in lexographic order
 
 public class User implements UserInterface {
@@ -28,10 +28,10 @@ public class User implements UserInterface {
     String profileDescription;
     String profilePicture;
     String userFileName;
-    boolean reciveAnyone;
+    boolean receiveAnyone;
 
     public User(String username, String password) {
-        try (BufferedReader br = new BufferedReader(new FileReader("files/" + usernameAndPasswords.txt))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("files/usernameAndPasswords.txt"))) {
             String line = br.readLine();
             while (line != null) {
                 String[] vars = line.split("-");
@@ -43,7 +43,7 @@ public class User implements UserInterface {
                         this.name = personalArr[1];
                         this.profileDescription = personalArr[2];
                         this.profilePicture = personalArr[3];
-                        this.reciveAnyone = Boolean.parseBoolean(personalArr[4]);
+                        this.receiveAnyone = Boolean.parseBoolean(personalArr[4]);
                         return;
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -63,11 +63,11 @@ public class User implements UserInterface {
         this.name = null;
         this.profileDescription = null;
         this.profilePicture = null;
-        this.reciveAnyone = false;
+        this.receiveAnyone = false;
         this.userFileName = username + ".txt";
         try (PrintWriter pw = new PrintWriter(new FileWriter(new File("files/" + this.userFileName)));
-             PrintWriter pw2 = new PrintWriter(new FileWriter(new File("files/" + usernameAndPasswords.txt), true))) {
-            pw.println(username + "-" + name + "-" + profileDescription + "-" + profilePicture + "-" + reciveAnyone); // personal identifiers
+             PrintWriter pw2 = new PrintWriter(new FileWriter(new File("files/usernameAndPasswords.txt"), true))) {
+            pw.println(username + "-" + name + "-" + profileDescription + "-" + profilePicture + "-" + receiveAnyone); // personal identifiers
             pw.println(); // blocked users
             pw.println(); // friends
             pw2.println(username + "-" + password);
@@ -168,7 +168,7 @@ public class User implements UserInterface {
     }
 
     public boolean getReceiveAnyone() {
-        return this.reciveAnyone;
+        return this.receiveAnyone;
     }
 
     public void setReceiveAnyone(boolean receiveAnyone) {
@@ -202,7 +202,7 @@ public class User implements UserInterface {
             String friends = br.readLine();
             if (friends.contains(senderUsername)) {
                 return true;
-            } else if (this.reciveAnyone) {
+            } else if (this.receiveAnyone) {
                 return true;
             } else {
                 return false;
