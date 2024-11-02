@@ -150,8 +150,7 @@ public class Application extends ApplicationInterface {
             if (pass.contains("-") {
                 System.out.println("Password contains '-'. Try again!");
                 validPass = false;
-            }
-                    else if (pass.length() == 0) {
+            } else if (pass.length() == 0) {
                 System.out.println("Empty password! Try again!");
                 validPass = false;
             } else {
@@ -214,7 +213,12 @@ public class Application extends ApplicationInterface {
                 File f = new File("files/" + user + ".txt")
                 if (f.exists()) {
                     User currentUser = new User(user, pass);
-                    actionsAfterLogin(currentUser)
+                    if (User.getPassword().equals(pass)) {
+                        actionsAfterLogin(currentUser)
+                    }
+                    else{
+                        System.out.println("Invalid Password!")
+                    }
                 } else {
                     System.out.println("Sorry User does not exist!")
                 }
