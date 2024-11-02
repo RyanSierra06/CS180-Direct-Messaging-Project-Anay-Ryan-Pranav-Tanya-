@@ -195,7 +195,7 @@ public class User implements UserInterface {
         }
     }
 
-    public boolean canReciveFrom(String senderUsername) {
+    public boolean canReceiveFrom(String senderUsername) {
         try (BufferedReader br = new BufferedReader(new FileReader(new File("files/" + this.userFileName)))) {
             br.readLine();
             br.readLine();
