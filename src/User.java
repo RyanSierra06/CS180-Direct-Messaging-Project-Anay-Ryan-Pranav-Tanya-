@@ -20,15 +20,18 @@ import java.io.FileReader;
 // senderUserame-receiverUsername-message 
 // these are 2 people dm's and firstUsername-secondUsername are in lexographic order
 
+
+// Change friends adding to force other user to accept or reject
+
 public class User implements UserInterface {
     // profile information
-    String name;
-    String username;
-    String password;
-    String profileDescription;
-    String profilePicture;
-    String userFileName;
-    boolean receiveAnyone;
+    private String name;
+    private String username;
+    private String password;
+    private String profileDescription;
+    private String profilePicture;
+    private String userFileName;
+    private boolean receiveAnyone;
 
     public User(String username, String password) {
         try (BufferedReader br = new BufferedReader(new FileReader("files/usernameAndPasswords.txt"))) {
@@ -214,14 +217,20 @@ public class User implements UserInterface {
         }
     }
 
-    public void sendMessage(Message message, String reciver) {
-        String first = (this.username.compareTo(reciver) < 0 ? reciver : this.username);
-        String second = (this.username.equals(first) ? reciver : this.username);
-        try (PrintWriter pw = new PrintWriter(new FileWriter(new File("files/" + first + "-" + second + ".txt"), true))) {
-            pw.println(this.username + "-" + reciver + "-" + message);
-        } catch (IOException e) {
-            e.printStackTrace();
+    public boolean sendMessage(Message message, String reciver) {
+        if(this.canReceiveFrom(reciver)) {
+            String first = (this.username.compareTo(reciver) < 0 ? reciver : this.username);
+            String second = (this.username.equals(first) ? reciver : this.username);
+            try (PrintWriter pw = new PrintWriter(new FileWriter(new File("files/" + first + "-" + second + ".txt"), true))) {
+                pw.println(this.username + "-" + reciver + "-" + message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            return false;
         }
+
+        return true;
     }
 
     public void blockUser(String blockedUser) {
