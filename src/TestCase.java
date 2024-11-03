@@ -1,7 +1,7 @@
 /**
  * Phase 1 Test Class for Team Project
  * 
- * tests the functionality of the User, Message, and Database classes
+ * tests the functionality of the User and Message classes
  * 
  * @author Tanya Jain, lab sec 12
  * 
