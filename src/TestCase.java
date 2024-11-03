@@ -13,7 +13,6 @@ public class TestCase {
   public static void main(String[] args) {
         testUserClass();
         testMessageClass();
-        testDatabaseClass();
   }
 
   // TEST 1: testing user class
@@ -90,11 +89,5 @@ public class TestCase {
     } else {
       System.out.println("test failed, invalid message type incorrectly handled");
     }
-  }
-
-  // TEST 3: testing database class
-  private static void testDatabaseClass() {
-    System.out.println("testing Database class: ");
-    
   }
 }
