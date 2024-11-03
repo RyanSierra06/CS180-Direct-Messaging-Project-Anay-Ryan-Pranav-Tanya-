@@ -12,13 +12,13 @@ public interface UserInterface {
     void setReceiveAnyone(boolean receiveAnyone);
     boolean canReceiveFrom(String senderUsername);
     boolean sendMessage(Message message, String receiver);
-    void blockUser(String blockUser);
+    boolean blockUser(String blockUser);
     void deleteMessage(String receiver, Message message);
     String getBlockedUsers();
     String getFriends();
-    void unblockUser(String previouslyBlockedUser);
+    boolean unblockUser(String previouslyBlockedUser);
     String readMessages(String reciver);
     String findUser(String username);
-    void addFriend(String newFriend);
-    void removeFriend(String oldFriend);
+    boolean addFriend(String newFriend);
+    boolean removeFriend(String oldFriend);
 }

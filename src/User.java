@@ -54,7 +54,7 @@ public class User implements UserInterface {
                 }
             }
             createUser(username, password);
-            
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -199,6 +199,9 @@ public class User implements UserInterface {
     }
 
     public boolean canReceiveFrom(String senderUsername) {
+        if(!checkUserExists(senderUsername)) {
+            return false;
+        }
         try (BufferedReader br = new BufferedReader(new FileReader(new File("files/" + this.userFileName)))) {
             br.readLine();
             br.readLine();
@@ -218,6 +221,9 @@ public class User implements UserInterface {
     }
 
     public boolean sendMessage(Message message, String reciver) {
+        if(!checkUserExists(reciver)) {
+            return false;
+        }
         if(this.canReceiveFrom(reciver)) {
             String first = (this.username.compareTo(reciver) < 0 ? reciver : this.username);
             String second = (this.username.equals(first) ? reciver : this.username);
@@ -233,7 +239,10 @@ public class User implements UserInterface {
         return true;
     }
 
-    public void blockUser(String blockedUser) {
+    public boolean blockUser(String blockedUser) {
+        if(!checkUserExists(blockedUser)) {
+            return false;
+        }
         try (BufferedReader br = new BufferedReader(new FileReader("files/" + this.userFileName));
              BufferedWriter bw = new BufferedWriter(new FileWriter(new File("files/" + this.userFileName), false))) {
             String line1 = br.readLine();
@@ -247,12 +256,17 @@ public class User implements UserInterface {
             bw.write(line1 + "\n");
             bw.write(line2 + "\n");
             bw.write(line3 + "\n");
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
     public void deleteMessage(String reciver, Message message) {
+        if(!checkUserExists(reciver)) {
+            return;
+        }
         String first = "";
         String second = "";
 
@@ -320,7 +334,10 @@ public class User implements UserInterface {
         }
     }
 
-    public void unblockUser(String previouslyBlockedUser) {
+    public boolean unblockUser(String previouslyBlockedUser) {
+        if(!checkUserExists(previouslyBlockedUser)) {
+            return false;
+        }
         try (BufferedReader br = new BufferedReader(new FileReader("files/" + this.userFileName));
              BufferedWriter bw = new BufferedWriter(new FileWriter(new File("files/" + this.userFileName), false))) {
             String line1 = br.readLine();
@@ -341,8 +358,10 @@ public class User implements UserInterface {
             bw.write(line1 + "\n");
             bw.write(line2 + "\n");
             bw.write(line3 + "\n");
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -382,7 +401,10 @@ public class User implements UserInterface {
         }
     }
 
-    public void addFriend(String newFriend) {
+    public boolean addFriend(String newFriend) {
+        if(!checkUserExists(newFriend)) {
+            return false;
+        }
         try (BufferedReader br = new BufferedReader(new FileReader("files/" + this.userFileName));
              BufferedWriter bw = new BufferedWriter(new FileWriter(new File("files/" + this.userFileName), false))) {
             String line1 = br.readLine();
@@ -396,13 +418,18 @@ public class User implements UserInterface {
             bw.write(line1 + "\n");
             bw.write(line2 + "\n");
             bw.write(line3 + "\n");
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
 
     }
 
-    public void removeFriend(String oldFriend) {
+    public boolean removeFriend(String oldFriend) {
+        if(!checkUserExists(oldFriend)) {
+            return false;
+        }
         try (BufferedReader br = new BufferedReader(new FileReader("files/" + this.userFileName));
              BufferedWriter bw = new BufferedWriter(new FileWriter(new File("files/" + this.userFileName), false))) {
             String line1 = br.readLine();
@@ -418,8 +445,15 @@ public class User implements UserInterface {
             bw.write(line1 + "\n");
             bw.write(line2 + "\n");
             bw.write(newLine3 + "\n");
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
+    }
+
+    public boolean checkUserExists(String username) {
+        File f = new File("files/" + username + ".txt");
+        return f.exists();
     }
 }
