@@ -17,7 +17,7 @@ import java.io.FileReader;
 // friendUsername1-friendUsername2-friendUsername3
 
 // Example "firstUsername-secondUsername".txt
-// senderUserame-receiverUsername-message 
+// senderUserame-receiverUsername-message
 // these are 2 people dm's and firstUsername-secondUsername are in lexographic order
 
 
@@ -263,9 +263,9 @@ public class User implements UserInterface {
         }
     }
 
-    public void deleteMessage(String reciver, Message message) {
+    public boolean deleteMessage(String reciver, Message message) {
         if(!checkUserExists(reciver)) {
-            return;
+            return false;
         }
         String first = "";
         String second = "";
@@ -294,9 +294,10 @@ public class User implements UserInterface {
                 tempFile.renameTo(inputFile);
             }
 
-
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
 
     }

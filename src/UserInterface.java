@@ -13,7 +13,7 @@ public interface UserInterface {
     boolean canReceiveFrom(String senderUsername);
     boolean sendMessage(Message message, String receiver);
     boolean blockUser(String blockUser);
-    void deleteMessage(String receiver, Message message);
+    boolean deleteMessage(String receiver, Message message);
     String getBlockedUsers();
     String getFriends();
     boolean unblockUser(String previouslyBlockedUser);
