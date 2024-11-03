@@ -21,7 +21,8 @@ public class TestCase {
   // TEST 1: testing user class
   private static void testUserClass() {
     System.out.println("testing User class: ");
-    
+
+    @Test
     // test for ability to create a new user storing the username and pw correctly
     public void testUserCreation() {
       User userTest1 = new User("testUser", "testPassword");
@@ -29,6 +30,7 @@ public class TestCase {
       assertEquals("testPassword", userTest1.getPassword(), "test failed, password does not match");
     }
 
+    @Test
     // test for ability to set and get profile description
     public void testSetandGetProfileDescription() {
       User userTest1 = new User("testUser", "testPassword");
@@ -36,6 +38,7 @@ public class TestCase {
       assertEquals("test profile", userTest1.getProfileDescription(), "test failed, get and set profile description does not match");
     }
 
+    @Test
     //test for ability to add friends
     public void testAddFriend() {
       User userTest1 = new User("testUser", "testPassword");
@@ -43,6 +46,7 @@ public class TestCase {
       assertTrue(userTest1.getFriends().contains("friendUser"), "test failed, friend not added");
     }
 
+    @Test
     // test for ability to remove friends
     public void testRemoveFriend() {
       User userTest1 = new User("testUser", "testPassword");
@@ -51,6 +55,7 @@ public class TestCase {
       assertFalse(userTest1.getFriends().contains("friendUser"), "test failed, friend not removed");
     }
 
+    @Test
     // test for ability to block a friend
     public void testBlockFriend() {
       User userTest1 = new User("testUser", "testPassword");
@@ -65,29 +70,34 @@ public class TestCase {
   private static void testMessageClass() {
     System.out.println("testing Message class: ");
 
+    @Test
     // test for ability to create message object with correctly set text and type
-    User userTest2 = new User("testUser", "testPassword");
-    Message messageTest1 = new Message(userTest2, "text", "hello world!");
-    if (messageTest1.getMessageText().equals("hello world!") && messageTest1.getType().equals("text") && messageTest1.getMessageImage().isEmpty()) {
-      System.out.println("test passed, text message successfully created");
-    } else {
-      System.out.println("test failed, text message not created");
+    public void testCreateTextMessage() {
+      User userTest2 = new User("testUser", "testPassword");
+      Message messageTest1 = new Message(userTest2, "text", "hello");
+      assertEquals("hello", messageTest1.getMessageText(), "test failed, text message does not match");
+      assertEquals("text", messageTest1.getType(), "test failed, text message type is not 'text'");
+      assertTrue(messageTest1.getMessageImage().isEmpty(), "test failed, message image not empty");
     }
 
+    @Test
     // test for ability to create message object with correctly set image, image type, and verification of empty text
-    Message messageTest2 = new Message(userTest2, "image", "imageLink.png");
-    if (messageTest2.getMessageImage().equals("imageLink.png") && messageTest2.getType().equals("image") && messageTest2.getMessageTest().isEmpty()) {
-      System.out.println("test passed, image message successfully created");
-    } else {
-      System.out.println("test failed, image message not created");
+    public void testCreateImageMessage() {
+      User userTest2 = new User("testUser", "testPassword");
+      Message messageTest2 = new Message(userTest2, "image", "imageLink.png");
+      assertEquals("imageLink.png", messageTest2.getMessageImage(), "test failed, image message does not match");
+      assertEquals("image", messageTest2.getType(), "test failed, text message type is not 'image'");
+      assertTrue(messageTest2.getMessageText().isEmpty(), "test failed, message text not empty");
     }
 
+    @Test
     // test for ability to verify an invalid message type
-    Message messageTest3 = new Message(userTest2, "audio", "soundLink.mp3");
-    if (messageTest3.getType().equals("invalid message type") && messageTest3.getMessageTest().isEmpty() && messageTest3.getMessageImage().isEmpty()) {
-      System.out.println("test passed, invalid message type correctly handled");
-    } else {
-      System.out.println("test failed, invalid message type incorrectly handled");
+    public void testInvalidMessageType() {
+      User userTest2 = new User("testUser", "testPassword");
+      Message messageTest3 = new Message(userTest2, "audio", "soundLink.mp3");
+      assertEquals("invalid message type", messageTest3.getType(), "test failed, invalid message type incorrectly handled");
+      assertTrue("messageTest3.getMessageText().isEmpty(), "test failed, message text should be empty for invalid type");
+      assertTrue("messageTest3.getMessageImage().isEmpty(), "test failed, message image should be empty for invalid type");
     }
   }
 }
