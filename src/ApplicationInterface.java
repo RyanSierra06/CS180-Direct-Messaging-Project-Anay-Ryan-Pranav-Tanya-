@@ -1,4 +1,4 @@
 public interface ApplicationInterface {
-    void actionsAfterLogin(User currentUser);
-    User createUserMain();
+    static void actionsAfterLogin(User currentUser) {}
+    static User createUserMain() { return null; }
 }

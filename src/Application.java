@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Application implements ApplicationInterface {
     private static final Object gateKeep = null;
 
-    public synchronized void actionsAfterLogin(User currentUser) {
+    public static synchronized void actionsAfterLogin(User currentUser) {
         boolean exit = false;
         Scanner sc = new Scanner(System.in);
         while (!exit) {
@@ -117,7 +117,7 @@ public class Application implements ApplicationInterface {
         }
     }
 
-    public User createUserMain() {
+    public static User createUserMain() {
         //SETTING THE USERNAME
         Scanner sc = new Scanner(System.in);
         String user = "";
@@ -175,7 +175,7 @@ public class Application implements ApplicationInterface {
     }
 
 
-    public void main(String args[]) {
+    public static void main(String args[]) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Welcome to the Social Media Application (Phase 1)");
 
@@ -240,5 +240,6 @@ public class Application implements ApplicationInterface {
 
         System.out.println("Thank you for using The Social Media Application (Phase 1)!");
     }
+
 
 }
