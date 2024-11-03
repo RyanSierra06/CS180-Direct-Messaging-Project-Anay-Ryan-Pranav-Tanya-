@@ -92,8 +92,9 @@ public class TestCase {
     }
   }
 
+  // TEST 3: testing database class
   private static void testDatabaseClass() {
-    System.out.println("Testing Database Class: ");
+    System.out.println("testing Database class: ");
     
   }
 }
