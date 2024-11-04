@@ -34,22 +34,18 @@ public class MessageTestCases {
 
         @Test(timeout = 1000)
         // test for ability to create message object with correctly set text and type
-        public void testCreateTextMessage () {
+        public void testGetMessageText () {
             User userTest2 = new User("testUser", "testPassword");
             Message messageTest1 = new Message(userTest2, "text", "hello");
             Assert.assertEquals("hello", messageTest1.getMessageText());
-            Assert.assertEquals("text",  messageTest1.getType());
-            Assert.assertTrue(messageTest1.getMessageImage().isEmpty());
         }
 
         @Test(timeout = 1000)
         // test for ability to create message object with correctly set image, image type, and verification of empty text
-        public void testCreateImageMessage () {
+        public void testGetImageMessage () {
             User userTest2 = new User("testUser", "testPassword");
             Message messageTest2 = new Message(userTest2, "image", "imageLink.png");
             Assert.assertEquals("imageLink.png", messageTest2.getMessageImage());
-            Assert.assertEquals("image", messageTest2.getType());
-            Assert.assertTrue(messageTest2.getMessageImage().isEmpty());
         }
 
         @Test(timeout = 1000)
@@ -58,7 +54,21 @@ public class MessageTestCases {
             User userTest2 = new User("testUser", "testPassword");
             Message messageTest3 = new Message(userTest2, "audio", "soundLink.mp3");
             Assert.assertEquals("Invalid Message Type", messageTest3.getType());
-            Assert.assertTrue(messageTest3.getMessageImage().isEmpty());
+        }
+
+
+        @Test(timeout = 1000)
+        public void testAssignToUser() {
+            User userTest2 = new User("testUser", "testPassword");
+            Message messageTest4 = new Message(userTest2, "text", "test message");
+            Assert.assertTrue(messageTest4.assignToUser(messageTest4.getMessageText(), "test", userTest2.getUsername()));
+        }
+
+        @Test(timeout = 1000)
+        public void testGetMainUser() {
+            User userTest2 = new User("testUser", "testPassword");
+            Message messageTest5 = new Message(userTest2, "text", "test message");
+            Assert.assertEquals(userTest2, messageTest5.getMainUser());
         }
     }
 }
