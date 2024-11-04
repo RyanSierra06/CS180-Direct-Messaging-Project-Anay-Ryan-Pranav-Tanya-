@@ -6,6 +6,16 @@ import java.io.*;
 //message2
 //message3
 
+/**
+ * HW-09 -- Message
+ *
+ * This is the Message class
+ *
+ * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
+ *
+ * @version Nov 3, 2024
+ *
+ */
 
 public class Message implements MessageInterface {
     String type;
@@ -31,16 +41,18 @@ public class Message implements MessageInterface {
     }
 
     public boolean assignToUser(String message, String type, String userName) {
-        try (PrintWriter pw = new PrintWriter(new File(userName + "Messages.txt"))) {
+        try(PrintWriter pw = new PrintWriter(new File("files/" + userName + "Messages.txt"))) {
             //message
             //message
             //message
             //......
             if (checkMessageType(type)) {
                 pw.println(message);
+                pw.close();
                 return true;
             } else {
                 pw.println("Invalid Message Type");
+                pw.close();
                 return false;
             }
         } catch (IOException e) {

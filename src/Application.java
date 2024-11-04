@@ -1,6 +1,17 @@
 import java.io.File;
 import java.util.Scanner;
 
+/**
+ * HW-09 -- Application
+ *
+ * This is the Application class
+ *
+ * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
+ *
+ * @version Nov 3, 2024
+ *
+ */
+
 public class Application implements ApplicationInterface {
     private static final Object gateKeep = null;
 

@@ -1,18 +1,24 @@
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
+import org.junit.runner.RunWith;
 import org.junit.runner.notification.Failure;
 
+
 /**
- * A framework to run public test cases for PJ4.
+ * HW-09 -- UserTestCases
  *
- * <p>Purdue University -- CS18000 -- Spring 2021</p>
+ * This is the User Test Cases 
  *
- * @author J Morris Purdue CS
- * @version Mar 08, 2024
+ * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
+ *
+ * @version Nov 3, 2024
+ *
  */
 
+@RunWith(Enclosed.class)
 public class UserTestCases {
 
     public static void main(String[] args) {

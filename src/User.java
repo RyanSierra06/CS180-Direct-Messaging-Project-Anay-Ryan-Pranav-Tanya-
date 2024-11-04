@@ -24,6 +24,17 @@ import java.io.FileReader;
 // Change friends adding to force other user to accept or reject
 // Change password = password in user for existing file to check if the passwords r equal and follow through
 
+/**
+ * HW-09 -- User
+ *
+ * This is the User class 
+ *
+ * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
+ *
+ * @version Nov 3, 2024
+ *
+ */
+
 public class User implements UserInterface {
     // profile information
     private String name;

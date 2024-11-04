@@ -6,17 +6,17 @@ import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 import org.junit.runner.notification.Failure;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
- * A framework to run Message test cases.
+ * HW-09 -- MessageTestCases
  *
- * <p>Purdue University -- CS18000 -- Spring 2021</p>
+ * This is the Message Test Cases 
  *
- * @author Tanya Jain
- * @version November 3, 2024
+ * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
+ *
+ * @version Nov 3, 2024
+ *
  */
+
 @RunWith(Enclosed.class)
 public class MessageTestCases {
     public static void main(String[] args) {
@@ -61,7 +61,7 @@ public class MessageTestCases {
         public void testAssignToUser() {
             User userTest2 = new User("testUser", "testPassword");
             Message messageTest4 = new Message(userTest2, "text", "test message");
-            Assert.assertTrue(messageTest4.assignToUser(messageTest4.getMessageText(), "test", userTest2.getUsername()));
+            Assert.assertEquals(messageTest4.assignToUser(messageTest4.getMessageText(), "text", userTest2.getUsername()), true);
         }
 
         @Test(timeout = 1000)
