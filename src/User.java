@@ -37,7 +37,7 @@ public class User implements UserInterface {
     public User(String username, String password) {
         try (BufferedReader br = new BufferedReader(new FileReader("files/usernamesAndPasswords.txt"))) {
             String line = br.readLine();
-            if(line == null || line.isEmpty()) {
+            if (line == null || line.isEmpty()) {
                 // System.out.println("ITS EMPTY \n \n \n");
                 createUser(username, password);
                 return;
@@ -118,7 +118,7 @@ public class User implements UserInterface {
                 line1 += s + "-";
             }
             line1 = line1.substring(0, line1.length() - 1);
-            
+
             PrintWriter pw = new PrintWriter("files/" + this.userFileName);
             pw.println(line1);
             pw.println(line2);
@@ -233,7 +233,7 @@ public class User implements UserInterface {
     }
 
     public boolean canReceiveFrom(String senderUsername) {
-        if(!checkUserExists(senderUsername)) {
+        if (!checkUserExists(senderUsername)) {
             return false;
         }
         try (BufferedReader br = new BufferedReader(new FileReader(new File("files/" + this.userFileName)))) {
@@ -256,10 +256,10 @@ public class User implements UserInterface {
     }
 
     public boolean sendMessage(Message message, String reciver) {
-        if(!checkUserExists(reciver)) {
+        if (!checkUserExists(reciver)) {
             return false;
         }
-        if(this.canReceiveFrom(reciver)) {
+        if (this.canReceiveFrom(reciver)) {
             String first = (this.username.compareTo(reciver) > 0 ? reciver : this.username);
             String second = (this.username.equals(first) ? reciver : this.username);
             try (PrintWriter pw = new PrintWriter(new FileWriter(new File("files/" + first + "-" + second + ".txt"), true))) {
@@ -275,7 +275,7 @@ public class User implements UserInterface {
     }
 
     public boolean blockUser(String blockedUser) {
-        if(!checkUserExists(blockedUser)) {
+        if (!checkUserExists(blockedUser)) {
             return false;
         }
         try (BufferedReader br = new BufferedReader(new FileReader("files/" + this.userFileName))) {
@@ -302,7 +302,7 @@ public class User implements UserInterface {
     }
 
     public boolean deleteMessage(String reciver, Message message) {
-        if(!checkUserExists(reciver)) {
+        if (!checkUserExists(reciver)) {
             return false;
         }
         String first = "";
@@ -376,7 +376,7 @@ public class User implements UserInterface {
     }
 
     public boolean unblockUser(String previouslyBlockedUser) {
-        if(!checkUserExists(previouslyBlockedUser)) {
+        if (!checkUserExists(previouslyBlockedUser)) {
             return false;
         }
         try (BufferedReader br = new BufferedReader(new FileReader("files/" + this.userFileName))) {
@@ -445,7 +445,7 @@ public class User implements UserInterface {
 
     public boolean addFriend(String newFriend) {
         System.out.println("files/" + this.userFileName);
-        if(!checkUserExists(newFriend)) {
+        if (!checkUserExists(newFriend)) {
             System.out.println("THINK USER DONT EXIST");
             return false;
         }
@@ -475,7 +475,7 @@ public class User implements UserInterface {
     }
 
     public boolean removeFriend(String oldFriend) {
-        if(!checkUserExists(oldFriend)) {
+        if (!checkUserExists(oldFriend)) {
             return false;
         }
         try (BufferedReader br = new BufferedReader(new FileReader("files/" + this.userFileName))) {
@@ -483,9 +483,9 @@ public class User implements UserInterface {
             String line2 = br.readLine();
             String line3 = br.readLine();
             String newLine3 = "";
-            if(!(line3.indexOf("-") == -1)) {
+            if (!(line3.indexOf("-") == -1)) {
                 String[] line3Part = line3.split("-");
-            
+
                 for (String parts : line3Part) {
                     if (parts == oldFriend) {
                         continue;
@@ -493,7 +493,7 @@ public class User implements UserInterface {
                     newLine3 += parts + "-";
                 }
             }
-            
+
             BufferedWriter bw = new BufferedWriter(new FileWriter(new File("files/" + this.userFileName), false));
             bw.write(line1 + "\n");
             bw.write(line2 + "\n");

@@ -34,7 +34,7 @@ public class MessageTestCases {
 
         @Test(timeout = 1000)
         // test for ability to create message object with correctly set text and type
-        public void testGetMessageText () {
+        public void testGetMessageText() {
             User userTest2 = new User("testUser", "testPassword");
             Message messageTest1 = new Message(userTest2, "text", "hello");
             Assert.assertEquals("hello", messageTest1.getMessageText());
@@ -42,7 +42,7 @@ public class MessageTestCases {
 
         @Test(timeout = 1000)
         // test for ability to create message object with correctly set image, image type, and verification of empty text
-        public void testGetImageMessage () {
+        public void testGetImageMessage() {
             User userTest2 = new User("testUser", "testPassword");
             Message messageTest2 = new Message(userTest2, "image", "imageLink.png");
             Assert.assertEquals("imageLink.png", messageTest2.getMessageImage());
@@ -50,7 +50,7 @@ public class MessageTestCases {
 
         @Test(timeout = 1000)
         // test for ability to verify an invalid message type
-        public void testInvalidMessageType () {
+        public void testInvalidMessageType() {
             User userTest2 = new User("testUser", "testPassword");
             Message messageTest3 = new Message(userTest2, "audio", "soundLink.mp3");
             Assert.assertEquals("Invalid Message Type", messageTest3.getType());

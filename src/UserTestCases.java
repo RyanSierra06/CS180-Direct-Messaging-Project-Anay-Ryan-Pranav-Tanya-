@@ -59,7 +59,6 @@ public class UserTestCases {
             thirdUser.setReceiveAnyone(false);
 
 
-
             boolean ableToBlock = initialUser.blockUser(thirdUser.getUsername());
             String userOneblocks = initialUser.getBlockedUsers();
             boolean removedBlock = initialUser.unblockUser(thirdUser.getUsername());
@@ -73,23 +72,23 @@ public class UserTestCases {
             String userFinder = initialUser.findUser(thirdUser.getUsername());
 
             Assert.assertEquals("1", menatToBreak, false);
-            Assert.assertEquals("2",addedFriend, true);
-            Assert.assertEquals("3",addedFriend2, true);
+            Assert.assertEquals("2", addedFriend, true);
+            Assert.assertEquals("3", addedFriend2, true);
 
-            Assert.assertEquals("4",meantToWork, true);
-            Assert.assertEquals("5",user1Friends, secondUser.getUsername());
+            Assert.assertEquals("4", meantToWork, true);
+            Assert.assertEquals("5", user1Friends, secondUser.getUsername());
 
-            Assert.assertEquals("6",ableToBlock, true);
-            Assert.assertEquals("7",userOneblocks, thirdUser.getUsername());
-            Assert.assertEquals("8",removedBlock, true);
-            Assert.assertEquals("9",userOnePostBlocks, "");
+            Assert.assertEquals("6", ableToBlock, true);
+            Assert.assertEquals("7", userOneblocks, thirdUser.getUsername());
+            Assert.assertEquals("8", removedBlock, true);
+            Assert.assertEquals("9", userOnePostBlocks, "");
 
-            
-            Assert.assertEquals("10",nonExistentUser, false);
-            Assert.assertEquals("11",removedFriend, true);
-            Assert.assertEquals("12",msgRead, "user1-user2-hehehe\n");
+
+            Assert.assertEquals("10", nonExistentUser, false);
+            Assert.assertEquals("11", removedFriend, true);
+            Assert.assertEquals("12", msgRead, "user1-user2-hehehe\n");
             Assert.assertEquals("13", msgRemoved, true);
-            Assert.assertEquals("14",userFinder, "user3-Son-Hi I'm son-./files/sonpfp.jpg-false");
+            Assert.assertEquals("14", userFinder, "user3-Son-Hi I'm son-./files/sonpfp.jpg-false");
 
             initialUser.blockUser(thirdUser.getUsername());
             initialUser.addFriend(secondUser.getUsername());
@@ -98,12 +97,12 @@ public class UserTestCases {
         @Test(timeout = 1000)
         public void runDatabaseTestCases() {
             User initialUser = new User("user1", "user1");
-            String  initialUserName = initialUser.getName();
-            String  initialUserPass = initialUser.getPassword();
-            String  initialUserProfDes = initialUser.getProfileDescription();
-            String  initialUserProfPic = initialUser.getProfilePicture();
-            String  initialUserFriends = initialUser.getFriends();
-            String  initialUserBlocked = initialUser.getBlockedUsers();
+            String initialUserName = initialUser.getName();
+            String initialUserPass = initialUser.getPassword();
+            String initialUserProfDes = initialUser.getProfileDescription();
+            String initialUserProfPic = initialUser.getProfilePicture();
+            String initialUserFriends = initialUser.getFriends();
+            String initialUserBlocked = initialUser.getBlockedUsers();
 
             User secondUser = new User("user2", "user2");
 

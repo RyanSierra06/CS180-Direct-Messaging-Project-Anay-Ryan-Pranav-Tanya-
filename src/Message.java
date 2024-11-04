@@ -31,21 +31,21 @@ public class Message implements MessageInterface {
     }
 
     public boolean assignToUser(String message, String type, String userName) {
-        try(PrintWriter pw = new PrintWriter(new File(userName + "Messages.txt"))) {
+        try (PrintWriter pw = new PrintWriter(new File(userName + "Messages.txt"))) {
             //message
             //message
             //message
             //......
-            if(checkMessageType(type)) {
+            if (checkMessageType(type)) {
                 pw.println(message);
                 return true;
-            } else  {
+            } else {
                 pw.println("Invalid Message Type");
                 return false;
             }
         } catch (IOException e) {
             e.printStackTrace();
-            return  false;
+            return false;
         }
     }
 
