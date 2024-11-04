@@ -10,12 +10,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * A framework to run public test cases for PJ4.
+ * A framework to run Message test cases.
  *
  * <p>Purdue University -- CS18000 -- Spring 2021</p>
  *
- * @author J Morris Purdue CS
- * @version Mar 08, 2024
+ * @author Tanya Jain
+ * @version November 3, 2024
  */
 public class MessageTestCases {
     private static void testMessageClass() {
