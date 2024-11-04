@@ -13,7 +13,7 @@ import org.junit.runner.notification.Failure;
  * @version Mar 08, 2024
  */
 
-public class TestCases {
+public class UserTestCases {
 
     public static void main(String[] args) {
         Result result = JUnitCore.runClasses(TestCase.class);
