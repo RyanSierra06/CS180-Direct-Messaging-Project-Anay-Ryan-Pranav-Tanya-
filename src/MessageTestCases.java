@@ -37,9 +37,9 @@ public class MessageTestCases {
         public void testCreateTextMessage () {
             User userTest2 = new User("testUser", "testPassword");
             Message messageTest1 = new Message(userTest2, "text", "hello");
-            assertEquals("hello", messageTest1.getMessageText(), "test failed, text message does not match");
-            assertEquals("text", messageTest1.getType(), "test failed, text message type is not 'text'");
-            assertTrue(messageTest1.getMessageImage().isEmpty(), "test failed, message image not empty");
+            Assert.assertEquals("hello", messageTest1.getMessageText(), "test failed, text message does not match");
+            Assert.assertEquals("text", messageTest1.getType(), "test failed, text message type is not 'text'");
+            Assert.assertTrue(messageTest1.getMessageImage().isEmpty(), "test failed, message image not empty");
         }
 
         @Test(timeout = 1000)
@@ -47,9 +47,9 @@ public class MessageTestCases {
         public void testCreateImageMessage () {
             User userTest2 = new User("testUser", "testPassword");
             Message messageTest2 = new Message(userTest2, "image", "imageLink.png");
-            assertEquals("imageLink.png", messageTest2.getMessageImage(), "test failed, image message does not match");
-            assertEquals("image", messageTest2.getType(), "test failed, text message type is not 'image'");
-            assertTrue(messageTest2.getMessageText().isEmpty(), "test failed, message text not empty");
+            Assert.assertEquals("imageLink.png", messageTest2.getMessageImage(), "test failed, image message does not match");
+            Assert.assertEquals("image", messageTest2.getType(), "test failed, text message type is not 'image'");
+            Assert.assertTrue(messageTest2.getMessageText().isEmpty(), "test failed, message text not empty");
         }
 
         @Test(timeout = 1000)
@@ -57,9 +57,9 @@ public class MessageTestCases {
         public void testInvalidMessageType () {
             User userTest2 = new User("testUser", "testPassword");
             Message messageTest3 = new Message(userTest2, "audio", "soundLink.mp3");
-            assertEquals("invalid message type", messageTest3.getType(), "test failed, invalid message type incorrectly handled");
-            assertTrue(messageTest3.getMessageText().isEmpty(), "test failed, message text should be empty for invalid type");
-            assertTrue(messageTest3.getMessageImage().isEmpty(), "test failed, message image should be empty for invalid type");
+            Assert.assertEquals("invalid message type", messageTest3.getType(), "test failed, invalid message type incorrectly handled");
+            Assert.assertTrue(messageTest3.getMessageText().isEmpty(), "test failed, message text should be empty for invalid type");
+            Assert.assertTrue(messageTest3.getMessageImage().isEmpty(), "test failed, message image should be empty for invalid type");
         }
     }
 }
