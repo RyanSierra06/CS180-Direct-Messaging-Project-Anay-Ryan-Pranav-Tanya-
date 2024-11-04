@@ -1,5 +1,5 @@
 /**
- * HW-09 -- MessageInterface
+ * Group PJ -- MessageInterface
  *
  * This is the Message interface
  *

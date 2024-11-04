@@ -7,7 +7,7 @@ import java.io.*;
 //message3
 
 /**
- * HW-09 -- Message
+ * Group PJ -- Message
  *
  * This is the Message class
  *
@@ -40,13 +40,13 @@ public class Message implements MessageInterface {
         }
     }
 
-    public boolean assignToUser(String message, String type, String userName) {
-        try(PrintWriter pw = new PrintWriter(new File("files/" + userName + "Messages.txt"))) {
+    public boolean assignToUser(String message, String type1, String userName) {
+        try (PrintWriter pw = new PrintWriter(new File("files/" + userName + "Messages.txt"))) {
             //message
             //message
             //message
             //......
-            if (checkMessageType(type)) {
+            if (checkMessageType(type1)) {
                 pw.println(message);
                 pw.close();
                 return true;
@@ -61,8 +61,8 @@ public class Message implements MessageInterface {
         }
     }
 
-    public boolean checkMessageType(String type) {
-        return type.equalsIgnoreCase("text") || type.equalsIgnoreCase("image");
+    public boolean checkMessageType(String type2) {
+        return type2.equalsIgnoreCase("text") || type2.equalsIgnoreCase("image");
     }
 
     public String getMessageText() {

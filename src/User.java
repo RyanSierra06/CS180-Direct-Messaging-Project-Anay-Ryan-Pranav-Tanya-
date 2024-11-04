@@ -25,7 +25,7 @@ import java.io.FileReader;
 // Change password = password in user for existing file to check if the passwords r equal and follow through
 
 /**
- * HW-09 -- User
+ * Group PJ -- User
  *
  * This is the User class 
  *
@@ -89,23 +89,24 @@ public class User implements UserInterface {
         }
     }
 
-    public void createUser(String username, String password) {
-        this.username = username;
-        this.password = password;
+    public void createUser(String username1, String password1) {
+        this.username = username1;
+        this.password = password1;
         this.name = " ";
         this.profileDescription = " ";
         this.profilePicture = " ";
         this.receiveAnyone = false;
-        this.userFileName = username + ".txt";
+        this.userFileName = username1 + ".txt";
 
         try (PrintWriter pw2 = new PrintWriter(new FileWriter(new File("files/usernamesAndPasswords.txt"), true))) {
             PrintWriter pw = new PrintWriter(new FileWriter(new File("files/" + this.userFileName), true));
 
-            pw.println(username + "-" + name + "-" + profileDescription + "-" + profilePicture + "-" + receiveAnyone); // personal identifiers
+            pw.println(username1 + "-" + name + "-" + profileDescription + "-" +
+                profilePicture + "-" + receiveAnyone); // personal identifiers
             pw.println(); // blocked users
             pw.println(); // friends
 
-            pw2.println(username + "-" + password);
+            pw2.println(username1 + "-" + password);
             pw.flush();
             pw.close();
         } catch (IOException e) {
@@ -254,10 +255,8 @@ public class User implements UserInterface {
             User fr = new User(senderUsername, "tempPass");
             if (friends.contains(senderUsername)) {
                 return true;
-            } else if (fr.receiveAnyone) {
-                return true;
             } else {
-                return false;
+                return fr.receiveAnyone;
             }
 
         } catch (IOException e) {
@@ -273,7 +272,8 @@ public class User implements UserInterface {
         if (this.canReceiveFrom(reciver)) {
             String first = (this.username.compareTo(reciver) > 0 ? reciver : this.username);
             String second = (this.username.equals(first) ? reciver : this.username);
-            try (PrintWriter pw = new PrintWriter(new FileWriter(new File("files/" + first + "-" + second + ".txt"), true))) {
+            try (PrintWriter pw = new PrintWriter(new FileWriter(new File("files/"
+                + first + "-" + second + ".txt"), true))) {
                 pw.println(this.username + "-" + reciver + "-" + message.getMessageText());
             } catch (IOException e) {
                 // e.printStackTrace();
@@ -441,10 +441,10 @@ public class User implements UserInterface {
         return sb.toString();
     }
 
-    public String findUser(String username) {
-        File f = new File("files/" + username + ".txt");
+    public String findUser(String username1) {
+        File f = new File("files/" + username1 + ".txt");
         if (f.exists()) {
-            try (BufferedReader br = new BufferedReader(new FileReader("files/" + username + ".txt"))) {
+            try (BufferedReader br = new BufferedReader(new FileReader("files/" + username1 + ".txt"))) {
                 return br.readLine();
             } catch (IOException e) {
                 return "User not found " + e.getMessage();
@@ -517,8 +517,8 @@ public class User implements UserInterface {
         }
     }
 
-    public boolean checkUserExists(String username) {
-        File f = new File("files/" + username + ".txt");
+    public boolean checkUserExists(String username1) {
+        File f = new File("files/" + username1 + ".txt");
         return f.exists();
     }
 }

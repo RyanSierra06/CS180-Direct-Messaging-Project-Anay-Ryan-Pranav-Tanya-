@@ -6,9 +6,8 @@ import org.junit.runner.Result;
 import org.junit.runner.RunWith;
 import org.junit.runner.notification.Failure;
 
-
 /**
- * HW-09 -- UserTestCases
+ * A framework to run UserTestCases
  *
  * This is the User Test Cases 
  *
@@ -17,8 +16,6 @@ import org.junit.runner.notification.Failure;
  * @version Nov 3, 2024
  *
  */
-
-@RunWith(Enclosed.class)
 public class UserTestCases {
 
     public static void main(String[] args) {
@@ -32,6 +29,16 @@ public class UserTestCases {
         }
     }
 
+    /**
+    * A set of public test cases to run
+    *
+    * This is the User Test Cases 
+    *
+    * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
+    *
+    * @version Nov 3, 2024
+    *
+    */
     public static class TestCase {
         @Test(timeout = 1000)
         public void programTestCase() {

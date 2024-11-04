@@ -1,5 +1,5 @@
 /**
- * HW-09 -- UserInterface
+ * Group PJ -- UserInterface
  *
  * This is the User interface
  *
