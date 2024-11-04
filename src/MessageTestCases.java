@@ -30,8 +30,6 @@ public class MessageTestCases {
     }
 
     public static class MessageTestCases {
-        System.out.println("testing Message class: ");
-        
         @Test(timeout = 1000)
         // test for ability to create message object with correctly set text and type
         public void testCreateTextMessage () {
