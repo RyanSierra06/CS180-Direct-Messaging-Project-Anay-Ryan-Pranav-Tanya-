@@ -10,8 +10,12 @@
  */
 
 public class ApplicationServer implements ApplicationServerInterface {
-   //need interface
+   //need to make ApplicationServerInterface
    //information stored on server side
    //information accessed via network IO using the client
+
+   //insert variables here
+
+   //insert methods here
    
 }
