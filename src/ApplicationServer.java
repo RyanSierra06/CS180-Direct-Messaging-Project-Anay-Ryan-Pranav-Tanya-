@@ -1,3 +1,6 @@
+import java.io.*;
+import java.net.*;
+
 /**
  * Group PJ -- Application Server
  *
@@ -10,12 +13,13 @@
  */
 
 public class ApplicationServer implements ApplicationServerInterface {
-   //need to make ApplicationServerInterface
-   //information stored on server side
-   //information accessed via network IO using the client
+   // need to make ApplicationServerInterface
+   // information stored on server side
+   // information accessed via network IO using the client
 
-   //insert variables here
-
-   //insert methods here
-   
+   public static void main(String[] args) throws IOException {
+      // insert variables here
+      
+      // insert methods here
+   }   
 }
