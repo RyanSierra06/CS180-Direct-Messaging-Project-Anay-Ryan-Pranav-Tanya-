@@ -217,7 +217,8 @@ public class Application extends ApplicationInterface {
                         actionsAfterLogin(currentUser)
                     }
                     else{
-                        System.out.println("Invalid Password!")
+                        System.out.println("Invalid Password" +
+                                "!")
                     }
                 } else {
                     System.out.println("Sorry User does not exist!")
