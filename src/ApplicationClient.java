@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class ApplicationC extends ApplicationInterface {
+public class Application extends ApplicationInterface {
     private static final Object gateKeep;
 
     private synchronized void actionsAfterLogin(User currentUser) {
@@ -217,8 +217,7 @@ public class ApplicationC extends ApplicationInterface {
                         actionsAfterLogin(currentUser)
                     }
                     else{
-                        System.out.println("Invalid Password" +
-                                "!")
+                        System.out.println("Invalid Password!")
                     }
                 } else {
                     System.out.println("Sorry User does not exist!")

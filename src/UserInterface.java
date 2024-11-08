@@ -1,24 +1,56 @@
+/**
+ * Group PJ -- UserInterface
+ *
+ * This is the User interface
+ *
+ * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
+ *
+ * @version Nov 3, 2024
+ *
+ */
+
 public interface UserInterface {
     void createUser(String username, String password);
+
     void setName(String name);
+
     String getName();
+
     String getPassword();
+
     String getUsername();
+
     void setProfileDescription(String profileDescription);
+
     String getProfileDescription();
+
     void setProfilePicture(String setProfilePicture);
+
     String getProfilePicture();
-    boolean canReceiveAnyone();
+
+    boolean getReceiveAnyone();
+
     void setReceiveAnyone(boolean receiveAnyone);
+
     boolean canReceiveFrom(String senderUsername);
-    void sendMessage(Message message, String receiver);
-    void blockUser(String blockUser);
-    void deleteMessage(String receiver, Message message);
+
+    boolean sendMessage(Message message, String receiver);
+
+    boolean blockUser(String blockUser);
+
+    boolean deleteMessage(String receiver, Message message);
+
     String getBlockedUsers();
+
     String getFriends();
-    void unblockUser(String previouslyBlockedUser);
+
+    boolean unblockUser(String previouslyBlockedUser);
+
     String readMessages(String reciver);
+
     String findUser(String username);
-    void addFriend(String newFriend);
-    void removeFriend(String oldFriend);
+
+    boolean addFriend(String newFriend);
+
+    boolean removeFriend(String oldFriend);
 }
