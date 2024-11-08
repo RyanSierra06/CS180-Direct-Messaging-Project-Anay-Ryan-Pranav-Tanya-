@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class Application extends ApplicationInterface {
+public class ApplicationC extends ApplicationInterface {
     private static final Object gateKeep;
 
     private synchronized void actionsAfterLogin(User currentUser) {
