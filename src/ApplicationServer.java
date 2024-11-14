@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.util.HashMap;
 
 /**
  * Group PJ -- Application Server
@@ -8,35 +9,62 @@ import java.net.*;
  *
  * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
  *
- * @version Nov 8, 2024
+ * @version Nov 14, 2024
  *
  */
 
 public class ApplicationServer implements ApplicationServerInterface {
-   // information stored on server side
-   // information accessed via network IO using the client
+   private static HashMap<String, User> userProfiles = new HashMap<>();
+   private static final Object gateKeep = new Object();
 
    public static void main(String[] args) throws IOException {
-      ServerSocket serverSocket = new ServerSocket(4242);
-      System.out.println("waiting for client to connect");
-      Socket socket = serverSocket.accept();
-      System.out.println("client connected");
+      ServerSocket serverSocket = new ServerSocket(4242); //need a universal port number - using 4242 for now
+      
+      while (true) {
+         Socket socket = serverSocket.accept();
+         System.out.println("Client connected.");
 
-      BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-      PrintWriter writer = new PrintWriter(socket.getOutputStream());
+         new ClientHandler(socket).start();
+      }
+   }
 
-      String message = reader.readLine();
-      System.out.printf("received from client:\n%s\n", message);
+   private static class ClientHandler extends Thread {
+      private Socket socket;
 
-      String response = message.replaceAll(" ", ",");
-      writer.write(response);
-      writer.println();
-      writer.flush();
-      System.out.printf("sent to client:\n%s\n", response);
+      public ClientHandler(Socket socket) {
+         this.socket = socket;
+      }
 
-      writer.close();
-      reader.close();
-      socket.close();
-      serverSocket.close();
-   }   
+      @Override
+      public void run() {
+         try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
+
+            String username = reader.readLine();
+            String actionCode = reader.readLine();
+
+            System.out.printf("received from client: username: %s, action: %s\n", username, actionCode);
+            
+            String response;
+            synchronized (gateKeep) {
+               User user = userProfiles.get(username);
+               if (user == null) {
+                  user = new User(username, "defaultPass"); // In real app, password would be handled securely
+                  userProfiles.put(username, user);
+               }
+               response = handleAction(actionCode, user, reader);
+            }
+
+            writer.println(response);
+            System.out.printf("sent to client: %s\n", response);
+
+            reader.close();
+            writer.close();
+            socket.close();
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+      }
+   }
 }
