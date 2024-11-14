@@ -1,5 +1,5 @@
 /**
- * HW-09 -- ApplicationInterface
+ * Project 4 -- ApplicationInterface
  *
  * This is the ApplicationInterface interface
  *
