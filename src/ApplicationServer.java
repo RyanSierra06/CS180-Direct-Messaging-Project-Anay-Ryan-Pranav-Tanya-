@@ -22,7 +22,7 @@ public class ApplicationServer implements ApplicationServerInterface {
       
       while (true) {
          Socket socket = serverSocket.accept();
-         System.out.println("Client connected.");
+         System.out.println("client connected");
 
          new ClientHandler(socket).start();
       }
