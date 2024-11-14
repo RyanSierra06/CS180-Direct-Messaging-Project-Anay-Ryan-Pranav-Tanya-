@@ -50,7 +50,7 @@ public class ApplicationServer implements ApplicationServerInterface {
             synchronized (gateKeep) {
                User user = userProfiles.get(username);
                if (user == null) {
-                  user = new User(username, "defaultPass"); // In real app, password would be handled securely
+                  user = new User(username, "defaultPass");
                   userProfiles.put(username, user);
                }
                response = handleAction(actionCode, user, reader);
