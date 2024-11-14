@@ -1,9 +1,13 @@
+import java.io.*;
+import java.net.*;
 import java.util.Scanner;
 
-public class Application extends ApplicationInterface {
-    private static final Object gateKeep;
 
-    private synchronized void actionsAfterLogin(User currentUser) {
+public class ApplicationClient implements ApplicationInterface {
+    private static final Object gateKeep = new Object();
+
+
+    private static synchronized void actionsAfterLogin(User currentUser, Scanner sc) {
         boolean exit = false;
         while (!exit) {
             System.out.println("\nUser Actions Menu:");
@@ -56,9 +60,11 @@ public class Application extends ApplicationInterface {
                 case "5" -> {
                     System.out.print("Enter receiver username: ");
                     String receiver = sc.nextLine();
+                    System.out.print("Enter message type content (Image/Text): ");
+                    String type = sc.nextLine();
                     System.out.print("Enter message content: ");
                     String content = sc.nextLine();
-                    Message message = new Message(content);
+                    Message message = new Message(currentUser, type, content);
                     currentUser.sendMessage(message, receiver);
                     System.out.println("Message sent to " + receiver);
                 }
@@ -115,14 +121,14 @@ public class Application extends ApplicationInterface {
         }
     }
 
-    private User createUserMain() {
+    private static User createUserMain(Scanner sc) {
         //SETTING THE USERNAME
         String user = "";
         boolean validUser = false;
         do {
             System.out.println("Enter the username without '-' (also it can't be empty): ");
             user = sc.nextLine().trim();
-            if (user.contains("-") {
+            if (user.contains("-")) {
                 System.out.println("Username contains '-'. Try again!");
                 validUser = false;
             }
@@ -130,8 +136,8 @@ public class Application extends ApplicationInterface {
                 System.out.println("Empty username! Try again!");
                 validUser = false;
             } else {
-                File f = new File("files/"user + ".txt");
-                if (f.exists) {
+                File f = new File("files/"+user + ".txt");
+                if (f.exists()) {
                     System.out.println("Username already exists! Try again!");
                     validUser = false;
                 } else {
@@ -147,7 +153,7 @@ public class Application extends ApplicationInterface {
         do {
             System.out.println("Enter the password without '-' (also it can't be empty): ");
             pass = sc.nextLine().trim();
-            if (pass.contains("-") {
+            if (pass.contains("-")) {
                 System.out.println("Password contains '-'. Try again!");
                 validPass = false;
             } else if (pass.length() == 0) {
@@ -163,80 +169,83 @@ public class Application extends ApplicationInterface {
 
         synchronized (gateKeep) {
             try {
-                User newUser = new User(user, pass);
+                newUser = new User(user, pass);
             } catch (java.lang.Exception e) {
                 e.printStackTrace();
             }
         }
 
-        return newUser
+        return newUser;
     }
 
 
-    public static void main(String args[]) {
+    public static void main(String args[]) throws IOException {
+
         Scanner sc = new Scanner(System.in);
+        Socket socket = null;
         System.out.println("Welcome to the Social Media Application (Phase 1)");
 
         String userMenu = "User Menu";
         String CHOICE_1 = "1. CREATE A NEW ACCOUNT";
         String CHOICE_2 = "2. LOGIN WITH EXISTING ACCOUNT";
-        String CHOICE_3 = "3. EXIT"
+        String CHOICE_3 = "3. EXIT";
 
         String choice = "";
 
         boolean validChoice = false;
         do {
-            System.out.print(userMenu);
+            System.out.println(userMenu);
             System.out.println(CHOICE_1);
             System.out.println(CHOICE_2);
+            System.out.println(CHOICE_3);
             choice = sc.nextLine();
             if (!"123".contains(choice) || choice.length() != 1) {
                 validChoice = false;
             } else {
                 validChoice = true;
             }
-        } while (!validChoice)
+        } while (!validChoice);
 
         switch (choice) {
             case "1" -> {
-                User newUser = createUserMain();
+                User newUser = createUserMain(sc);
                 System.out.println("Created Login!");
                 break;
             }
 
             case "2" -> {
                 System.out.println("Enter the username: ");
-                user = sc.nextLine().trim();
+                String user = sc.nextLine().trim();
                 System.out.println("Enter the password: ");
-                pass = sc.nextLine().trim();
+                String pass = sc.nextLine().trim();
 
-                File f = new File("files/" + user + ".txt")
+                File f = new File("files/" + user + ".txt");
                 if (f.exists()) {
                     User currentUser = new User(user, pass);
-                    if (User.getPassword().equals(pass)) {
-                        actionsAfterLogin(currentUser)
+                    if (currentUser.getPassword().equals(pass)) {
+                        actionsAfterLogin(currentUser, sc);
                     }
                     else{
-                        System.out.println("Invalid Password!")
+                        System.out.println("Invalid Password!");
                     }
                 } else {
-                    System.out.println("Sorry User does not exist!")
+                    System.out.println("Sorry User does not exist!");
                 }
 
                 break;
             }
 
             case "3" -> {
-                System.out.println("Exiting the Menu!")
+                System.out.println("Exiting the Menu!");
             }
 
-            case default -> {
+            default -> {
                 System.out.println("Invalid Input!");
             }
 
         }
 
-        System.out.println("Thank you for using The Social Media Application (Phase 1)!");
+        System.out.println("Thank you for using The Social Media Application (Phase 2)!");
     }
 
 
