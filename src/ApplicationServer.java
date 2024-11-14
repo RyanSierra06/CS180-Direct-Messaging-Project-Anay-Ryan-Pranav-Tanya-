@@ -13,16 +13,10 @@ import java.net.*;
 public class ApplicationServer implements ApplicationServerInterface {
    
    public static void main(String[] args) throws IOException {
-      ServerSocket serverSocket = new ServerSocket(4242); // Universal port number set to 4242
-      
-      System.out.println("Server started and waiting for clients...");
+      ServerSocket serverSocket = new ServerSocket(4242); // needs universal port number - set to 4242 for now
       
       while (true) {
-         // Accept incoming client connections
          Socket socket = serverSocket.accept();
-         System.out.println("Client connected.");
-
-         // Start a new thread for each client
          new Thread(() -> handleClient(socket)).start();
       }
    }
@@ -35,35 +29,32 @@ public class ApplicationServer implements ApplicationServerInterface {
          String username = reader.readLine();
          String actionCode = reader.readLine();
 
-         System.out.printf("Received from client: username: %s, action: %s\n", username, actionCode);
+         System.out.printf("recieved from client: username: %s, action: %s\n", username, actionCode);
 
-         // Process the action and generate a response
          String response = handleAction(actionCode, username);
 
-         writer.println(response); // Send response back to client
-         System.out.printf("Sent to client: %s\n", response);
+         writer.println(response); 
+         System.out.printf("sent to client: %s\n", response);
          
       } catch (IOException e) {
-         System.err.println("Error handling client: " + e.getMessage());
+         System.err.println("error handling client: " + e.getMessage());
          e.printStackTrace();
       } finally {
          try {
             socket.close();
          } catch (IOException e) {
-            System.err.println("Error closing socket: " + e.getMessage());
+            System.err.println("error closing socket: " + e.getMessage());
          }
       }
    }
 
-   // A placeholder method that processes actions based on actionCode and username
    private static String handleAction(String actionCode, String username) {
-      // Example response generation based on actionCode
       if ("VIEW_PROFILE".equals(actionCode)) {
-         return "Profile for " + username;
+         return "profile for " + username;
       } else if ("UPDATE_PROFILE".equals(actionCode)) {
-         return "Profile updated for " + username;
+         return "profile updated for " + username;
       } else {
-         return "Unknown action";
+         return "unknown action";
       }
    }
 }
