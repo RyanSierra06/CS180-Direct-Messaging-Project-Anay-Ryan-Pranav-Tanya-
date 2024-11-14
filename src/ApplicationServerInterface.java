@@ -1,3 +1,6 @@
+import java.io.*;
+import java.net.*;
+
 /**
  * Project 4 -- ApplicationInterface
  *
@@ -10,4 +13,8 @@
  */
 
 public interface ApplicationServerInterface {
+    void main(String[] args) throws IOException;
+    void handleClient(Socket socket);
+    String handleAction(String actionCode, String username);
 }
+
