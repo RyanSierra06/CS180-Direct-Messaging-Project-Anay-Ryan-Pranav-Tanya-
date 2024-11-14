@@ -18,10 +18,12 @@ public class ApplicationServer implements ApplicationServerInterface {
       System.out.println("Server started and waiting for clients...");
       
       while (true) {
+         // Accept incoming client connections
          Socket socket = serverSocket.accept();
          System.out.println("Client connected.");
 
-         new ClientHandler(socket).start();
+         // Start a new thread for each client
+         new Thread(() -> handleClient(socket)).start();
       }
    }
 
@@ -35,7 +37,7 @@ public class ApplicationServer implements ApplicationServerInterface {
 
          System.out.printf("Received from client: username: %s, action: %s\n", username, actionCode);
 
-
+         // Process the action and generate a response
          String response = handleAction(actionCode, username);
 
          writer.println(response); // Send response back to client
@@ -53,7 +55,7 @@ public class ApplicationServer implements ApplicationServerInterface {
       }
    }
 
-   
+   // A placeholder method that processes actions based on actionCode and username
    private static String handleAction(String actionCode, String username) {
       // Example response generation based on actionCode
       if ("VIEW_PROFILE".equals(actionCode)) {
