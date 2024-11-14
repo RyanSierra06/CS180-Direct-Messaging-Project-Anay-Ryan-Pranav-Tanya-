@@ -13,7 +13,6 @@ import java.net.*;
  */
 
 public class ApplicationServer implements ApplicationServerInterface {
-   // need to make ApplicationServerInterface
    // information stored on server side
    // information accessed via network IO using the client
 
