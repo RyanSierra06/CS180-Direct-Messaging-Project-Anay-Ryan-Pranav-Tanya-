@@ -215,7 +215,7 @@ public class ApplicationClient implements ApplicationInterface {
 
         switch (choice) {
             case "1" -> {
-                User newUser = createUserMain(sc, writer, reader);
+                User newUser = createUserMain(sc);
                 System.out.println("Created Login!");
             }
             case "2" -> {
@@ -226,10 +226,9 @@ public class ApplicationClient implements ApplicationInterface {
 
                 File f = new File("files/" + user + ".txt");
                 if (f.exists()) {
-                    //user is now changed to when an invalid password is made that the user variable for username password is null
                     User currentUser = new User(user, pass);
                     if (currentUser.getPassword().equals(pass)) {
-                        actionsAfterLogin(currentUser, sc, writer, reader);
+                        actionsAfterLogin(currentUser, sc);
                     }
                     else{
                         System.out.println("Invalid Password!");
@@ -246,12 +245,9 @@ public class ApplicationClient implements ApplicationInterface {
             default -> {
                 System.out.println("Invalid Input!");
             }
+         }  //end of switch   
+
             System.out.println("Thank you for using The Social Media Application (Phase 2)!");
 
         }
-
-        System.out.println("Thank you for using The Social Media Application (Phase 2)!");
-    }
-
-
 }
