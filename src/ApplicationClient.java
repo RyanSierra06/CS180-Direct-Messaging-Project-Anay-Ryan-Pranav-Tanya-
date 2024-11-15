@@ -86,7 +86,7 @@ public class ApplicationClient implements ApplicationInterface {
 
                 case "7" -> {
                     //check if the method returns true of false and let the user know
-                    //if the person is already blocked or if they successfully blocked 
+                    //if the person is already blocked or if they successfully blocked
                     System.out.print("Enter username to unblock: ");
                     String unblockUser = sc.nextLine();
                     currentUser.unblockUser(unblockUser);
