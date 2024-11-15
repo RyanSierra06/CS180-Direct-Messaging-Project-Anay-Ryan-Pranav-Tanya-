@@ -2,12 +2,10 @@ import java.io.*;
 import java.net.*;
 import java.util.Scanner;
 
-
 public class ApplicationClient implements ApplicationInterface {
-    private static final Object gateKeep = new Object();
+    private static final int SERVER_PORT = 4242;
 
-
-    private static synchronized void actionsAfterLogin(User currentUser, Scanner sc) {
+    private static void actionsAfterLogin(User currentUser, Scanner sc, PrintWriter writer, BufferedReader reader) {
         boolean exit = false;
         while (!exit) {
             //Maybe change the scanner to not pass to the method and instead make a new one
@@ -16,54 +14,44 @@ public class ApplicationClient implements ApplicationInterface {
             System.out.println("2. Set Profile Description");
             System.out.println("3. Set Profile Picture");
             System.out.println("4. View Profile Information");
-            System.out.println("5. Send Message");
-            System.out.println("6. Block User");
-            System.out.println("7. Unblock User");
-            System.out.println("8. View Blocked Users");
-            System.out.println("9. Add Friend");
-            System.out.println("10. Remove Friend");
-            System.out.println("11. View Friends");
-            System.out.println("12. Read Messages");
-            System.out.println("13. Log Out");
+            System.out.println("5. Log Out");
 
-            System.out.print("Choose an action (1-13): ");
+            System.out.print("Choose an action (1-5): ");
             String action = sc.nextLine().trim();
 
-            switch (action) {
-                case "1" -> {
-                    System.out.print("Enter new name: ");
-                    String name = sc.nextLine();
-                    currentUser.setName(name);
-                    System.out.println("Name updated successfully.");
-                }
+            try {
+                switch (action) {
+                    case "1" -> {
+                        System.out.print("Enter new name: ");
+                        String name = sc.nextLine();
+                        writer.println("SET_NAME");
+                        writer.println(name);
+                        System.out.println("Name updated successfully.");
+                    }
 
-                case "2" -> {
-                    System.out.print("Enter profile description: ");
-                    String description = sc.nextLine();
-                    currentUser.setProfileDescription(description);
-                    System.out.println("Profile description updated.");
+                    case "2" -> {
+                        System.out.print("Enter profile description: ");
+                        String description = sc.nextLine();
+                        writer.println("SET_DESCRIPTION");
+                        writer.println(description);
+                        System.out.println("Profile description updated.");
+                    }
 
-                }
+                    case "3" -> {
+                        System.out.print("Enter profile picture URL: ");
+                        String picture = sc.nextLine();
+                        writer.println("SET_PICTURE");
+                        writer.println(picture);
+                        System.out.println("Profile picture updated.");
+                    }
 
-                case "3" -> {
-                    System.out.print("Enter profile picture URL: ");
-                    String picture = sc.nextLine();
-                    currentUser.setProfilePicture(picture);
-                    System.out.println("Profile picture updated.");
-                }
-
-                case "4" -> {
-                    System.out.println("Name: " + currentUser.getName());
-                    System.out.println("Profile Description: " + currentUser.getProfileDescription());
-                    System.out.println("Profile Picture: " + currentUser.getProfilePicture());
-                }
+                    case "4" -> {
+                        writer.println("VIEW_PROFILE");
+                        System.out.println("Profile Information:");
+                        System.out.println(reader.readLine());
+                    }
 
                 case "5" -> {
-                    //synchronize the sending of the message
-                    //check to see if the user is blocked first
-                    //display the actual message (you already do this later, but maybe there's a way
-                    //to show the message history as it happens instead of calling for it
-                    //block user mid send
                     System.out.print("Enter receiver username: ");
                     String receiver = sc.nextLine();
                     System.out.print("Enter message type content (Image/Text): ");
@@ -76,8 +64,6 @@ public class ApplicationClient implements ApplicationInterface {
                 }
 
                 case "6" -> {
-                    //check if the method returns true of false and let the user know
-                    //if the person is already blocked or if they successfully blocked
                     System.out.print("Enter username to block: ");
                     String blockUser = sc.nextLine();
                     currentUser.blockUser(blockUser);
@@ -85,8 +71,6 @@ public class ApplicationClient implements ApplicationInterface {
                 }
 
                 case "7" -> {
-                    //check if the method returns true of false and let the user know
-                    //if the person is already blocked or if they successfully blocked
                     System.out.print("Enter username to unblock: ");
                     String unblockUser = sc.nextLine();
                     currentUser.unblockUser(unblockUser);
@@ -98,7 +82,6 @@ public class ApplicationClient implements ApplicationInterface {
                 }
 
                 case "9" -> {
-                    //Same comments as for the block and unblock user
                     System.out.print("Enter username to add as friend: ");
                     String newFriend = sc.nextLine();
                     currentUser.addFriend(newFriend);
@@ -106,7 +89,6 @@ public class ApplicationClient implements ApplicationInterface {
                 }
 
                 case "10" -> {
-                    //Same comments as for the block and unblock user
                     System.out.print("Enter username to remove from friends: ");
                     String oldFriend = sc.nextLine();
                     currentUser.removeFriend(oldFriend);
@@ -128,26 +110,34 @@ public class ApplicationClient implements ApplicationInterface {
                     exit = true;
                 }
 
-                default -> System.out.println("Invalid option. Please try again.");
+                    default -> System.out.println("Invalid option. Please try again.");
+                }
+            } catch (IOException e) {
+                System.out.println("Error communicating with server: " + e.getMessage());
             }
         }
     }
 
-    private static User createUserMain(Scanner sc) {
-        //SETTING THE USERNAME
+    private static User createUserMain(Scanner sc, PrintWriter writer, BufferedReader reader) throws IOException {
         String user = "";
-        boolean validUser = false;
+        String pass = "";
+        boolean validUser;
+
         do {
-            System.out.println("Enter the username without '-' (also it can't be empty): ");
+            System.out.print("Enter username (no '-' allowed, cannot be empty): ");
             user = sc.nextLine().trim();
             if (user.contains("-")) {
                 System.out.println("Username contains '-'. Try again!");
-            } else if (user.isEmpty()) {
+                validUser = false;
+            }
+                    else if (user.length() == 0) {
                 System.out.println("Empty username! Try again!");
+                validUser = false;
             } else {
-                File f = new File("files/"+ user + ".txt");
+                File f = new File("files/"+user + ".txt");
                 if (f.exists()) {
                     System.out.println("Username already exists! Try again!");
+                    validUser = false;
                 } else {
                     validUser = true;
                 }
@@ -155,17 +145,15 @@ public class ApplicationClient implements ApplicationInterface {
 
         } while (!validUser);
 
-        //SETTING THE PASSWORD
-        String pass = "";
-        boolean validPass = false;
         do {
-            System.out.println("Enter the password without '-' (also it can't be empty): ");
+            System.out.print("Enter password (no '-' allowed, cannot be empty): ");
             pass = sc.nextLine().trim();
             if (pass.contains("-")) {
                 System.out.println("Password contains '-'. Try again!");
-            } else if (pass.isEmpty()) {
+                validPass = false;
+            } else if (pass.length() == 0) {
                 System.out.println("Empty password! Try again!");
-
+                validPass = false;
             } else {
                 validPass = true;
             }
@@ -177,7 +165,7 @@ public class ApplicationClient implements ApplicationInterface {
         synchronized (gateKeep) {
             try {
                 newUser = new User(user, pass);
-            } catch (Exception e) {
+            } catch (java.lang.Exception e) {
                 e.printStackTrace();
             }
         }
@@ -186,11 +174,13 @@ public class ApplicationClient implements ApplicationInterface {
     }
 
 
-    public static void main(String args[]) throws IOException {
+    public static void main(String[] args) {
+        try (Scanner sc = new Scanner(System.in);
+             Socket socket = new Socket("localhost", SERVER_PORT);
+             PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
+             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
 
-        Scanner sc = new Scanner(System.in);
-        Socket socket = null;
-        System.out.println("Welcome to the Social Media Application (Phase 1)");
+            System.out.println("Welcome to the Social Media Application (Phase 1)");
 
         String userMenu = "User Menu";
         String CHOICE_1 = "1. CREATE A NEW ACCOUNT";
@@ -206,7 +196,9 @@ public class ApplicationClient implements ApplicationInterface {
             System.out.println(CHOICE_2);
             System.out.println(CHOICE_3);
             choice = sc.nextLine();
-            if ("123".contains(choice) || choice.length() == 1) {
+            if (!"123".contains(choice) || choice.length() != 1) {
+                validChoice = false;
+            } else {
                 validChoice = true;
             }
         } while (!validChoice);
@@ -215,7 +207,9 @@ public class ApplicationClient implements ApplicationInterface {
             case "1" -> {
                 User newUser = createUserMain(sc);
                 System.out.println("Created Login!");
+                break;
             }
+
             case "2" -> {
                 System.out.println("Enter the username: ");
                 String user = sc.nextLine().trim();
@@ -234,6 +228,8 @@ public class ApplicationClient implements ApplicationInterface {
                 } else {
                     System.out.println("Sorry User does not exist!");
                 }
+
+                break;
             }
 
             case "3" -> {
@@ -243,11 +239,10 @@ public class ApplicationClient implements ApplicationInterface {
             default -> {
                 System.out.println("Invalid Input!");
             }
+            System.out.println("Thank you for using The Social Media Application (Phase 2)!");
 
+        } catch (IOException e) {
+            System.err.println("Error connecting to server: " + e.getMessage());
         }
-
-        System.out.println("Thank you for using The Social Media Application (Phase 2)!");
     }
-
-
 }
