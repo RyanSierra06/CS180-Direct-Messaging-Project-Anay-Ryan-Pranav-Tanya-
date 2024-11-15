@@ -13,11 +13,22 @@ import java.net.*;
 public class ApplicationServer implements ApplicationServerInterface, Runnable {
    
    public static void main(String[] args) throws IOException {
-      ServerSocket serverSocket = new ServerSocket(4242); // need universal port number - set to 4242 for now
-      
-      while (true) {
-         Socket socket = serverSocket.accept();
-         new Thread(() -> handleClient(socket)).start();
+      ApplicationServer server = new ApplicationServer();
+      server.run();
+   }
+   
+   @Override
+   public void run() {
+      try {
+         ServerSocket serverSocket = new ServerSocket(4242); // need universal port number - set to 4242 for now
+         
+         while (true) {
+            Socket socket = serverSocket.accept();
+            new Thread(() -> handleClient(socket)).start(); // new thread for each client
+         }
+      } catch (IOException e) {
+         System.err.println("server error: " + e.getMessage());
+         e.printStackTrace();
       }
    }
 
