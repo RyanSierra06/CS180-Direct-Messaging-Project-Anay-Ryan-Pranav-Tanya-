@@ -1,3 +1,6 @@
+import java.io.*;
+import java.net.*;
+
 /**
  * Project 4 -- ApplicationInterface
  *
@@ -10,4 +13,7 @@
  */
 
 public interface ApplicationServerInterface {
+    static void handleClient(Socket socket){};
+    static String handleAction(String actionCode, String username){ return "";};
 }
+
