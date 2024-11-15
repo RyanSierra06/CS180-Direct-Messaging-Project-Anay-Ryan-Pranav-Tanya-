@@ -13,16 +13,10 @@ import java.net.*;
 public class ApplicationServer implements ApplicationServerInterface {
    
    public static void main(String[] args) throws IOException {
-      ServerSocket serverSocket = new ServerSocket(4242); // Universal port number set to 4242
-      
-      System.out.println("Server started and waiting for clients...");
+      ServerSocket serverSocket = new ServerSocket(4242); // need universal port number - set to 4242 for now
       
       while (true) {
-         // Accept incoming client connections
          Socket socket = serverSocket.accept();
-         System.out.println("Client connected.");
-
-         // Start a new thread for each client
          new Thread(() -> handleClient(socket)).start();
       }
    }
@@ -36,8 +30,6 @@ public class ApplicationServer implements ApplicationServerInterface {
          String actionCode = reader.readLine();
 
          System.out.printf("recieved from client: username: %s, action: %s\n", username, actionCode);
-
-         // Process the action and generate a response
          String response = handleAction(actionCode, username);
 
          writer.println(response);
@@ -55,7 +47,6 @@ public class ApplicationServer implements ApplicationServerInterface {
       }
    }
 
-   // A placeholder method that processes actions based on actionCode and username
    private static String handleAction(String actionCode, String username) {
       if ("VIEW_PROFILE".equals(actionCode)) {
          return "profile for " + username;
