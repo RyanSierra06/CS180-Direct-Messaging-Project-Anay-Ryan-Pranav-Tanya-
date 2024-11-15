@@ -72,11 +72,11 @@ public class ApplicationClient implements ApplicationInterface {
                     String content = sc.nextLine();
                     Message message = new Message(currentUser, type, content);
                     if(currentUser.isBlocked(currentUser.getUsername(), receiver)){
-                        System.out.println("You have blocked this user. Failed to send message.");
+                        System.out.println("Block Error: Failed to send message.");
                         break;
                     }
                     else if (currentUser.isBlocked(receiver, currentUser.getUsername())){
-                        System.out.println("You are blocked by this user. Failed to send message.");
+                        System.out.println("Block Error: Failed to send message.");
                         break;
                     }
                     else{
