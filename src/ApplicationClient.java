@@ -7,7 +7,7 @@ public class ApplicationClient implements ApplicationInterface {
     private static final int SERVER_PORT = 4242;
     private static final Object gateKeep = new Object();
 
-    private static synchronized void actionsAfterLogin(User currentUser, Scanner sc) {
+    private void actionsAfterLogin(User currentUser, Scanner sc) {
         boolean exit = false;
         while (!exit) {
             //Maybe change the scanner to not pass to the method and instead make a new one
@@ -59,63 +59,38 @@ public class ApplicationClient implements ApplicationInterface {
                 }
 
                 case "5" -> {
+                    //TODO
                     //synchronize the sending of the message
                     //check to see if the user is blocked first
                     //display the actual message (you already do this later, but maybe there's a way
                     //to show the message history as it happens instead of calling for it
-                    //block user mid send
                     System.out.print("Enter receiver username: ");
                     String receiver = sc.nextLine();
-                    System.out.print("Enter message type content (Image/Text): ");
-                    String type = sc.nextLine();
-                    System.out.print("Enter message content: ");
-                    String content = sc.nextLine();
-                    Message message = new Message(currentUser, type, content);
-                    
-                    String messageHistory = currentUser.readMessages(receiver);
-                    String messages[] = messageHistory.split("\n");
-
-                    //Finding the last message sent by the user, going in the reverse order
-                    int lastUserMessageIndex = -1;
-                    for (int i = messages.length - 1; i >= 0; i--) {
-                        if (messages[i].startsWith(currentUser.getUsername() + "-")) {
-                            lastUserMessageIndex = i;
-                            break;
-                        }
-                    }
-
-                    // Extract messages sent by the receiver after the last user's message
-                    StringBuilder recentMessages = new StringBuilder();
-                    if (lastUserMessageIndex != -1) {
-                        for (int i = lastUserMessageIndex + 1; i < messages.length; i++) {
-                            if (messages[i].startsWith(receiver + "-")) {
-                                recentMessages.append(messages[i]).append("\n");
-                            }
-                        }
-                    }   
-                    
-
-                    if (recentMessages.length() > 0) {
-                        System.out.println("New messages from " + receiver + ":\n" + recentMessages);
-                    } else {
-                        System.out.println("No new messages from " + receiver + ".");
-                    }
-                        
-
-
                     if(currentUser.isBlocked(currentUser.getUsername(), receiver)){
                         System.out.println("Block Error: Failed to send message.");
                     }
-                    else if (currentUser.isBlocked(receiver, currentUser.getUsername())){
-                        System.out.println("Block Error: Failed to send message.");
-                    }
-                    else{
+                    boolean goAgain = false;
+                    do {
+                        System.out.print("Enter message type content (Image/Text): ");
+                        String type = sc.nextLine();
+                        System.out.print("Enter message content: ");
+                        String content = sc.nextLine();
+                        Message message = new Message(currentUser, type, content);
+
                         synchronized (gateKeep) {
                             currentUser.sendMessage(message, receiver);
                             System.out.println("Message sent to " + receiver);
                         }
-                    }
+                        while(currentUser.findMostRecentMessages(receiver).isEmpty()) {
+                            currentUser.findMostRecentMessages(receiver);
+                        }
+                        System.out.println(currentUser.findMostRecentMessages(receiver));
 
+                        //change this line to just check for when the user types "exit" and then exit the messages
+                        //when they re-enter to display the full message history again
+                        System.out.println("Do you want to keep messaging?");
+                        goAgain = sc.nextLine().equalsIgnoreCase("yes");
+                    } while (goAgain);
                 }
 
                 case "6" -> {
@@ -226,9 +201,13 @@ public class ApplicationClient implements ApplicationInterface {
 
 
     public static void main(String args[]) throws IOException {
-
+        //TODO
+        //make a new instance of Applicaiton client
+        //fix the case 5 to continuiously show the message history as it happens
+        //make sure that this actually connects to the server (the socket currently doesnt do anything)
+        //just make sure you can have two clinets communicate with eachother simultaneously
+        //the files arent also being created in some instances
         Scanner sc = new Scanner(System.in);
-        Socket socket = null;
         System.out.println("Welcome to the Social Media Application (Phase 1)");
 
         String userMenu = "User Menu";
@@ -238,6 +217,10 @@ public class ApplicationClient implements ApplicationInterface {
 
         String choice = "";
 
+        try(Socket socket = new Socket("localhost", 4242)) {
+
+        }
+
         boolean validChoice = false;
         do {
             System.out.println(userMenu);
@@ -245,7 +228,7 @@ public class ApplicationClient implements ApplicationInterface {
             System.out.println(CHOICE_2);
             System.out.println(CHOICE_3);
             choice = sc.nextLine();
-            if ("123".contains(choice) || choice.length() == 1) {
+            if ("123".contains(choice)) {
                 validChoice = true;
             }
         } while (!validChoice);

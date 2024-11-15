@@ -502,6 +502,22 @@ public class User implements UserInterface {
         return sb.toString();
     }
 
+    public String findMostRecentMessages(String otherUsername) {
+        String messageHistory = readMessages(otherUsername);
+        String[] messages = messageHistory.split("\n");
+        StringBuilder result = new StringBuilder();
+        for(int i = messages.length - 1; i >= 0; i--) {
+            if(messages[i].startsWith(this.username) || i == 0) {
+                for(int j = i; j < messages.length; j++) {
+                    result.append(messages[j]).append("\n");
+                }
+            }
+        }
+
+        return result.toString();
+    }
+
+
     public String findUser(String username1) {
         File f = new File("files/" + username1 + ".txt");
         if (f.exists()) {
