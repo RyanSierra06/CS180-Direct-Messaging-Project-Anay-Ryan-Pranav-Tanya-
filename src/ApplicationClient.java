@@ -226,6 +226,7 @@ public class ApplicationClient implements ApplicationInterface {
 
                 File f = new File("files/" + user + ".txt");
                 if (f.exists()) {
+                    //user is now changed to when an invalid password is made that the user variable for username password is null
                     User currentUser = new User(user, pass);
                     if (currentUser.getPassword().equals(pass)) {
                         actionsAfterLogin(currentUser, sc, writer, reader);
