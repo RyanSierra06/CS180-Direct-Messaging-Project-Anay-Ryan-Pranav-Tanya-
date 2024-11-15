@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 public class ApplicationClient implements ApplicationInterface {
     private static final int SERVER_PORT = 4242;
+    private static final Object gateKeep = new Object();
 
     private static void actionsAfterLogin(User currentUser, Scanner sc, PrintWriter writer, BufferedReader reader) {
         boolean exit = false;
@@ -122,6 +123,7 @@ public class ApplicationClient implements ApplicationInterface {
         String user = "";
         String pass = "";
         boolean validUser;
+        boolean validPass;
 
         do {
             System.out.print("Enter username (no '-' allowed, cannot be empty): ");
@@ -205,7 +207,7 @@ public class ApplicationClient implements ApplicationInterface {
 
         switch (choice) {
             case "1" -> {
-                User newUser = createUserMain(sc);
+                User newUser = createUserMain(sc, writer, reader);
                 System.out.println("Created Login!");
                 break;
             }
@@ -220,7 +222,7 @@ public class ApplicationClient implements ApplicationInterface {
                 if (f.exists()) {
                     User currentUser = new User(user, pass);
                     if (currentUser.getPassword().equals(pass)) {
-                        actionsAfterLogin(currentUser, sc);
+                        actionsAfterLogin(currentUser, sc, writer, reader);
                     }
                     else{
                         System.out.println("Invalid Password!");
@@ -239,6 +241,7 @@ public class ApplicationClient implements ApplicationInterface {
             default -> {
                 System.out.println("Invalid Input!");
             }
+        }
             System.out.println("Thank you for using The Social Media Application (Phase 2)!");
 
         } catch (IOException e) {
