@@ -57,24 +57,33 @@ public class User implements UserInterface {
                 while (line != null) {
                     System.out.println(line + "\n \n \n");
                     String[] vars = line.split("-");
-
                     if (vars[0].equals(username)) {
-                        try (BufferedReader br2 = new BufferedReader(new FileReader("files/" + username + ".txt"))) {
-                            System.out.println("past LINE \n \n \n");
-                            String personalIdentifiers = br2.readLine();
-                            String[] personalArr = personalIdentifiers.split("-");
-                            this.username = personalArr[0];
-                            this.name = personalArr[1];
-                            this.profileDescription = personalArr[2];
-                            this.profilePicture = personalArr[3];
-                            this.receiveAnyone = Boolean.parseBoolean(personalArr[4]);
-                            this.userFileName = this.username + ".txt";
-                            this.password = password;
-                            return;
-                        } catch (IOException e) {
-                            createUser(username, password);
-                            // e.printStackTrace();
-                            return;
+                        if(checkValidPassword(username, password)) {
+                            try (BufferedReader br2 = new BufferedReader(new FileReader("files/" + username + ".txt"))) {
+                                System.out.println("past LINE \n \n \n");
+                                String personalIdentifiers = br2.readLine();
+                                String[] personalArr = personalIdentifiers.split("-");
+                                this.username = personalArr[0];
+                                this.name = personalArr[1];
+                                this.profileDescription = personalArr[2];
+                                this.profilePicture = personalArr[3];
+                                this.receiveAnyone = Boolean.parseBoolean(personalArr[4]);
+                                this.userFileName = this.username + ".txt";
+                                this.password = password;
+                                return;
+                            } catch (IOException e) {
+                                createUser(username, password);
+                                // e.printStackTrace();
+                                return;
+                            }
+                        } else {
+                            this.username = null;
+                            this.name = null;
+                            this.profileDescription = null;
+                            this.profilePicture = null;
+                            this.receiveAnyone = false;
+                            this.userFileName = null;
+                            this.password = null;
                         }
                     } else {
                         line = br.readLine();
@@ -115,12 +124,26 @@ public class User implements UserInterface {
         }
     }
 
-    //TODO fix the issue here
+    public boolean checkValidPassword(String userName, String passWord) {
+        try (BufferedReader br = new BufferedReader(new FileReader("files/usernamesAndPasswords.txt"))) {
+            String[] vars = null;
+            String line = null;
+            while((line = br.readLine()) != null) {
+                vars = line.split("-");
+                if(vars[0].equals(userName)) {
+                    return vars[1].equals(passWord);
+                }
+            }
+            return false;
+        } catch(IOException e) {
+            return false;
+        }
+    }
+
     public String getName() {
         return this.name;
     }
 
-    //TODO fix the issue here
     public void setName(String name) {
         try (BufferedReader br = new BufferedReader(new FileReader("files/" + this.userFileName))) {
             String line1 = br.readLine();
