@@ -105,26 +105,20 @@ public class ApplicationClient implements ApplicationInterface {
 
                     if(currentUser.isBlocked(currentUser.getUsername(), receiver)){
                         System.out.println("Block Error: Failed to send message.");
-                        break;
                     }
                     else if (currentUser.isBlocked(receiver, currentUser.getUsername())){
                         System.out.println("Block Error: Failed to send message.");
-                        break;
                     }
                     else{
-                    synchronized (gateKeep) {
-
-
-                        currentUser.sendMessage(message, receiver);
-                        System.out.println("Message sent to " + receiver);
+                        synchronized (gateKeep) {
+                            currentUser.sendMessage(message, receiver);
+                            System.out.println("Message sent to " + receiver);
+                        }
                     }
-                }
-                    
+
                 }
 
                 case "6" -> {
-                    //check if the method returns true of false and let the user know
-                    //if the person is already blocked or if they successfully blocked
                     System.out.print("Enter username to block: ");
                     String blockUser = sc.nextLine();
                     currentUser.blockUser(blockUser);
@@ -132,8 +126,6 @@ public class ApplicationClient implements ApplicationInterface {
                 }
 
                 case "7" -> {
-                    //check if the method returns true of false and let the user know
-                    //if the person is already blocked or if they successfully blocked
                     System.out.print("Enter username to unblock: ");
                     String unblockUser = sc.nextLine();
                     currentUser.unblockUser(unblockUser);
@@ -145,7 +137,6 @@ public class ApplicationClient implements ApplicationInterface {
                 }
 
                 case "9" -> {
-                    //Same comments as for the block and unblock user
                     System.out.print("Enter username to add as friend: ");
                     String newFriend = sc.nextLine();
                     currentUser.addFriend(newFriend);
@@ -153,7 +144,6 @@ public class ApplicationClient implements ApplicationInterface {
                 }
 
                 case "10" -> {
-                    //Same comments as for the block and unblock user
                     System.out.print("Enter username to remove from friends: ");
                     String oldFriend = sc.nextLine();
                     currentUser.removeFriend(oldFriend);
@@ -292,9 +282,9 @@ public class ApplicationClient implements ApplicationInterface {
             default -> {
                 System.out.println("Invalid Input!");
             }
-         }  //end of switch   
+        }  //end of switch
 
-            System.out.println("Thank you for using The Social Media Application (Phase 2)!");
+        System.out.println("Thank you for using The Social Media Application (Phase 2)!");
 
-        }
+    }
 }

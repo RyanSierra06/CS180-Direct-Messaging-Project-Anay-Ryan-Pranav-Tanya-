@@ -328,6 +328,8 @@ public class User implements UserInterface {
 
             if(thisLine3.contains(otherUsername) || otherLine3.contains(thisUsername)) {
                 return true;
+            } else {
+                return false;
             }
 
         } catch (IOException e) {
@@ -335,7 +337,35 @@ public class User implements UserInterface {
             return false;
         }
 
-        return false;
+    }
+
+    public boolean isUnBlocked(String thisUsername, String otherUsername) {
+        if(!checkUserExists(thisUsername)) {
+            return false;
+        }
+        if(!checkUserExists(otherUsername)) {
+            return false;
+        }
+
+        try(BufferedReader thisUsernameBR = new BufferedReader(new FileReader("files/" + thisUsername));
+            BufferedReader otherUsernameBR = new BufferedReader(new FileReader("files/" + otherUsername))) {
+            thisUsernameBR.readLine();
+            thisUsernameBR.readLine();
+            String thisLine3 = thisUsernameBR.readLine();
+            otherUsernameBR.readLine();
+            otherUsernameBR.readLine();
+            String otherLine3 = otherUsernameBR.readLine();
+
+            if(!thisLine3.contains(otherUsername) || !otherLine3.contains(thisUsername)) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (IOException e) {
+            //e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean deleteMessage(String reciver, Message message) {
@@ -543,7 +573,7 @@ public class User implements UserInterface {
             bw.close();
             return true;
         } catch (IOException e) {
-            // e.printStackTrace(); 
+            // e.printStackTrace();
             return false;
         }
     }
