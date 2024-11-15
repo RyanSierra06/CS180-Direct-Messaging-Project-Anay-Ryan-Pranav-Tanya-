@@ -10,6 +10,7 @@ public class ApplicationClient implements ApplicationInterface {
     private static synchronized void actionsAfterLogin(User currentUser, Scanner sc) {
         boolean exit = false;
         while (!exit) {
+            //Maybe change the scanner to not pass to the method and instead make a new one
             System.out.println("\nUser Actions Menu:");
             System.out.println("1. Set Name");
             System.out.println("2. Set Profile Description");
@@ -58,6 +59,11 @@ public class ApplicationClient implements ApplicationInterface {
                 }
 
                 case "5" -> {
+                    //synchronize the sending of the message
+                    //check to see if the user is blocked first
+                    //display the actual message (you already do this later, but maybe there's a way
+                    //to show the message history as it happens instead of calling for it
+                    //block user mid send
                     System.out.print("Enter receiver username: ");
                     String receiver = sc.nextLine();
                     System.out.print("Enter message type content (Image/Text): ");
@@ -70,6 +76,8 @@ public class ApplicationClient implements ApplicationInterface {
                 }
 
                 case "6" -> {
+                    //check if the method returns true of false and let the user know
+                    //if the person is already blocked or if they successfully blocked
                     System.out.print("Enter username to block: ");
                     String blockUser = sc.nextLine();
                     currentUser.blockUser(blockUser);
@@ -77,6 +85,8 @@ public class ApplicationClient implements ApplicationInterface {
                 }
 
                 case "7" -> {
+                    //check if the method returns true of false and let the user know
+                    //if the person is already blocked or if they successfully blocked
                     System.out.print("Enter username to unblock: ");
                     String unblockUser = sc.nextLine();
                     currentUser.unblockUser(unblockUser);
@@ -88,6 +98,7 @@ public class ApplicationClient implements ApplicationInterface {
                 }
 
                 case "9" -> {
+                    //Same comments as for the block and unblock user
                     System.out.print("Enter username to add as friend: ");
                     String newFriend = sc.nextLine();
                     currentUser.addFriend(newFriend);
@@ -95,6 +106,7 @@ public class ApplicationClient implements ApplicationInterface {
                 }
 
                 case "10" -> {
+                    //Same comments as for the block and unblock user
                     System.out.print("Enter username to remove from friends: ");
                     String oldFriend = sc.nextLine();
                     currentUser.removeFriend(oldFriend);
@@ -130,16 +142,12 @@ public class ApplicationClient implements ApplicationInterface {
             user = sc.nextLine().trim();
             if (user.contains("-")) {
                 System.out.println("Username contains '-'. Try again!");
-                validUser = false;
-            }
-                    else if (user.length() == 0) {
+            } else if (user.isEmpty()) {
                 System.out.println("Empty username! Try again!");
-                validUser = false;
             } else {
-                File f = new File("files/"+user + ".txt");
+                File f = new File("files/"+ user + ".txt");
                 if (f.exists()) {
                     System.out.println("Username already exists! Try again!");
-                    validUser = false;
                 } else {
                     validUser = true;
                 }
@@ -155,10 +163,9 @@ public class ApplicationClient implements ApplicationInterface {
             pass = sc.nextLine().trim();
             if (pass.contains("-")) {
                 System.out.println("Password contains '-'. Try again!");
-                validPass = false;
-            } else if (pass.length() == 0) {
+            } else if (pass.isEmpty()) {
                 System.out.println("Empty password! Try again!");
-                validPass = false;
+
             } else {
                 validPass = true;
             }
@@ -170,7 +177,7 @@ public class ApplicationClient implements ApplicationInterface {
         synchronized (gateKeep) {
             try {
                 newUser = new User(user, pass);
-            } catch (java.lang.Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -199,9 +206,7 @@ public class ApplicationClient implements ApplicationInterface {
             System.out.println(CHOICE_2);
             System.out.println(CHOICE_3);
             choice = sc.nextLine();
-            if (!"123".contains(choice) || choice.length() != 1) {
-                validChoice = false;
-            } else {
+            if ("123".contains(choice) || choice.length() == 1) {
                 validChoice = true;
             }
         } while (!validChoice);
@@ -210,9 +215,7 @@ public class ApplicationClient implements ApplicationInterface {
             case "1" -> {
                 User newUser = createUserMain(sc);
                 System.out.println("Created Login!");
-                break;
             }
-
             case "2" -> {
                 System.out.println("Enter the username: ");
                 String user = sc.nextLine().trim();
@@ -231,8 +234,6 @@ public class ApplicationClient implements ApplicationInterface {
                 } else {
                     System.out.println("Sorry User does not exist!");
                 }
-
-                break;
             }
 
             case "3" -> {

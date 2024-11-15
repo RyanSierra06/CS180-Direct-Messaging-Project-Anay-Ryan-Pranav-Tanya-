@@ -35,7 +35,7 @@ import java.io.FileReader;
  *
  */
 
-public class User implements UserInterface {
+public class User extends Thread implements UserInterface {
     // profile information
     private String name;
     private String username;
@@ -44,6 +44,7 @@ public class User implements UserInterface {
     private String profilePicture;
     private String userFileName;
     private boolean receiveAnyone;
+    private Object lock = new Object();
 
     public User(String username, String password) {
         try (BufferedReader br = new BufferedReader(new FileReader("files/usernamesAndPasswords.txt"))) {
@@ -102,7 +103,7 @@ public class User implements UserInterface {
             PrintWriter pw = new PrintWriter(new FileWriter(new File("files/" + this.userFileName), true));
 
             pw.println(username1 + "-" + name + "-" + profileDescription + "-" +
-                profilePicture + "-" + receiveAnyone); // personal identifiers
+                    profilePicture + "-" + receiveAnyone); // personal identifiers
             pw.println(); // blocked users
             pw.println(); // friends
 
@@ -273,7 +274,7 @@ public class User implements UserInterface {
             String first = (this.username.compareTo(reciver) > 0 ? reciver : this.username);
             String second = (this.username.equals(first) ? reciver : this.username);
             try (PrintWriter pw = new PrintWriter(new FileWriter(new File("files/"
-                + first + "-" + second + ".txt"), true))) {
+                    + first + "-" + second + ".txt"), true))) {
                 pw.println(this.username + "-" + reciver + "-" + message.getMessageText());
             } catch (IOException e) {
                 // e.printStackTrace();
@@ -520,5 +521,9 @@ public class User implements UserInterface {
     public boolean checkUserExists(String username1) {
         File f = new File("files/" + username1 + ".txt");
         return f.exists();
+    }
+
+    public void run() {
+
     }
 }

@@ -13,8 +13,7 @@ import java.net.*;
  */
 
 public interface ApplicationServerInterface {
-    void main(String[] args) throws IOException;
-    void handleClient(Socket socket);
-    String handleAction(String actionCode, String username);
+    static void handleClient(Socket socket){};
+    static String handleAction(String actionCode, String username){ return "";};
 }
 

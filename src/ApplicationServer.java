@@ -11,10 +11,10 @@ import java.net.*;
  */
 
 public class ApplicationServer implements ApplicationServerInterface {
-   
-   public static void main(String[] args) throws IOException {
+
+   public static void main(String args[]) throws IOException {
       ServerSocket serverSocket = new ServerSocket(4242); // needs universal port number - set to 4242 for now
-      
+
       while (true) {
          Socket socket = serverSocket.accept();
          new Thread(() -> handleClient(socket)).start();
@@ -23,8 +23,8 @@ public class ApplicationServer implements ApplicationServerInterface {
 
    private static void handleClient(Socket socket) {
       try (
-         BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-         PrintWriter writer = new PrintWriter(socket.getOutputStream(), true)
+              BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+              PrintWriter writer = new PrintWriter(socket.getOutputStream(), true)
       ) {
          String username = reader.readLine();
          String actionCode = reader.readLine();
@@ -33,9 +33,9 @@ public class ApplicationServer implements ApplicationServerInterface {
 
          String response = handleAction(actionCode, username);
 
-         writer.println(response); 
+         writer.println(response);
          System.out.printf("sent to client: %s\n", response);
-         
+
       } catch (IOException e) {
          System.err.println("error handling client: " + e.getMessage());
          e.printStackTrace();
