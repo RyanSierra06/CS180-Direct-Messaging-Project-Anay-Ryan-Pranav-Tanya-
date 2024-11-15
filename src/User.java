@@ -1,10 +1,4 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 
 // Example usernamesAndPasswords.txt
 // username-password
@@ -57,33 +51,24 @@ public class User implements UserInterface {
                 while (line != null) {
                     System.out.println(line + "\n \n \n");
                     String[] vars = line.split("-");
+
                     if (vars[0].equals(username)) {
-                        if(checkValidPassword(username, password)) {
-                            try (BufferedReader br2 = new BufferedReader(new FileReader("files/" + username + ".txt"))) {
-                                System.out.println("past LINE \n \n \n");
-                                String personalIdentifiers = br2.readLine();
-                                String[] personalArr = personalIdentifiers.split("-");
-                                this.username = personalArr[0];
-                                this.name = personalArr[1];
-                                this.profileDescription = personalArr[2];
-                                this.profilePicture = personalArr[3];
-                                this.receiveAnyone = Boolean.parseBoolean(personalArr[4]);
-                                this.userFileName = this.username + ".txt";
-                                this.password = password;
-                                return;
-                            } catch (IOException e) {
-                                createUser(username, password);
-                                // e.printStackTrace();
-                                return;
-                            }
-                        } else {
-                            this.username = null;
-                            this.name = null;
-                            this.profileDescription = null;
-                            this.profilePicture = null;
-                            this.receiveAnyone = false;
-                            this.userFileName = null;
-                            this.password = null;
+                        try (BufferedReader br2 = new BufferedReader(new FileReader("files/" + username + ".txt"))) {
+                            System.out.println("past LINE \n \n \n");
+                            String personalIdentifiers = br2.readLine();
+                            String[] personalArr = personalIdentifiers.split("-");
+                            this.username = personalArr[0];
+                            this.name = personalArr[1];
+                            this.profileDescription = personalArr[2];
+                            this.profilePicture = personalArr[3];
+                            this.receiveAnyone = Boolean.parseBoolean(personalArr[4]);
+                            this.userFileName = this.username + ".txt";
+                            this.password = password;
+                            return;
+                        } catch (IOException e) {
+                            createUser(username, password);
+                            // e.printStackTrace();
+                            return;
                         }
                     } else {
                         line = br.readLine();
@@ -121,22 +106,6 @@ public class User implements UserInterface {
             pw.close();
         } catch (IOException e) {
             // e.printStackTrace();
-        }
-    }
-
-    public boolean checkValidPassword(String userName, String passWord) {
-        try (BufferedReader br = new BufferedReader(new FileReader("files/usernamesAndPasswords.txt"))) {
-            String[] vars = null;
-            String line = null;
-            while((line = br.readLine()) != null) {
-                vars = line.split("-");
-                if(vars[0].equals(userName)) {
-                    return vars[1].equals(passWord);
-                }
-            }
-            return false;
-        } catch(IOException e) {
-            return false;
         }
     }
 
@@ -340,6 +309,35 @@ public class User implements UserInterface {
         }
     }
 
+    public boolean isBlocked(String thisUsername, String otherUsername) {
+        if(!checkUserExists(thisUsername)) {
+            return false;
+        }
+        if(!checkUserExists(otherUsername)) {
+            return false;
+        }
+
+        try(BufferedReader thisUsernameBR = new BufferedReader(new FileReader("files/" + thisUsername));
+            BufferedReader otherUsernameBR = new BufferedReader(new FileReader("files/" + otherUsername))) {
+            thisUsernameBR.readLine();
+            thisUsernameBR.readLine();
+            String thisLine3 = thisUsernameBR.readLine();
+            otherUsernameBR.readLine();
+            otherUsernameBR.readLine();
+            String otherLine3 = otherUsernameBR.readLine();
+
+            if(thisLine3.contains(otherUsername) || otherLine3.contains(thisUsername)) {
+                return true;
+            }
+
+        } catch (IOException e) {
+            //e.printStackTrace();
+            return false;
+        }
+
+        return false;
+    }
+
     public boolean deleteMessage(String reciver, Message message) {
         synchronized (mainLock) {
             if (!checkUserExists(reciver)) {
@@ -399,6 +397,8 @@ public class User implements UserInterface {
             return "something broke";
         }
     }
+
+
 
     public String getFriends() {
         StringBuilder sb = new StringBuilder();
@@ -543,7 +543,7 @@ public class User implements UserInterface {
             bw.close();
             return true;
         } catch (IOException e) {
-            // e.printStackTrace(); 
+            // e.printStackTrace();
             return false;
         }
     }
