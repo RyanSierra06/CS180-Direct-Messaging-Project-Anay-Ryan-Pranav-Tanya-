@@ -10,7 +10,7 @@ import java.net.*;
  *
  */
 
-public class ApplicationServer implements ApplicationServerInterface {
+public class ApplicationServer implements ApplicationServerInterface, Runnable {
    
    public static void main(String[] args) throws IOException {
       ServerSocket serverSocket = new ServerSocket(4242); // need universal port number - set to 4242 for now
