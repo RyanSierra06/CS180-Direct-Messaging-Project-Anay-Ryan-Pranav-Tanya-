@@ -35,7 +35,7 @@ import java.io.FileReader;
  *
  */
 
-public class User extends Thread implements UserInterface {
+public class User implements UserInterface {
     // profile information
     private String name;
     private String username;
@@ -44,7 +44,7 @@ public class User extends Thread implements UserInterface {
     private String profilePicture;
     private String userFileName;
     private boolean receiveAnyone;
-    private Object lock = new Object();
+    private final Object mainLock = new Object();
 
     public User(String username, String password) {
         try (BufferedReader br = new BufferedReader(new FileReader("files/usernamesAndPasswords.txt"))) {
@@ -115,10 +115,12 @@ public class User extends Thread implements UserInterface {
         }
     }
 
+    //TODO fix the issue here
     public String getName() {
         return this.name;
     }
 
+    //TODO fix the issue here
     public void setName(String name) {
         try (BufferedReader br = new BufferedReader(new FileReader("files/" + this.userFileName))) {
             String line1 = br.readLine();
@@ -267,23 +269,25 @@ public class User extends Thread implements UserInterface {
     }
 
     public boolean sendMessage(Message message, String reciver) {
-        if (!checkUserExists(reciver)) {
-            return false;
-        }
-        if (this.canReceiveFrom(reciver)) {
-            String first = (this.username.compareTo(reciver) > 0 ? reciver : this.username);
-            String second = (this.username.equals(first) ? reciver : this.username);
-            try (PrintWriter pw = new PrintWriter(new FileWriter(new File("files/"
-                    + first + "-" + second + ".txt"), true))) {
-                pw.println(this.username + "-" + reciver + "-" + message.getMessageText());
-            } catch (IOException e) {
-                // e.printStackTrace();
+        synchronized (mainLock) {
+            if (!checkUserExists(reciver)) {
+                return false;
             }
-        } else {
-            return false;
-        }
+            if (this.canReceiveFrom(reciver)) {
+                String first = (this.username.compareTo(reciver) > 0 ? reciver : this.username);
+                String second = (this.username.equals(first) ? reciver : this.username);
+                try (PrintWriter pw = new PrintWriter(new FileWriter(new File("files/"
+                        + first + "-" + second + ".txt"), true))) {
+                    pw.println(this.username + "-" + reciver + "-" + message.getMessageText());
+                } catch (IOException e) {
+                    // e.printStackTrace();
+                }
+            } else {
+                return false;
+            }
 
-        return true;
+            return true;
+        }
     }
 
     public boolean blockUser(String blockedUser) {
@@ -314,42 +318,45 @@ public class User extends Thread implements UserInterface {
     }
 
     public boolean deleteMessage(String reciver, Message message) {
-        if (!checkUserExists(reciver)) {
-            return false;
-        }
-        String first = "";
-        String second = "";
-
-        if (reciver.compareTo(username) < 0) {
-            first = reciver;
-            second = this.username;
-        } else if (reciver.compareTo(username) > 0) {
-            second = reciver;
-            first = this.username;
-        }
-
-        File inputFile = new File("files/" + first + "-" + second + ".txt");
-
-        try (BufferedReader br = new BufferedReader(new FileReader("files/" + first + "-" + second + ".txt"))) {
-            String finalString = "";
-            String line = "";
-
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split("-");
-                if (parts[2].equals(message.getMessageText())) {
-                    continue;
-                }
-                finalString += line + "\n";
+        synchronized (mainLock) {
+            if (!checkUserExists(reciver)) {
+                return false;
             }
-            System.out.println(finalString + "THIS IS FINAL");
-            BufferedWriter bw = new BufferedWriter(new FileWriter(inputFile));
-            bw.write(finalString);
-            bw.close();
+            String first = "";
+            String second = "";
 
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
+            if (reciver.compareTo(username) < 0) {
+                first = reciver;
+                second = this.username;
+            } else if (reciver.compareTo(username) > 0) {
+                second = reciver;
+                first = this.username;
+            }
+
+            File inputFile = new File("files/" + first + "-" + second + ".txt");
+
+            try (BufferedReader br = new BufferedReader(new FileReader("files/" + first + "-" + second + ".txt"))) {
+                String finalString = "";
+                String line = "";
+
+                while ((line = br.readLine()) != null) {
+                    String[] parts = line.split("-");
+                    if (parts[2].equals(message.getMessageText())) {
+                        continue;
+                    }
+                    finalString += line + "\n";
+                }
+                System.out.println(finalString + "THIS IS FINAL");
+                BufferedWriter bw = new BufferedWriter(new FileWriter(inputFile));
+                bw.write(finalString);
+                bw.close();
+
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+
         }
 
     }
@@ -523,7 +530,4 @@ public class User extends Thread implements UserInterface {
         return f.exists();
     }
 
-    public void run() {
-
-    }
 }
