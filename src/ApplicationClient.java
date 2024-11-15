@@ -71,6 +71,38 @@ public class ApplicationClient implements ApplicationInterface {
                     System.out.print("Enter message content: ");
                     String content = sc.nextLine();
                     Message message = new Message(currentUser, type, content);
+                    
+                    String messageHistory = currentUser.readMessages(receiver);
+                    String messages[] = messageHistory.split("\n");
+
+                    //Finding the last message sent by the user, going in the reverse order
+                    int lastUserMessageIndex = -1;
+                    for (int i = messages.length - 1; i >= 0; i--) {
+                        if (messages[i].startsWith(currentUser.getUsername() + "-")) {
+                            lastUserMessageIndex = i;
+                            break;
+                        }
+                    }
+
+                    // Extract messages sent by the receiver after the last user's message
+                    StringBuilder recentMessages = new StringBuilder();
+                    if (lastUserMessageIndex != -1) {
+                        for (int i = lastUserMessageIndex + 1; i < messages.length; i++) {
+                            if (messages[i].startsWith(receiver + "-")) {
+                                recentMessages.append(messages[i]).append("\n");
+                            }
+                        }
+                    }   
+                    
+
+                    if (recentMessages.length() > 0) {
+                        System.out.println("New messages from " + receiver + ":\n" + recentMessages);
+                    } else {
+                        System.out.println("No new messages from " + receiver + ".");
+                    }
+                        
+
+
                     if(currentUser.isBlocked(currentUser.getUsername(), receiver)){
                         System.out.println("Block Error: Failed to send message.");
                         break;
@@ -81,6 +113,8 @@ public class ApplicationClient implements ApplicationInterface {
                     }
                     else{
                     synchronized (gateKeep) {
+
+
                         currentUser.sendMessage(message, receiver);
                         System.out.println("Message sent to " + receiver);
                     }
