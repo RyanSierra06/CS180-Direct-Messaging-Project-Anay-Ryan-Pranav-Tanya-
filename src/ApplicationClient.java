@@ -244,6 +244,7 @@ public class ApplicationClient implements ApplicationInterface {
             case "1" -> {
                 User newUser = createUserMain(sc);
                 System.out.println("Created Login!");
+                client.actionsAfterLogin(newUser, sc);
             }
             case "2" -> {
                 System.out.println("Enter the username: ");
