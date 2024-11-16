@@ -47,24 +47,26 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
          String friends = "";
 
          StringBuilder messages  = new StringBuilder();
-         while((choice = input.readLine()) != null) {
+         while(true) {
+            choice = input.readLine();
             if (choice.startsWith("Username: ")) {
-               username = input.readLine().substring("Username: ".length());
+               //TODO change choice to maybe input.readLine() or input.readLine() to choice
+               username = choice.substring("Username: ".length());
             }
             if (choice.startsWith("Password: ")) {
-               password = input.readLine().substring("Password: ".length());
+               password = choice.substring("Password: ".length());
                user = new User(username, password);
             }
             if (choice.startsWith("Name: ")) {
-               name = input.readLine().substring("Name: ".length());
+               name = choice.substring("Name: ".length());
                user.setName(name);
             }
             if (choice.startsWith("Profile Description: ")) {
-               profileDescription = input.readLine().substring("Profile Description: ".length());
+               profileDescription = choice.substring("Profile Description: ".length());
                user.setProfileDescription(profileDescription);
             }
             if (choice.startsWith("Profile Picture: ")) {
-               profilePicture = input.readLine().substring("Profile Picture: ".length());
+               profilePicture = choice.substring("Profile Picture: ".length());
                user.setProfilePicture(profilePicture);
             }
             if (choice.startsWith("Profile Information: ")) {
@@ -76,9 +78,9 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                //change to be a ImageIcon with the GUI
             }
             if (choice.startsWith("Message: ")) {
-               String otherUser = input.readLine().substring("Message: ".length());
-               String thisMessage = input.readLine().substring(("Message: " + otherUser + " ").length());
-               String type = input.readLine().substring(("Message: " + otherUser + " " + thisMessage + " ").length());
+               String otherUser = choice.substring("Message: ".length());
+               String thisMessage = choice.substring(("Message: " + otherUser + " ").length());
+               String type = choice.substring(("Message: " + otherUser + " " + thisMessage + " ").length());
                if(user.isBlocked(user.getUsername(), otherUser)) {
                   output.write("Block Error: Failed to send message.");
                   output.flush();
@@ -102,28 +104,28 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                // then go into just the straight messages back and fourth
             }
             if (choice.startsWith("Block User: ")) {
-               blockUser = input.readLine().substring("Block User: ".length());
+               blockUser = choice.substring("Block User: ".length());
                user.blockUser(blockUser);
             }
             if (choice.startsWith("Unblock User: ")) {
-               unblockUser = input.readLine().substring("Unblock User: ".length());
+               unblockUser = choice.substring("Unblock User: ".length());
                user.unblockUser(unblockUser);
             }
             if (choice.startsWith("Blocked Users: ")) {
-               blockedUsers = input.readLine().substring("Blocked Users: ".length());
+               blockedUsers = choice.substring("Blocked Users: ".length());
                output.write(blockedUsers + "\n");
                output.flush();
             }
             if (choice.startsWith("Add Friend: ")) {
-               addFriend = input.readLine().substring("Add Friend: ".length());
+               addFriend = choice.substring("Add Friend: ".length());
                user.addFriend(addFriend);
             }
             if (choice.startsWith("Remove Friend: ")) {
-               removeFriend = input.readLine().substring("Remove Friend: ".length());
+               removeFriend = choice.substring("Remove Friend: ".length());
                user.removeFriend(removeFriend);
             }
             if (choice.startsWith("Friend List: ")) {
-               friends = user.getFriends().substring("Friend List: ".length());
+               friends = choice.substring("Friend List: ".length());
                output.write(friends + "\n");
                output.flush();
             }

@@ -34,6 +34,7 @@ public class ApplicationClient implements ApplicationInterface {
                     String name = sc.nextLine();
                     try {
                         bw.write("Name: " + name + "\n");
+                        bw.flush();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -45,6 +46,7 @@ public class ApplicationClient implements ApplicationInterface {
                     String description = sc.nextLine();
                     try {
                         bw.write("Profile Description: " + description + "\n");
+                        bw.flush();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -57,6 +59,7 @@ public class ApplicationClient implements ApplicationInterface {
                     String picture = sc.nextLine();
                     try {
                         bw.write("Profile Picture" + picture + "\n");
+                        bw.flush();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -66,6 +69,7 @@ public class ApplicationClient implements ApplicationInterface {
                 case "4" -> {
                     try {
                         bw.write("Profile Information: ");
+                        bw.flush();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -80,6 +84,7 @@ public class ApplicationClient implements ApplicationInterface {
                     String message = sc.nextLine();
                     try {
                         bw.write("Message: " + receiver + " " + message + " " + type + "\n");
+                        bw.flush();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -116,6 +121,7 @@ public class ApplicationClient implements ApplicationInterface {
                     String blockUser = sc.nextLine();
                     try {
                         bw.write("Block User: " + blockUser + "\n");
+                        bw.flush();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -128,6 +134,7 @@ public class ApplicationClient implements ApplicationInterface {
                     String unblockUser = sc.nextLine();
                     try {
                         bw.write("Unblock User: " + unblockUser + "\n");
+                        bw.flush();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -137,6 +144,7 @@ public class ApplicationClient implements ApplicationInterface {
                 case "8" -> {
                     try {
                         bw.write("Blocked Users: ");
+                        bw.flush();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -147,6 +155,7 @@ public class ApplicationClient implements ApplicationInterface {
                     String newFriend = sc.nextLine();
                     try {
                         bw.write("Add Friend: " + newFriend + "\n");
+                        bw.flush();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -158,6 +167,7 @@ public class ApplicationClient implements ApplicationInterface {
                     String oldFriend = sc.nextLine();
                     try {
                         bw.write("Remove Friend: " + oldFriend + "\n");
+                        bw.flush();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -167,6 +177,7 @@ public class ApplicationClient implements ApplicationInterface {
                 case "11" -> {
                     try {
                         bw.write("Friend List: ");
+                        bw.flush();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -175,6 +186,7 @@ public class ApplicationClient implements ApplicationInterface {
                 case "12" -> {
                     try {
                         bw.write("Exit");
+                        bw.flush();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -258,6 +270,7 @@ public class ApplicationClient implements ApplicationInterface {
                 } while (!validPass);
                 bw.write("Username: " + user + "\n");
                 bw.write("Password: " + pass + "\n");
+                bw.flush();
 
                 File f = new File("files/" + user + ".txt");
                 System.out.println(f.exists());
@@ -277,6 +290,7 @@ public class ApplicationClient implements ApplicationInterface {
                 if (f.exists()) {
                     bw.write("Username: " + user + "\n");
                     bw.write("Password: " + pass + "\n");
+                    bw.flush();
                     client.actionsAfterLogin(bw, br, sc);
                 } else {
                     System.out.println("Sorry User does not exist!");
@@ -284,7 +298,8 @@ public class ApplicationClient implements ApplicationInterface {
             }
 
             case "3" -> {
-                bw.write("Exit");
+                bw.write("Exit" + "\n");
+                bw.flush();
                 System.out.println("Exiting the Menu!");
             }
 
