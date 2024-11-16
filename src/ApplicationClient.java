@@ -6,8 +6,10 @@ import java.util.Scanner;
 public class ApplicationClient implements ApplicationInterface {
     private static final int SERVER_PORT = 4242;
     private static final Object gateKeep = new Object();
+    private String thisClientName = "";
+    private String thisClientPassword = "";
 
-    private void actionsAfterLogin(User currentUser, Scanner sc) {
+    private static void actionsAfterLogin(User currentUser, Scanner sc) {
         boolean exit = false;
         while (!exit) {
             System.out.println("\nUser Actions Menu:");
@@ -88,13 +90,13 @@ public class ApplicationClient implements ApplicationInterface {
                             }
 
                             System.out.println("Message sent to " + receiver);
-                            while(currentUser.findMostRecentMessages(receiver).isEmpty()) {
-                                currentUser.findMostRecentMessages(receiver);
-                            }
+//                            while(currentUser.findMostRecentMessages(receiver).isEmpty()) {
+//                                currentUser.findMostRecentMessages(receiver);
+//                            }
+//
+//                            System.out.println(currentUser.findMostRecentMessages(receiver));
 
-                            System.out.println(currentUser.findMostRecentMessages(receiver));
-
-                            System.out.println("Do you want to exit?");
+                            //System.out.println("Do you want to exit?");
                             goAgain = !sc.nextLine().equalsIgnoreCase("exit");
                         } while (goAgain);
                     }
@@ -215,6 +217,7 @@ public class ApplicationClient implements ApplicationInterface {
         //just make sure you can have two clinets communicate with eachother simultaneously
         //the files arent also being created in some instances
         Scanner sc = new Scanner(System.in);
+        ApplicationClient client = new ApplicationClient();
         System.out.println("Welcome to the Social Media Application (Phase 1)");
 
         String userMenu = "User Menu";
@@ -224,9 +227,9 @@ public class ApplicationClient implements ApplicationInterface {
 
         String choice = "";
 
-        try(Socket socket = new Socket("localhost", 4242)) {
-
-        }
+//        try(Socket socket = new Socket("localhost", 4242)) {
+//
+//        }
 
         boolean validChoice = false;
         do {
@@ -251,12 +254,12 @@ public class ApplicationClient implements ApplicationInterface {
                 String user = sc.nextLine().trim();
                 System.out.println("Enter the password: ");
                 String pass = sc.nextLine().trim();
-                ApplicationClient client = new ApplicationClient();
 
                 File f = new File("files/" + user + ".txt");
                 if (f.exists()) {
                     User currentUser = new User(user, pass);
                     if (currentUser.getPassword().equals(pass)) {
+                        //TODO FIX
                         client.actionsAfterLogin(currentUser, sc);
                     }
                     else{
