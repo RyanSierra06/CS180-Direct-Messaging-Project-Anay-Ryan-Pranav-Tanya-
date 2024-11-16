@@ -9,8 +9,9 @@ public class ApplicationClient implements ApplicationInterface {
     private String thisClientName = "";
     private String thisClientPassword = "";
 
-    private static void actionsAfterLogin(User currentUser, Scanner sc) {
+    private void actionsAfterLogin(BufferedWriter bw, BufferedReader br, Scanner sc) {
         boolean exit = false;
+
         while (!exit) {
             System.out.println("\nUser Actions Menu:");
             System.out.println("1. Set Name");
@@ -24,7 +25,6 @@ public class ApplicationClient implements ApplicationInterface {
             System.out.println("9. Add Friend");
             System.out.println("10. Remove Friend");
             System.out.println("11. View Friends");
-            System.out.println("12. Read Messages");
             System.out.println("13. Log Out");
 
             System.out.print("Choose an action (1-13): ");
@@ -34,14 +34,14 @@ public class ApplicationClient implements ApplicationInterface {
                 case "1" -> {
                     System.out.print("Enter new name: ");
                     String name = sc.nextLine();
-                    currentUser.setName(name);
+                    // TODO passback name with identifier
                     System.out.println("Name updated successfully.");
                 }
 
                 case "2" -> {
                     System.out.print("Enter profile description: ");
                     String description = sc.nextLine();
-                    currentUser.setProfileDescription(description);
+                    // TODO passback description with identifier
                     System.out.println("Profile description updated.");
 
                 }
@@ -49,14 +49,15 @@ public class ApplicationClient implements ApplicationInterface {
                 case "3" -> {
                     System.out.print("Enter profile picture URL: ");
                     String picture = sc.nextLine();
-                    currentUser.setProfilePicture(picture);
+                    // TODO passback picture with identifier
                     System.out.println("Profile picture updated.");
                 }
 
                 case "4" -> {
-                    System.out.println("Name: " + currentUser.getName());
-                    System.out.println("Profile Description: " + currentUser.getProfileDescription());
-                    System.out.println("Profile Picture: " + currentUser.getProfilePicture());
+                    // TODO read and display name from server
+                    // TODO read and display profile desc from server
+                    // TODO read and display profile pict from server
+
                 }
 
                 case "5" -> {
@@ -105,46 +106,41 @@ public class ApplicationClient implements ApplicationInterface {
                 case "6" -> {
                     System.out.print("Enter username to block: ");
                     String blockUser = sc.nextLine();
-                    currentUser.blockUser(blockUser);
+                    // TODO passback user to be blocked with identifier from server
                     System.out.println(blockUser + " has been blocked.");
                 }
 
                 case "7" -> {
                     System.out.print("Enter username to unblock: ");
                     String unblockUser = sc.nextLine();
-                    currentUser.unblockUser(unblockUser);
+                    // TODO passback user to be unblocked with identifier from server
                     System.out.println(unblockUser + " has been unblocked.");
                 }
 
                 case "8" -> {
-                    System.out.println("Blocked Users: " + currentUser.getBlockedUsers());
+                    // TODO read form server for all blocked users of ur user
                 }
 
                 case "9" -> {
                     System.out.print("Enter username to add as friend: ");
                     String newFriend = sc.nextLine();
-                    currentUser.addFriend(newFriend);
+                    // TODO passback new friend to server
                     System.out.println(newFriend + " added to friends.");
                 }
 
                 case "10" -> {
                     System.out.print("Enter username to remove from friends: ");
                     String oldFriend = sc.nextLine();
-                    currentUser.removeFriend(oldFriend);
+                    // TODO passback friend to remove to server
                     System.out.println(oldFriend + " removed from friends.");
                 }
 
                 case "11" -> {
-                    System.out.println("Friends List: " + currentUser.getFriends());
-                }
-
-                case "12" -> {
-                    System.out.print("Enter sender username to view messages from: ");
-                    String sender = sc.nextLine();
-                    System.out.println("Messages from " + sender + ": " + currentUser.readMessages(sender));
+                    // TODO read from server to get friends list
                 }
 
                 case "13" -> {
+                    // TODO send kill server thread message
                     System.out.println("Logging out...");
                     exit = true;
                 }
@@ -152,60 +148,6 @@ public class ApplicationClient implements ApplicationInterface {
                 default -> System.out.println("Invalid option. Please try again.");
             }
         }
-    }
-
-    private static User createUserMain(Scanner sc) {
-        //SETTING THE USERNAME
-        String user = "";
-        String pass = "";
-        boolean validUser = false;
-        boolean validPass = false;
-
-        do {
-            System.out.println("Enter the username without '-' (also it can't be empty): ");
-            user = sc.nextLine().trim();
-            if (user.contains("-")) {
-                System.out.println("Username contains '-'. Try again!");
-            } else if (user.isEmpty()) {
-                System.out.println("Empty username! Try again!");
-            } else {
-                File f = new File("files/"+ user + ".txt");
-                if (f.exists()) {
-                    System.out.println("Username already exists! Try again!");
-                } else {
-                    validUser = true;
-                }
-            }
-
-        } while (!validUser);
-
-
-
-        do {
-            System.out.println("Enter the password without '-' (also it can't be empty): ");
-            pass = sc.nextLine().trim();
-            if (pass.contains("-")) {
-                System.out.println("Password contains '-'. Try again!");
-            } else if (pass.isEmpty()) {
-                System.out.println("Empty password! Try again!");
-
-            } else {
-                validPass = true;
-            }
-
-        } while (!validPass);
-
-        User newUser = null;
-
-        synchronized (gateKeep) {
-            try {
-                newUser = new User(user, pass);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        return newUser;
     }
 
 
@@ -227,9 +169,9 @@ public class ApplicationClient implements ApplicationInterface {
 
         String choice = "";
 
-//        try(Socket socket = new Socket("localhost", 4242)) {
-//
-//        }
+        Socket socket = new Socket("localhost", 4242);
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
         boolean validChoice = false;
         do {
@@ -245,9 +187,48 @@ public class ApplicationClient implements ApplicationInterface {
 
         switch (choice) {
             case "1" -> {
-                User newUser = createUserMain(sc);
+                //SETTING THE USERNAME
+                String user = "";
+                String pass = "";
+                boolean validUser = false;
+                boolean validPass = false;
+        
+                do {
+                    System.out.println("Enter the username without '-' (also it can't be empty): ");
+                    user = sc.nextLine().trim();
+                    if (user.contains("-")) {
+                        System.out.println("Username contains '-'. Try again!");
+                    } else if (user.isEmpty()) {
+                        System.out.println("Empty username! Try again!");
+                    } else {
+                        File f = new File("files/"+ user + ".txt");
+                        if (f.exists()) {
+                            System.out.println("Username already exists! Try again!");
+                        } else {
+                            validUser = true;
+                        }
+                    }
+        
+                } while (!validUser);
+        
+                do {
+                    System.out.println("Enter the password without '-' (also it can't be empty): ");
+                    pass = sc.nextLine().trim();
+                    if (pass.contains("-")) {
+                        System.out.println("Password contains '-'. Try again!");
+                    } else if (pass.isEmpty()) {
+                        System.out.println("Empty password! Try again!");
+        
+                    } else {
+                        validPass = true;
+                    }
+        
+                } while (!validPass);
+
+                // TODO send username and password to server, with identifer
+
                 System.out.println("Created Login!");
-                client.actionsAfterLogin(newUser, sc);
+                client.actionsAfterLogin(bw, br, sc);
             }
             case "2" -> {
                 System.out.println("Enter the username: ");
@@ -257,14 +238,8 @@ public class ApplicationClient implements ApplicationInterface {
 
                 File f = new File("files/" + user + ".txt");
                 if (f.exists()) {
-                    User currentUser = new User(user, pass);
-                    if (currentUser.getPassword().equals(pass)) {
-                        //TODO FIX
-                        client.actionsAfterLogin(currentUser, sc);
-                    }
-                    else{
-                        System.out.println("Invalid Password!");
-                    }
+                    // TODO passback password and username to server, with identifier
+                    client.actionsAfterLogin(bw, br, sc);
                 } else {
                     System.out.println("Sorry User does not exist!");
                 }
@@ -277,7 +252,7 @@ public class ApplicationClient implements ApplicationInterface {
             default -> {
                 System.out.println("Invalid Input!");
             }
-        }  //end of switch
+        }
 
         System.out.println("Thank you for using The Social Media Application (Phase 2)!");
 
