@@ -53,23 +53,23 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                //TODO change choice to maybe input.readLine() or input.readLine() to choice
                username = choice.substring("Username: ".length());
             }
-            if (choice.startsWith("Password: ")) {
+            else if (choice.startsWith("Password: ")) {
                password = choice.substring("Password: ".length());
                user = new User(username, password);
             }
-            if (choice.startsWith("Name: ")) {
+            else if (choice.startsWith("Name: ")) {
                name = choice.substring("Name: ".length());
                user.setName(name);
             }
-            if (choice.startsWith("Profile Description: ")) {
+            else if (choice.startsWith("Profile Description: ")) {
                profileDescription = choice.substring("Profile Description: ".length());
                user.setProfileDescription(profileDescription);
             }
-            if (choice.startsWith("Profile Picture: ")) {
+            else if (choice.startsWith("Profile Picture: ")) {
                profilePicture = choice.substring("Profile Picture: ".length());
                user.setProfilePicture(profilePicture);
             }
-            if (choice.startsWith("Profile Information: ")) {
+            else if (choice.startsWith("Profile Information: ")) {
                output.write(user.getName() + "\n");
                output.write(user.getProfileDescription() + "\n");
                output.write(user.getProfilePicture() + "\n");
@@ -77,7 +77,7 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                //profile picture only returns the path right now since were in the terminal
                //change to be a ImageIcon with the GUI
             }
-            if (choice.startsWith("Message: ")) {
+            else if (choice.startsWith("Message: ")) {
                String otherUser = choice.substring("Message: ".length());
                String thisMessage = choice.substring(("Message: " + otherUser + " ").length());
                String type = choice.substring(("Message: " + otherUser + " " + thisMessage + " ").length());
@@ -103,34 +103,36 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                // Maybe have an atomic integer to display message history the first time and
                // then go into just the straight messages back and fourth
             }
-            if (choice.startsWith("Block User: ")) {
+            else if (choice.startsWith("Block User: ")) {
                blockUser = choice.substring("Block User: ".length());
                user.blockUser(blockUser);
             }
-            if (choice.startsWith("Unblock User: ")) {
+            else if (choice.startsWith("Unblock User: ")) {
                unblockUser = choice.substring("Unblock User: ".length());
                user.unblockUser(unblockUser);
             }
-            if (choice.startsWith("Blocked Users: ")) {
+            else if (choice.startsWith("Blocked Users: ")) {
                blockedUsers = choice.substring("Blocked Users: ".length());
                output.write(blockedUsers + "\n");
                output.flush();
             }
-            if (choice.startsWith("Add Friend: ")) {
+            else if (choice.startsWith("Add Friend: ")) {
                addFriend = choice.substring("Add Friend: ".length());
                user.addFriend(addFriend);
             }
-            if (choice.startsWith("Remove Friend: ")) {
+            else if (choice.startsWith("Remove Friend: ")) {
                removeFriend = choice.substring("Remove Friend: ".length());
                user.removeFriend(removeFriend);
             }
-            if (choice.startsWith("Friend List: ")) {
+            else if (choice.startsWith("Friend List: ")) {
                friends = choice.substring("Friend List: ".length());
                output.write(friends + "\n");
                output.flush();
             }
-            if (choice.startsWith("Exit")) {
+            else if (choice.startsWith("Exit")) {
                break;
+            } else {
+               System.out.println("None of teh commands");
             }
          }
 

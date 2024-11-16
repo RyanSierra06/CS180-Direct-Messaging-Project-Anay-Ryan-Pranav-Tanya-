@@ -9,9 +9,10 @@ public class ApplicationServerRunner {
             while(true) {
                 Socket client = ss.accept();
 
-                ApplicationServer appServer = new ApplicationServer();
+                ApplicationServer appServer = new ApplicationServer(client);
                 Thread clinetThread = new Thread(appServer);
                 clinetThread.start();
+                System.out.println("reached here");
             }
         } catch(Exception e) {
             e.printStackTrace();
