@@ -10,7 +10,6 @@ public class ApplicationClient implements ApplicationInterface {
     private void actionsAfterLogin(User currentUser, Scanner sc) {
         boolean exit = false;
         while (!exit) {
-            //Maybe change the scanner to not pass to the method and instead make a new one
             System.out.println("\nUser Actions Menu:");
             System.out.println("1. Set Name");
             System.out.println("2. Set Profile Description");
@@ -60,37 +59,45 @@ public class ApplicationClient implements ApplicationInterface {
 
                 case "5" -> {
                     //TODO
-                    //synchronize the sending of the message
-                    //check to see if the user is blocked first
                     //display the actual message (you already do this later, but maybe there's a way
                     //to show the message history as it happens instead of calling for it
                     System.out.print("Enter receiver username: ");
                     String receiver = sc.nextLine();
                     if(currentUser.isBlocked(currentUser.getUsername(), receiver)){
                         System.out.println("Block Error: Failed to send message.");
-                    }
-                    boolean goAgain = false;
-                    do {
-                        System.out.print("Enter message type content (Image/Text): ");
-                        String type = sc.nextLine();
-                        System.out.print("Enter message content: ");
-                        String content = sc.nextLine();
-                        Message message = new Message(currentUser, type, content);
+                    } else {
+                        String first = (currentUser.getUsername().compareTo(receiver) > 0 ? receiver : currentUser.getUsername());
+                        String second = (currentUser.getUsername().equals(first) ? receiver : currentUser.getUsername());
+                        File f = new File("files/" + first + "-" + second + ".txt");
+                        if(f.exists()) {
+                            String messageHistory = currentUser.readMessages(receiver);
+                            System.out.println(messageHistory);
+                        }
 
-                        synchronized (gateKeep) {
-                            currentUser.sendMessage(message, receiver);
+                        boolean goAgain = true;
+                        do {
+                            // Cant truly read and update at the same time since were in terminal
+                            System.out.print("Enter message type content (Image/Text): ");
+                            String type = sc.nextLine();
+                            System.out.print("Enter message content: ");
+                            String content = sc.nextLine();
+                            Message message = new Message(currentUser, type, content);
+
+                            synchronized (gateKeep) {
+                                currentUser.sendMessage(message, receiver);
+                            }
+
                             System.out.println("Message sent to " + receiver);
-                        }
-                        while(currentUser.findMostRecentMessages(receiver).isEmpty()) {
-                            currentUser.findMostRecentMessages(receiver);
-                        }
-                        System.out.println(currentUser.findMostRecentMessages(receiver));
+                            while(currentUser.findMostRecentMessages(receiver).isEmpty()) {
+                                currentUser.findMostRecentMessages(receiver);
+                            }
 
-                        //change this line to just check for when the user types "exit" and then exit the messages
-                        //when they re-enter to display the full message history again
-                        System.out.println("Do you want to keep messaging?");
-                        goAgain = sc.nextLine().equalsIgnoreCase("yes");
-                    } while (goAgain);
+                            System.out.println(currentUser.findMostRecentMessages(receiver));
+
+                            System.out.println("Do you want to exit?");
+                            goAgain = !sc.nextLine().equalsIgnoreCase("exit");
+                        } while (goAgain);
+                    }
                 }
 
                 case "6" -> {
@@ -243,12 +250,13 @@ public class ApplicationClient implements ApplicationInterface {
                 String user = sc.nextLine().trim();
                 System.out.println("Enter the password: ");
                 String pass = sc.nextLine().trim();
+                ApplicationClient client = new ApplicationClient();
 
                 File f = new File("files/" + user + ".txt");
                 if (f.exists()) {
                     User currentUser = new User(user, pass);
                     if (currentUser.getPassword().equals(pass)) {
-                        actionsAfterLogin(currentUser, sc);
+                        client.actionsAfterLogin(currentUser, sc);
                     }
                     else{
                         System.out.println("Invalid Password!");
