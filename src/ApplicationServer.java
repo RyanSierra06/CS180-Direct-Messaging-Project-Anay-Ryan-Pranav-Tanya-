@@ -27,10 +27,9 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
       handleClient(clientSocket);
    }
 
-
    public void handleClient(Socket clientSocket) {
-      try (ObjectInputStream input = new ObjectInputStream(clientSocket.getInputStream());
-           ObjectOutputStream output = new ObjectOutputStream(clientSocket.getOutputStream())) {
+      try (BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+           BufferedWriter output = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()))) {
          String choice = "";
          //user should never be null (outside declaration) since were either forcing the user to create or log in
          //and if its unsuccessful, it should kick them out
@@ -69,9 +68,10 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                user.setProfilePicture(profilePicture);
             }
             if (choice.startsWith("Profile Information: ")) {
-               output.writeChars(user.getName() + "\n");
-               output.writeChars(user.getProfileDescription() + "\n");
-               output.writeChars(user.getProfilePicture() + "\n");
+               output.write(user.getName() + "\n");
+               output.write(user.getProfileDescription() + "\n");
+               output.write(user.getProfilePicture() + "\n");
+               output.flush();
                //profile picture only returns the path right now since were in the terminal
                //change to be a ImageIcon with the GUI
             }
@@ -80,7 +80,8 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                String thisMessage = input.readLine().substring(("Message: " + otherUser + " ").length());
                String type = input.readLine().substring(("Message: " + otherUser + " " + thisMessage + " ").length());
                if(user.isBlocked(user.getUsername(), otherUser)) {
-                  output.writeChars("Block Error: Failed to send message.");
+                  output.write("Block Error: Failed to send message.");
+                  output.flush();
                } else {
                   String first = (user.getUsername().compareTo(otherUser) > 0 ? otherUser : user.getUsername());
                   String second = (user.getUsername().equals(first) ? otherUser : user.getUsername());
@@ -88,9 +89,11 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                   if(f.exists()) {
                      user.sendMessage(new Message(user, type, thisMessage), otherUser);
                      String messageHistory = user.readMessages(otherUser);
-                     output.writeChars(messageHistory + "\n");
+                     output.write(messageHistory + "\n");
+                     output.flush();
                   } else {
-                     output.writeChars("There are no messages between you and " + otherUser + "\n");
+                     output.write("There are no messages between you and " + otherUser + "\n");
+                     output.flush();
                   }
                }
                //TODO back in the client, once you're in case 5, start a
@@ -108,7 +111,8 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
             }
             if (choice.startsWith("Blocked Users: ")) {
                blockedUsers = input.readLine().substring("Blocked Users: ".length());
-               output.writeChars(blockedUsers + "\n");
+               output.write(blockedUsers + "\n");
+               output.flush();
             }
             if (choice.startsWith("Add Friend: ")) {
                addFriend = input.readLine().substring("Add Friend: ".length());
@@ -120,7 +124,8 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
             }
             if (choice.startsWith("Friend List: ")) {
                friends = user.getFriends().substring("Friend List: ".length());
-               output.writeChars(friends + "\n");
+               output.write(friends + "\n");
+               output.flush();
             }
             if (choice.startsWith("Exit")) {
                break;
