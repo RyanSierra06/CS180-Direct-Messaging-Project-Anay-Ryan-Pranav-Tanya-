@@ -37,37 +37,106 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
    }
 
 
-   public void handleClient(Socket clientSocket) {
-      //TODO CHANGE TO WRITE TO FILE
+   private void handleClient(Socket clientSocket) {
       try (ObjectInputStream input = new ObjectInputStream(clientSocket.getInputStream());
            ObjectOutputStream output = new ObjectOutputStream(clientSocket.getOutputStream())) {
          String choice = "";
+         //user should never be null (outside declaration) since were either forcing the user to create or log in
+         //and if its unsuccessful, it should kick them out
+         User user = null;
+         String username = "";
+         String password = "";
+         String name = "";
+         String profileDescription = "";
+         String profilePicture = "";
+         String blockUser = "";
+         String unblockUser = "";
+         String blockedUsers = "";
+         String addFriend = "";
+         String removeFriend = "";
+         String friends = "";
+
          StringBuilder messages  = new StringBuilder();
          while((choice = input.readLine()) != null) {
-            if(choice.length() == 1) {
-               switch(choice) {
-                  case "1", "2" -> {
-                     messages.append("Username: ").append(input.readLine()).append("\n");
-                     messages.append("Password: ").append(input.readLine()).append("\n");
+            if (choice.startsWith("Username: ")) {
+               username = input.readLine().substring("Username: ".length());
+            }
+            if (choice.startsWith("Password: ")) {
+               password = input.readLine().substring("Password: ".length());
+               user = new User(username, password);
+            }
+            if (choice.startsWith("Name: ")) {
+               name = input.readLine().substring("Name: ".length());
+               user.setName(name);
+            }
+            if (choice.startsWith("Profile Description: ")) {
+               profileDescription = input.readLine().substring("Profile Description: ".length());
+               user.setProfileDescription(profileDescription);
+            }
+            if (choice.startsWith("Profile Picture: ")) {
+               profilePicture = input.readLine().substring("Profile Picture: ".length());
+               user.setProfilePicture(profilePicture);
+            }
+            if (choice.startsWith("Profile Information: ")) {
+               output.writeChars(user.getName() + "\n");
+               output.writeChars(user.getProfileDescription() + "\n");
+               output.writeChars(user.getProfilePicture() + "\n");
+               //profile picture only returns the path right now since were in the terminal
+               //change to be a ImageIcon with the GUI
+            }
+            if (choice.startsWith("Message: ")) {
+               String otherUser = input.readLine().substring("Message: ".length());
+               String thisMessage = input.readLine().substring(("Message: " + otherUser + " ").length());
+               String type = input.readLine().substring(("Message: " + otherUser + " " + thisMessage + " ").length());
+               if(user.isBlocked(user.getUsername(), otherUser)) {
+                  output.writeChars("Block Error: Failed to send message.");
+               } else {
+                  String first = (user.getUsername().compareTo(otherUser) > 0 ? otherUser : user.getUsername());
+                  String second = (user.getUsername().equals(first) ? otherUser : user.getUsername());
+                  File f = new File("files/" + first + "-" + second + ".txt");
+                  if(f.exists()) {
+                     user.sendMessage(new Message(user, type, thisMessage), otherUser);
+                     String messageHistory = user.readMessages(otherUser);
+                     output.writeChars(messageHistory + "\n");
+                  } else {
+                     output.writeChars("There are no messages between you and " + otherUser + "\n");
                   }
                }
-
+               //TODO back in the client, once you're in case 5, start a
+               // loop to keep messaging that user until a certain value is types
+               // Maybe have an atomic integer to display message history the first time and
+               // then go into just the straight messages back and fourth
+            }
+            if (choice.startsWith("Block User: ")) {
+               blockUser = input.readLine().substring("Block User: ".length());
+               user.blockUser(blockUser);
+            }
+            if (choice.startsWith("Unblock User: ")) {
+               unblockUser = input.readLine().substring("Unblock User: ".length());
+               user.unblockUser(unblockUser);
+            }
+            if (choice.startsWith("Blocked Users: ")) {
+               blockedUsers = input.readLine().substring("Blocked Users: ".length());
+               output.writeChars(blockedUsers + "\n");
+            }
+            if (choice.startsWith("Add Friend: ")) {
+               addFriend = input.readLine().substring("Add Friend: ".length());
+               user.addFriend(addFriend);
+            }
+            if (choice.startsWith("Remove Friend: ")) {
+               removeFriend = input.readLine().substring("Remove Friend: ".length());
+               user.removeFriend(removeFriend);
+            }
+            if (choice.startsWith("Friend List: ")) {
+               friends = user.getFriends().substring("Friend List: ".length());
+               output.writeChars(friends + "\n");
+            }
+            if (choice.startsWith("Exit")) {
+               break;
             }
          }
 
-         if(!messages.isEmpty()) {
-            String[] nameAndPass = messages.toString().split("\n");
-            //name is 0, pass is 1
-            BufferedWriter bw = new BufferedWriter(new FileWriter("files/" + nameAndPass[0] + ".txt"));
-
-            String messageText = (String) input.readObject();
-            System.out.println("SERVER: Received message text: " + messageText);
-
-            output.writeObject(messageText);
-            output.flush();
-         }
-
-      } catch (IOException | ClassNotFoundException e) {
+      } catch (IOException e) {
          System.err.println("SERVER: Error handling client: " + e.getMessage());
       } finally {
          try {
