@@ -86,7 +86,7 @@ public class ApplicationClient implements ApplicationInterface {
                 case "5" -> {
                     System.out.println("Enter receiver username: ");
                     String receiver = sc.nextLine();
-                    Thread read = new Thread(new ReadMessageThread(br));
+                    Thread read = new Thread(new ReadMessageThread(br,bw));
                     read.start();
 
                     do {
@@ -95,7 +95,6 @@ public class ApplicationClient implements ApplicationInterface {
                         System.out.println("Enter your message: (to quit messaging at any point, type \"quit\"");
                         String message = sc.nextLine();
                         Thread write = new Thread(new WriteMessageThread(bw, sc, receiver, type, displayMessageHistoryCounter));
-
                         try {
                             if(message.equals("quit") || type.equals("quit")) {
                                 bw.write("quit\n");
@@ -108,7 +107,6 @@ public class ApplicationClient implements ApplicationInterface {
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
-
                         write.start();
                     } while(true);
                     displayMessageHistoryCounter++;
@@ -246,11 +244,12 @@ public class ApplicationClient implements ApplicationInterface {
                     } else if (user.isEmpty()) {
                         System.out.println("Empty username! Try again!");
                     } else {
-                        File f = new File("files/"+ user + ".txt");
-                        if (f.exists()) {
-                            System.out.println("Username already exists! Try again!");
-                        } else {
+                        bw.write("Check Valid Username: " + user + "\n");
+                        bw.flush();
+                        if(br.readLine().equals("Valid Username")) {
                             validUser = true;
+                        } else {
+                            System.out.println("Username already exists! Try again!");
                         }
                     }
 
@@ -284,23 +283,22 @@ public class ApplicationClient implements ApplicationInterface {
                 System.out.println("Enter the password: ");
                 String pass = sc.nextLine().trim();
 
-                File f = new File("files/" + user + ".txt");
-                if (f.exists()) {
-                    bw.write("Username Login: " + user + "\n");
-                    bw.write("Password Login: " + pass + "\n");
-                    bw.flush();
-                    while(true) {
-                        if(!br.readLine().equals("Correct Password")) {
-                            break;
-                        } else {
-                            System.out.println(br.readLine());
-                        }
-                    }
+                bw.write("Username Login: " + user + "\n");
+                bw.write("Password Login: " + pass + "\n");
+                bw.flush();
 
-                    client.actionsAfterLogin(bw, br, sc);
-                } else {
-                    System.out.println("Sorry User does not exist!");
+                while(true) {
+                    if(br.readLine().equals("Correct Password")) {
+                        break;
+                    } else {
+                        System.out.println(br.readLine());
+                        pass = sc.nextLine().trim();
+                        bw.write("Password Login: " + pass + "\n");
+                    }
                 }
+
+                client.actionsAfterLogin(bw, br, sc);
+
             }
 
             case "3" -> {
