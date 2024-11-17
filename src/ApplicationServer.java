@@ -56,6 +56,13 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
             else if (choice.startsWith("Password: ")) {
                password = choice.substring("Password: ".length());
                user = new User(username, password);
+               if(user.getUsername() == null) {
+                  output.write("Wrong Password. Please Try again\n");
+                  output.flush();
+               } else {
+                  output.write("Correct Password\n");
+                  output.flush();
+               }
             }
 
             else if (choice.startsWith("Name: ")) {
@@ -88,7 +95,7 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                String otherUser = choice.substring("Message: ".length(), choice.indexOf("-"));
                System.out.println(otherUser);
                choice = choice.substring(choice.indexOf("-") + 1);
-               
+
                String thisMessage = choice.substring(0, choice.indexOf("-"));
                System.out.println(thisMessage);
                choice = choice.substring(choice.indexOf("-") + 1);
