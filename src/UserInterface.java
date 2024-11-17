@@ -53,4 +53,8 @@ public interface UserInterface {
     boolean addFriend(String newFriend);
 
     boolean removeFriend(String oldFriend);
+
+    boolean checkUserExists(String username1);
+
+    
 }
