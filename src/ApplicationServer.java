@@ -48,6 +48,17 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
             choice = input.readLine();
             System.out.println(choice);
 
+            if(choice.startsWith("Check Valid Username: ")) {
+               username = choice.substring("Check Valid Username: ".length());
+               File f = new File("files/"+ user + ".txt");
+               if (f.exists()) {
+                  output.write("Valid Username\n");
+               } else {
+                  output.write("Invalid Username\n");
+               }
+
+            }
+
             if (choice.startsWith("Username: ")) {
                //TODO change choice to maybe input.readLine() or input.readLine() to choice
                username = choice.substring("Username: ".length());
@@ -162,6 +173,7 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                output.flush();
             }
             else if (choice.startsWith("Exit")) {
+               clientSocket.close();
                break;
             }
 
