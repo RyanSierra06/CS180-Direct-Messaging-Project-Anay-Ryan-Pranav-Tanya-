@@ -3,7 +3,7 @@ import java.net.*;
 import java.util.Scanner;
 //TODO Add functionality for can recieve messages from anyone in case 5
 // Fix texting (display who the messsage is from), basically who sent it
-
+// make sure it keeps asking for messages
 
 public class ApplicationClient implements ApplicationInterface {
     private static final int SERVER_PORT = 4242;
