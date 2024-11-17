@@ -48,30 +48,51 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
             choice = input.readLine();
             System.out.println(choice);
 
-            if(choice.startsWith("Check Valid Username: ")) {
-               username = choice.substring("Check Valid Username: ".length());
-               File f = new File("files/"+ user + ".txt");
-               if (f.exists()) {
-                  output.write("Valid Username\n");
-               } else {
-                  output.write("Invalid Username\n");
-               }
-
-            }
-
-            if (choice.startsWith("Username: ")) {
+            if (choice.startsWith("Username Create: ")) {
                //TODO change choice to maybe input.readLine() or input.readLine() to choice
-               username = choice.substring("Username: ".length());
-            }
-
-            else if (choice.startsWith("Password: ")) {
-               password = choice.substring("Password: ".length());
-               user = new User(username, password);
-               if(user.getUsername() == null) {
-                  output.write("Wrong Password. Please Try again\n");
+               username = choice.substring("Username Create: ".length());
+               File f = new File("files/" + username + ".txt");
+               if(f.exists()) {
+                  output.write("Username Exists\n");
                   output.flush();
                } else {
-                  output.write("Correct Password\n");
+                  output.write("New User\n");
+                  output.flush();
+               }
+            }
+
+            else if (choice.startsWith("Username Login: ")) {
+               //TODO change choice to maybe input.readLine() or input.readLine() to choice
+               username = choice.substring("Username: ".length());               
+            }
+
+            else if (choice.startsWith("Password Create: ")) {
+               password = choice.substring("Password Create: ".length());
+               user = new User(username, password);
+            }
+
+            else if (choice.startsWith("Password Login: ")) {
+               password = choice.substring("Password Login: ".length());
+               File f = new File("files/" + username + ".txt");
+               if(f.exists()) {
+                  BufferedReader passwordsFile = new BufferedReader(new FileReader(new File("files/usernamesAndPasswords.txt")));
+                  String userDetails = passwordsFile.readLine();
+                  while(userDetails != null) {
+                     String[] details = userDetails.split("-");
+                     if(details[0].equals(username) && details[1].equals(password)) {
+                        output.write("Logged In!\n");
+                        output.flush();
+                     } else if(details[0].equals(username)) {
+                        output.write("Wrong Password\n");
+                        output.flush();
+                     } else {
+                        userDetails = passwordsFile.readLine();
+                     }
+                  }
+                  passwordsFile.close();
+               } else {
+                  user = new User(username, password);
+                  output.write("Created New User!\n");
                   output.flush();
                }
             }

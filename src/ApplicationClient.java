@@ -243,16 +243,16 @@ public class ApplicationClient implements ApplicationInterface {
                         System.out.println("Username contains '-'. Try again!");
                     } else if (user.isEmpty()) {
                         System.out.println("Empty username! Try again!");
-                    } else {
-                        bw.write("Check Valid Username: " + user + "\n");
-                        bw.flush();
-                        if(br.readLine().equals("Valid Username")) {
-                            validUser = true;
-                        } else {
-                            System.out.println("Username already exists! Try again!");
-                        }
                     }
 
+                    bw.write("Username Create: " + user + "\n");
+                    bw.flush();
+
+                    if(br.readLine().equals("New User")) {
+                        validUser = true;
+                    } else {
+                        System.out.println("Username is in use, select a new username");
+                    }
                 } while (!validUser);
 
                 do {
@@ -269,7 +269,6 @@ public class ApplicationClient implements ApplicationInterface {
 
                 } while (!validPass);
 
-                bw.write("Username Create: " + user + "\n");
                 bw.write("Password Create: " + pass + "\n");
                 bw.flush();
 
@@ -280,25 +279,28 @@ public class ApplicationClient implements ApplicationInterface {
             case "2" -> {
                 System.out.println("Enter the username: ");
                 String user = sc.nextLine().trim();
-                System.out.println("Enter the password: ");
-                String pass = sc.nextLine().trim();
-
                 bw.write("Username Login: " + user + "\n");
-                bw.write("Password Login: " + pass + "\n");
                 bw.flush();
-
-                while(true) {
-                    if(br.readLine().equals("Correct Password")) {
-                        break;
+                boolean tryAgain = true;
+                while(tryAgain) {
+                    System.out.println("Enter the password: ");
+                    String pass = sc.nextLine().trim();
+                    bw.write("Password Login: " + pass + "\n");
+                    bw.flush();
+                    String line = br.readLine();
+                    if(line.equals("Logged In!") || line.equals("Created New User!")) {
+                        if(line.equals("Logged In!")) {
+                            System.out.println("Welcome Old User");
+                        } else {
+                            System.out.println("Welcome New User");
+                        }
+                        tryAgain = false;
                     } else {
-                        System.out.println(br.readLine());
-                        pass = sc.nextLine().trim();
-                        bw.write("Password Login: " + pass + "\n");
+                        System.out.println("Wrong password try again");
                     }
                 }
 
                 client.actionsAfterLogin(bw, br, sc);
-
             }
 
             case "3" -> {

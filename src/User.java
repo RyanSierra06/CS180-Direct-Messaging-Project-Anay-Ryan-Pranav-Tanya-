@@ -50,8 +50,7 @@ public class User implements UserInterface {
             } else {
                 while (line != null) {
                     String[] vars = line.split("-");
-
-                    if (vars[0].equals(username)) {
+                    if (vars[0].equals(username) && vars[1].equals(password)) {
                         try (BufferedReader br2 = new BufferedReader(new FileReader("files/" + username + ".txt"))) {
                             System.out.println("past LINE \n \n \n");
                             String personalIdentifiers = br2.readLine();
@@ -69,6 +68,8 @@ public class User implements UserInterface {
                             // e.printStackTrace();
                             return;
                         }
+                    } else if(vars[0].equals(username)) {
+                        this.username = null;
                     } else {
                         line = br.readLine();
                     }
