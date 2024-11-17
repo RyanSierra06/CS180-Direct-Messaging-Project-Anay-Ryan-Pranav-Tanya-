@@ -599,4 +599,12 @@ public class User implements UserInterface {
         return f.exists();
     }
 
+    public static boolean checkCanReceiveAnyone(String otherUsername) {
+        try(BufferedReader br = new BufferedReader(new FileReader("files/" + otherUsername + ".txt"))) {
+            return br.readLine().endsWith("true");
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }

@@ -63,7 +63,7 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
 
             else if (choice.startsWith("Username Login: ")) {
                //TODO change choice to maybe input.readLine() or input.readLine() to choice
-               username = choice.substring("Username Login: ".length());               
+               username = choice.substring("Username Login: ".length());
             }
 
             else if (choice.startsWith("Password Create: ")) {
@@ -122,6 +122,15 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                output.flush();
                //profile picture only returns the path right now since were in the terminal
                //change to be a ImageIcon with the GUI
+            }
+
+            else if(choice.startsWith("Check Block/Friends: ")) {
+               String receiver = choice.substring("Check Block/Friends: ".length());
+               if(user.isBlocked(receiver, user.getUsername())){
+                  output.write("This User Is Blocked\n");
+               } else if(!User.checkCanReceiveAnyone(receiver)) {
+                  output.write("This User Doesnt Accept Messages from Non-Friends\n");
+               }
             }
 
             else if (choice.startsWith("Message: ")) {

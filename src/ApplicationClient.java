@@ -86,7 +86,24 @@ public class ApplicationClient implements ApplicationInterface {
                 case "5" -> {
                     System.out.println("Enter receiver username: ");
                     String receiver = sc.nextLine();
-                    Thread read = new Thread(new ReadMessageThread(br,bw));
+
+                    try {
+                        String choice = br.readLine();
+                        bw.write("Check Block/Friends: " + receiver);
+                        if(choice.equals("This User Is Blocked")) {
+                            //TODO CHECK TO MAYBE CHANGE TO CONTINUE
+                            System.out.println("This User Is Blocked");
+                            break;
+                        } else if(choice.equals("This User Doesnt Accept Messages from Non-Friends")) {
+                            System.out.println("This User Doesnt Accept Messages from Non-Friends");
+                            break;
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+
+                    Thread read = new Thread(new ReadMessageThread(br));
                     read.start();
 
                     do {
