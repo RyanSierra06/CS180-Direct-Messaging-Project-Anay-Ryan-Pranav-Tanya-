@@ -84,14 +84,16 @@ public class ApplicationClient implements ApplicationInterface {
                 case "5" -> {
                     System.out.println("Enter receiver username: ");
                     String receiver = sc.nextLine();
-                    ReadMessageThread read = new ReadMessageThread(br);
+                    Thread read = new Thread(new ReadMessageThread(br));
                     read.start();
+
                     do {
                         System.out.println("What message type is this? ");
                         String type = sc.nextLine();
                         System.out.println("Enter your message: (to quit messaging at any point, type \"quit\"");
                         String message = sc.nextLine();
-                        WriteMessageThreade write = new WriteMessageThread(bw, sc, receiver, type, displayMessageHistoryCounter);
+                        Thread write = new Thread(new WriteMessageThread(bw, sc, receiver, type, displayMessageHistoryCounter));
+
                         try {
                             if(message.equals("quit") || type.equals("quit")) {
                                 bw.write("quit\n");
@@ -104,12 +106,9 @@ public class ApplicationClient implements ApplicationInterface {
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
+
                         write.start();
                     } while(true);
-                    //TODO
-
-
-
                     displayMessageHistoryCounter++;
 
                 }

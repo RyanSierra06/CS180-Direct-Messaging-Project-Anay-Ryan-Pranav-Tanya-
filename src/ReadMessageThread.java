@@ -14,15 +14,20 @@ public class ReadMessageThread implements Runnable {
     @Override
     public void run() {
         try {
-            String isBlocked = br.readLine();
-            if(isBlocked.equals("Block Error: Failed to send message.")) {
-                return;
-            } else {
-                String message;
-                while( (message = br.readLine()) != null) {
-                    System.out.println(message);
+            while(true) {
+                String isBlocked = br.readLine();
+                if(isBlocked.equals("Block Error: Failed to send message.")) {
+                    return;
+                } else if(isBlocked.equalsIgnoreCase("quit")) {
+                    break;
+                } else {
+                    String message;
+                    while((message = br.readLine()) != null) {
+                        System.out.println(message);
+                    }
                 }
             }
+            
         } catch(IOException e) {
             e.printStackTrace();
         }
