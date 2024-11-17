@@ -63,7 +63,7 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
 
             else if (choice.startsWith("Username Login: ")) {
                //TODO change choice to maybe input.readLine() or input.readLine() to choice
-               username = choice.substring("Username Login: ".length());               
+               username = choice.substring("Username Login: ".length());
             }
 
             else if (choice.startsWith("Password Create: ")) {
@@ -122,6 +122,15 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                output.flush();
                //profile picture only returns the path right now since were in the terminal
                //change to be a ImageIcon with the GUI
+            }
+
+            else if(choice.startsWith("Check Block/Friends: ")) {
+               String receiver = choice.substring("Check Block/Friends: ".length());
+               if(user.isBlocked(receiver, user.getUsername())){
+                  output.write("This User Is Blocked\n");
+               } else if(!User.checkCanReceiveAnyone(receiver) && user.getFriends().contains(receiver)) {
+                  output.write("This User Doesnt Accept Messages from Non-Friends\n");
+               }
             }
 
             else if (choice.startsWith("Message: ")) {
@@ -202,6 +211,11 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
             else if (choice.startsWith("Friend List: ")) {
                output.write(user.getFriends() + "\n");
                output.flush();
+            }
+
+            else if(choice.startsWith("Change Can Receive Anyone: ")) {
+               boolean yesNo = Boolean.parseBoolean(choice.substring("Change Can Receive Anyone: ".length()));
+               user.setReceiveAnyone(yesNo);
             }
             else if (choice.startsWith("Exit")) {
                clientSocket.close();

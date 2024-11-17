@@ -6,10 +6,8 @@ import java.util.Scanner;
 
 public class ReadMessageThread implements Runnable {
     BufferedReader br = null;
-    BufferedWriter bw = null;
 
-    public ReadMessageThread(BufferedReader br, BufferedWriter bw) {
-        this.bw = bw;
+    public ReadMessageThread(BufferedReader br) {
         this.br = br;
     }
 
@@ -19,7 +17,6 @@ public class ReadMessageThread implements Runnable {
             while(true) {
                 String isBlocked = br.readLine();
                 if(isBlocked.equals("Block Error: Failed to send message.")) {
-
                     return;
                 } else if(isBlocked.equals("This User Doesnt Accept Messages from Non-Friends")) {
                     return;
