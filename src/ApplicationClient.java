@@ -26,7 +26,8 @@ public class ApplicationClient implements ApplicationInterface {
             System.out.println("9. Add Friend");
             System.out.println("10. Remove Friend");
             System.out.println("11. View Friends");
-            System.out.println("12. Log Out");
+            System.out.println("12. Set Can Receive from anyone");
+            System.out.println("13. Log Out");
 
             System.out.print("Choose an action (1-12): ");
             String action = sc.nextLine().trim();
@@ -199,8 +200,20 @@ public class ApplicationClient implements ApplicationInterface {
                         throw new RuntimeException(e);
                     }
                 }
-
                 case "12" -> {
+                    System.out.println("Do you want to receive messages from anyone (yes/no)");
+                    String choice = sc.nextLine();
+                    boolean yesNo = choice.equalsIgnoreCase("yes");
+                    try {
+                        bw.write("Change Can Receive Anyone: " + yesNo + "\n");
+                        bw.flush();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    System.out.println("Changed Can Receive Anyone to: " + yesNo + "\n");
+                }
+
+                case "13" -> {
                     try {
                         bw.write("Exit");
                         bw.flush();

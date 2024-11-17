@@ -212,6 +212,11 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                output.write(user.getFriends() + "\n");
                output.flush();
             }
+
+            else if(choice.startsWith("Change Can Receive Anyone: ")) {
+               boolean yesNo = Boolean.parseBoolean(choice.substring("Change Can Receive Anyone: ".length()));
+               user.setReceiveAnyone(yesNo);
+            }
             else if (choice.startsWith("Exit")) {
                clientSocket.close();
                break;
