@@ -93,10 +93,10 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                   }
                   passwordsFile.close();
                } else {
+                  user = new User(username, password);
                   output.write("Created New User!\n");
                   output.flush();
                }
-               user = new User(username, password);
             }
 
             else if (choice.startsWith("Name: ")) {
@@ -128,7 +128,7 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                String receiver = choice.substring("Check Block/Friends: ".length());
                if(user.isBlocked(receiver, user.getUsername())){
                   output.write("This User Is Blocked\n");
-               } else if(!User.checkCanReceiveAnyone(receiver)) {
+               } else if(!User.checkCanReceiveAnyone(receiver) && user.getFriends().contains(receiver)) {
                   output.write("This User Doesnt Accept Messages from Non-Friends\n");
                }
             }
