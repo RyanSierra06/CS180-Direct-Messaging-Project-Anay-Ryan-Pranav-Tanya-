@@ -75,7 +75,7 @@ public class ApplicationClient implements ApplicationInterface {
                         System.out.println(br.readLine());
                         System.out.println(br.readLine());
                         System.out.println(br.readLine());
-                        
+
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -86,7 +86,7 @@ public class ApplicationClient implements ApplicationInterface {
                     String receiver = sc.nextLine();
                     System.out.println("What message type is this? ");
                     String type = sc.nextLine();
-                    System.out.println("Enter your message: ");
+                    System.out.println("Enter your message: (to quit messaging at any point, type \"quit\"");
                     String message = sc.nextLine();
                     try {
                         bw.write("Message: " + receiver + " " + message + " " + type + " " + displayMessageHistoryCounter + "\n");
@@ -94,8 +94,12 @@ public class ApplicationClient implements ApplicationInterface {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    displayMessageHistoryCounter++;
                     //TODO
+                    ReadMessageThread read = new ReadMessageThread(br);
+                    WriteMessageThreade write = new WriteMessageThread(bw, sc, receiver, type, displayMessageHistoryCounter);
+
+                    displayMessageHistoryCounter++;
+
                 }
 
                 case "6" -> {

@@ -57,7 +57,7 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                password = choice.substring("Password: ".length());
                user = new User(username, password);
             }
-            
+
             else if (choice.startsWith("Name: ")) {
                name = choice.substring("Name: ".length());
                user.setName(name);
@@ -91,7 +91,7 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                String counter = choice.substring(("Message: " + otherUser + " " + thisMessage + " " + type + " ").length());
 
                if(user.isBlocked(user.getUsername(), otherUser)) {
-                  output.write("Block Error: Failed to send message.");
+                  output.write("Block Error: Failed to send message." + "\n");
                   output.flush();
                } else {
                   String first = (user.getUsername().compareTo(otherUser) > 0 ? otherUser : user.getUsername());
