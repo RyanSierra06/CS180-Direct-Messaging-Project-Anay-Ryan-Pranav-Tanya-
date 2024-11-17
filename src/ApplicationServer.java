@@ -121,7 +121,13 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                if(user.isBlocked(user.getUsername(), otherUser)) {
                   output.write("Block Error: Failed to send message." + "\n");
                   output.flush();
-               } else {
+               } else if(!user.getReceiveAnyone() && !user.getFriends().contains(otherUser)) {
+                  //TODO CHANGE TO ADD IMPLEMENTATION FOR CAN RECEIVE FROM ON FRIENDS
+                  output.write("This User Doesnt Accept Messages from Non-Friends" + "\n");
+                  output.flush();
+               }
+
+               else {
                   String first = (user.getUsername().compareTo(otherUser) > 0 ? otherUser : user.getUsername());
                   String second = (user.getUsername().equals(first) ? otherUser : user.getUsername());
                   File f = new File("files/" + first + "-" + second + ".txt");
@@ -148,6 +154,8 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                // Maybe have an atomic integer to display message history the first time and
                // then go into just the straight messages back and fourth
             }
+
+
             else if (choice.startsWith("Block User: ")) {
                blockUser = choice.substring("Block User: ".length());
                user.blockUser(blockUser);
