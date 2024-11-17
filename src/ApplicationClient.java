@@ -75,7 +75,7 @@ public class ApplicationClient implements ApplicationInterface {
                         System.out.println("Name: " + br.readLine());
                         System.out.println("Description: " + br.readLine());
                         System.out.println("Picture: " + br.readLine());
-                        
+
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -84,19 +84,31 @@ public class ApplicationClient implements ApplicationInterface {
                 case "5" -> {
                     System.out.println("Enter receiver username: ");
                     String receiver = sc.nextLine();
-                    System.out.println("What message type is this? ");
-                    String type = sc.nextLine();
-                    System.out.println("Enter your message: (to quit messaging at any point, type \"quit\"");
-                    String message = sc.nextLine();
-                    try {
-                        bw.write("Message: " + receiver + " " + message + " " + type + " " + displayMessageHistoryCounter + "\n");
-                        bw.flush();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    //TODO
                     ReadMessageThread read = new ReadMessageThread(br);
-                    WriteMessageThreade write = new WriteMessageThread(bw, sc, receiver, type, displayMessageHistoryCounter);
+                    read.start();
+                    do {
+                        System.out.println("What message type is this? ");
+                        String type = sc.nextLine();
+                        System.out.println("Enter your message: (to quit messaging at any point, type \"quit\"");
+                        String message = sc.nextLine();
+                        WriteMessageThreade write = new WriteMessageThread(bw, sc, receiver, type, displayMessageHistoryCounter);
+                        try {
+                            if(message.equals("quit") || type.equals("quit")) {
+                                bw.write("quit\n");
+                                bw.flush();
+                                break;
+                            } else {
+                                bw.write("Message: " + receiver + " " + message + " " + type + " " + displayMessageHistoryCounter + "\n");
+                                bw.flush();
+                            }
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        write.start();
+                    } while(true);
+                    //TODO
+
+
 
                     displayMessageHistoryCounter++;
 

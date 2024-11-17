@@ -97,19 +97,18 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                   String first = (user.getUsername().compareTo(otherUser) > 0 ? otherUser : user.getUsername());
                   String second = (user.getUsername().equals(first) ? otherUser : user.getUsername());
                   File f = new File("files/" + first + "-" + second + ".txt");
-                  if(f.exists() && Integer.parseInt(counter) == 0) {
+                  if (f.exists() && Integer.parseInt(counter) == 0) {
                      //First time coming back so print the message history
                      user.sendMessage(new Message(user, type, thisMessage), otherUser);
                      String messageHistory = user.readMessages(otherUser);
-                     output.write(messageHistory + "\n");
+                     output.write("Message: " + "\n" +messageHistory + "\n");
                      output.flush();
                   } else if(f.exists() && Integer.parseInt(counter) > 0) {
                      //Second time, so everything is already printed, we just want the new messages to start coming in
                      user.sendMessage(new Message(user, type, thisMessage), otherUser);
-                     output.write(user.findMostRecentMessages(otherUser) + "\n");
+                     output.write("Message: " + "\n" + user.findMostRecentMessages(otherUser) + "\n");
                      output.flush();
-                  }
-                  else {
+                  } else if(!f.exists()) {
                      output.write("There are no messages between you and " + otherUser + "\n");
                      output.flush();
                   }
@@ -149,7 +148,13 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
             }
             else if (choice.startsWith("Exit")) {
                break;
-            } else {
+            }
+
+            else if(choice.equals("quit")) {
+               output.write("quit");
+            }
+
+            else {
                System.out.println("None of teh commands");
             }
          }
