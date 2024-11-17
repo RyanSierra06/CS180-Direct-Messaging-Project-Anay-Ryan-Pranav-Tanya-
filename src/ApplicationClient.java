@@ -262,7 +262,6 @@ public class ApplicationClient implements ApplicationInterface {
                         System.out.println("Password contains '-'. Try again!");
                     } else if (pass.isEmpty()) {
                         System.out.println("Empty password! Try again!");
-
                     } else {
                         validPass = true;
                     }
@@ -295,7 +294,7 @@ public class ApplicationClient implements ApplicationInterface {
                             System.out.println("Welcome New User");
                         }
                         tryAgain = false;
-                    } else {
+                    } else if(line.equals("Wrong Password")) {
                         System.out.println("Wrong password try again");
                     }
                 }

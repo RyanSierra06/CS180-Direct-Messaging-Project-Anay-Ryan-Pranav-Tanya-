@@ -63,7 +63,7 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
 
             else if (choice.startsWith("Username Login: ")) {
                //TODO change choice to maybe input.readLine() or input.readLine() to choice
-               username = choice.substring("Username: ".length());               
+               username = choice.substring("Username Login: ".length());               
             }
 
             else if (choice.startsWith("Password Create: ")) {
@@ -82,9 +82,11 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                      if(details[0].equals(username) && details[1].equals(password)) {
                         output.write("Logged In!\n");
                         output.flush();
-                     } else if(details[0].equals(username)) {
+                        break;
+                     } else if(details[0].equals(username) && !details[1].equals(password)) {
                         output.write("Wrong Password\n");
                         output.flush();
+                        break;
                      } else {
                         userDetails = passwordsFile.readLine();
                      }
