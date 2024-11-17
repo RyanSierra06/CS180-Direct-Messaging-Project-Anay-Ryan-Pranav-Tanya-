@@ -247,7 +247,6 @@ public class ApplicationClient implements ApplicationInterface {
                         System.out.println("Empty username! Try again!");
                     } else {
                         File f = new File("files/"+ user + ".txt");
-                        System.out.println(f.exists());
                         if (f.exists()) {
                             System.out.println("Username already exists! Try again!");
                         } else {
@@ -276,8 +275,6 @@ public class ApplicationClient implements ApplicationInterface {
                 bw.write("Password: " + pass + "\n");
                 bw.flush();
 
-                // File f = new File("files/" + user + ".txt");
-                // System.out.println(f.exists());
                 System.out.println("Created Login!");
                 client.actionsAfterLogin(bw, br, sc);
             }
@@ -288,14 +285,19 @@ public class ApplicationClient implements ApplicationInterface {
                 System.out.println("Enter the password: ");
                 String pass = sc.nextLine().trim();
 
-
                 File f = new File("files/" + user + ".txt");
-                System.out.println(f.exists());
-                System.out.println(f.getAbsolutePath());
                 if (f.exists()) {
                     bw.write("Username: " + user + "\n");
                     bw.write("Password: " + pass + "\n");
                     bw.flush();
+                    while(true) {
+                        if(!br.readLine().equals("Correct Password")) {
+                            break;
+                        } else {
+                            System.out.println(br.readLine());
+                        }
+                    }
+
                     client.actionsAfterLogin(bw, br, sc);
                 } else {
                     System.out.println("Sorry User does not exist!");
