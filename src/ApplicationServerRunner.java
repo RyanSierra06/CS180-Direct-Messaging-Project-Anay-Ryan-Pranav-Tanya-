@@ -12,7 +12,6 @@ public class ApplicationServerRunner {
                 ApplicationServer appServer = new ApplicationServer(client);
                 Thread clinetThread = new Thread(appServer);
                 clinetThread.start();
-                System.out.println("reached here");
             }
         } catch(Exception e) {
             e.printStackTrace();

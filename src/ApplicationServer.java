@@ -1,8 +1,6 @@
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -48,34 +46,43 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
          StringBuilder messages  = new StringBuilder();
          while(true) {
             choice = input.readLine();
+            System.out.println(choice);
+
             if (choice.startsWith("Username: ")) {
                //TODO change choice to maybe input.readLine() or input.readLine() to choice
                username = choice.substring("Username: ".length());
             }
+
             else if (choice.startsWith("Password: ")) {
                password = choice.substring("Password: ".length());
                user = new User(username, password);
             }
+            
             else if (choice.startsWith("Name: ")) {
                name = choice.substring("Name: ".length());
                user.setName(name);
             }
+
             else if (choice.startsWith("Profile Description: ")) {
                profileDescription = choice.substring("Profile Description: ".length());
                user.setProfileDescription(profileDescription);
             }
+
             else if (choice.startsWith("Profile Picture: ")) {
                profilePicture = choice.substring("Profile Picture: ".length());
                user.setProfilePicture(profilePicture);
             }
             else if (choice.equals("Profile Information: ")) {
                output.write(user.getName() + "\n");
+               output.flush();
                output.write(user.getProfileDescription() + "\n");
+               output.flush();
                output.write(user.getProfilePicture() + "\n");
                output.flush();
                //profile picture only returns the path right now since were in the terminal
                //change to be a ImageIcon with the GUI
             }
+
             else if (choice.startsWith("Message: ")) {
 
                String otherUser = choice.substring("Message: ".length());
