@@ -1,6 +1,8 @@
 import java.io.*;
 import java.net.*;
 import java.util.Scanner;
+//TODO Add functionality for can recieve messages from anyone in case 5
+// Fix texting (display who the messsage is from), basically who sent it
 
 
 public class ApplicationClient implements ApplicationInterface {
@@ -59,7 +61,7 @@ public class ApplicationClient implements ApplicationInterface {
                     System.out.print("Enter profile picture URL: ");
                     String picture = sc.nextLine();
                     try {
-                        bw.write("Profile Picture" + picture + "\n");
+                        bw.write("Profile Picture: " + picture + "\n");
                         bw.flush();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -100,7 +102,7 @@ public class ApplicationClient implements ApplicationInterface {
                                 bw.flush();
                                 break;
                             } else {
-                                bw.write("Message: " + receiver + " " + message + " " + type + " " + displayMessageHistoryCounter + "\n");
+                                bw.write("Message: " + receiver + "-" + message + "-" + type + "-" + displayMessageHistoryCounter + "\n");
                                 bw.flush();
                             }
                         } catch (IOException e) {
@@ -140,8 +142,10 @@ public class ApplicationClient implements ApplicationInterface {
 
                 case "8" -> {
                     try {
-                        bw.write("Blocked Users: ");
+                        bw.write("Blocked Users: " + "\n");
                         bw.flush();
+                        System.out.println("Blocked Users: " + br.readLine());
+
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -173,8 +177,9 @@ public class ApplicationClient implements ApplicationInterface {
 
                 case "11" -> {
                     try {
-                        bw.write("Friend List: ");
+                        bw.write("Friend List: " + "\n");
                         bw.flush();
+                        System.out.println("Friend List: " + br.readLine());
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }

@@ -49,7 +49,6 @@ public class User implements UserInterface {
                 return;
             } else {
                 while (line != null) {
-                    System.out.println(line + "\n \n \n");
                     String[] vars = line.split("-");
 
                     if (vars[0].equals(username)) {

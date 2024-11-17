@@ -30,6 +30,6 @@ public class WriteMessageThread implements Runnable {
             }
         } catch(IOException e) {
             e.printStackTrace();
-        } 
+        }
     }
 }

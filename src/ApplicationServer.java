@@ -85,10 +85,20 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
 
             else if (choice.startsWith("Message: ")) {
 
-               String otherUser = choice.substring("Message: ".length());
-               String thisMessage = choice.substring(("Message: " + otherUser + " ").length());
-               String type = choice.substring(("Message: " + otherUser + " " + thisMessage + " ").length());
-               String counter = choice.substring(("Message: " + otherUser + " " + thisMessage + " " + type + " ").length());
+               String otherUser = choice.substring("Message: ".length(), choice.indexOf("-"));
+               System.out.println(otherUser);
+               choice = choice.substring(choice.indexOf("-") + 1);
+               
+               String thisMessage = choice.substring(0, choice.indexOf("-"));
+               System.out.println(thisMessage);
+               choice = choice.substring(choice.indexOf("-") + 1);
+
+               String type = choice.substring(0, choice.indexOf("-"));
+               System.out.println(type);
+               choice = choice.substring(choice.indexOf("-") + 1);
+
+               String counter = choice;
+               System.out.println(counter);
 
                if(user.isBlocked(user.getUsername(), otherUser)) {
                   output.write("Block Error: Failed to send message." + "\n");
@@ -97,19 +107,19 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                   String first = (user.getUsername().compareTo(otherUser) > 0 ? otherUser : user.getUsername());
                   String second = (user.getUsername().equals(first) ? otherUser : user.getUsername());
                   File f = new File("files/" + first + "-" + second + ".txt");
-                  if (f.exists() && Integer.parseInt(counter) == 0) {
+
+                  System.out.println("we reached this point");
+
+                  if (Integer.parseInt(counter) == 0) {
                      //First time coming back so print the message history
                      user.sendMessage(new Message(user, type, thisMessage), otherUser);
                      String messageHistory = user.readMessages(otherUser);
-                     output.write("Message: " + "\n" +messageHistory + "\n");
+                     output.write("Message: " + "\n" + messageHistory + "\n");
                      output.flush();
-                  } else if(f.exists() && Integer.parseInt(counter) > 0) {
+                  } else if(Integer.parseInt(counter) > 0) {
                      //Second time, so everything is already printed, we just want the new messages to start coming in
                      user.sendMessage(new Message(user, type, thisMessage), otherUser);
                      output.write("Message: " + "\n" + user.findMostRecentMessages(otherUser) + "\n");
-                     output.flush();
-                  } else if(!f.exists()) {
-                     output.write("There are no messages between you and " + otherUser + "\n");
                      output.flush();
                   }
                }
@@ -129,8 +139,7 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                user.unblockUser(unblockUser);
             }
             else if (choice.startsWith("Blocked Users: ")) {
-               blockedUsers = choice.substring("Blocked Users: ".length());
-               output.write(blockedUsers + "\n");
+               output.write(user.getBlockedUsers() + "\n");
                output.flush();
             }
             else if (choice.startsWith("Add Friend: ")) {
@@ -142,8 +151,7 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                user.removeFriend(removeFriend);
             }
             else if (choice.startsWith("Friend List: ")) {
-               friends = choice.substring("Friend List: ".length());
-               output.write(friends + "\n");
+               output.write(user.getFriends() + "\n");
                output.flush();
             }
             else if (choice.startsWith("Exit")) {
