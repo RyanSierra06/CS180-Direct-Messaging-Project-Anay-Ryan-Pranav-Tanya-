@@ -9,6 +9,7 @@ public class ApplicationClient implements ApplicationInterface {
 
     private void actionsAfterLogin(BufferedWriter bw, BufferedReader br, Scanner sc) {
         boolean exit = false;
+        int displayMessageHistoryCounter = 0;
 
         while (!exit) {
             System.out.println("\nUser Actions Menu:");
@@ -62,7 +63,6 @@ public class ApplicationClient implements ApplicationInterface {
                     try {
                         bw.write("Profile Picture" + picture + "\n");
                         bw.flush();
-                        bw.flush();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -71,8 +71,7 @@ public class ApplicationClient implements ApplicationInterface {
 
                 case "4" -> {
                     try {
-                        bw.write("Profile Information: ");
-                        bw.flush();
+                        bw.write("Profile Information: " + "\n");
                         bw.flush();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -87,38 +86,13 @@ public class ApplicationClient implements ApplicationInterface {
                     System.out.println("Enter your message: ");
                     String message = sc.nextLine();
                     try {
-                        bw.write("Message: " + receiver + " " + message + " " + type + "\n");
-                        bw.flush();
+                        bw.write("Message: " + receiver + " " + message + " " + type + " " + displayMessageHistoryCounter + "\n");
                         bw.flush();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
+                    displayMessageHistoryCounter++;
                     //TODO
-
-//                        boolean goAgain = true;
-//                        do {
-//                            // Cant truly read and update at the same time since were in terminal
-//                            System.out.print("Enter message type content (Image/Text): ");
-//                            String type = sc.nextLine();
-//                            System.out.print("Enter message content: ");
-//                            String content = sc.nextLine();
-//                            Message message = new Message(currentUser, type, content);
-//
-//                            synchronized (gateKeep) {
-//                                currentUser.sendMessage(message, receiver);
-//                            }
-//
-//                            System.out.println("Message sent to " + receiver);
-////                            while(currentUser.findMostRecentMessages(receiver).isEmpty()) {
-////                                currentUser.findMostRecentMessages(receiver);
-////                            }
-////
-////                            System.out.println(currentUser.findMostRecentMessages(receiver));
-//
-//                            //System.out.println("Do you want to exit?");
-//                            goAgain = !sc.nextLine().equalsIgnoreCase("exit");
-//                        } while (goAgain);
-//                    }
                 }
 
                 case "6" -> {

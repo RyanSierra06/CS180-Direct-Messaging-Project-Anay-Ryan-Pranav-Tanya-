@@ -15,7 +15,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 
 public class ApplicationServer implements ApplicationServerInterface, Runnable {
-   private static AtomicInteger counter = new AtomicInteger(2);
    private static final int portNumber = 4242;
    private final Socket clientSocket;
 
@@ -69,7 +68,7 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                profilePicture = choice.substring("Profile Picture: ".length());
                user.setProfilePicture(profilePicture);
             }
-            else if (choice.startsWith("Profile Information: ")) {
+            else if (choice.equals("Profile Information: ")) {
                output.write(user.getName() + "\n");
                output.write(user.getProfileDescription() + "\n");
                output.write(user.getProfilePicture() + "\n");
@@ -78,9 +77,12 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                //change to be a ImageIcon with the GUI
             }
             else if (choice.startsWith("Message: ")) {
+
                String otherUser = choice.substring("Message: ".length());
                String thisMessage = choice.substring(("Message: " + otherUser + " ").length());
                String type = choice.substring(("Message: " + otherUser + " " + thisMessage + " ").length());
+               String counter = choice.substring(("Message: " + otherUser + " " + thisMessage + " " + type + " ").length());
+
                if(user.isBlocked(user.getUsername(), otherUser)) {
                   output.write("Block Error: Failed to send message.");
                   output.flush();
@@ -88,16 +90,25 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                   String first = (user.getUsername().compareTo(otherUser) > 0 ? otherUser : user.getUsername());
                   String second = (user.getUsername().equals(first) ? otherUser : user.getUsername());
                   File f = new File("files/" + first + "-" + second + ".txt");
-                  if(f.exists()) {
+                  if(f.exists() && Integer.parseInt(counter) == 0) {
+                     //First time coming back so print the message history
                      user.sendMessage(new Message(user, type, thisMessage), otherUser);
                      String messageHistory = user.readMessages(otherUser);
                      output.write(messageHistory + "\n");
                      output.flush();
-                  } else {
+                  } else if(f.exists() && Integer.parseInt(counter) > 0) {
+                     //Second time, so everything is already printed, we just want the new messages to start coming in
+                     user.sendMessage(new Message(user, type, thisMessage), otherUser);
+                     output.write(user.findMostRecentMessages(otherUser) + "\n");
+                     output.flush();
+                  }
+                  else {
                      output.write("There are no messages between you and " + otherUser + "\n");
                      output.flush();
                   }
                }
+
+
                //TODO back in the client, once you're in case 5, start a
                // loop to keep messaging that user until a certain value is types
                // Maybe have an atomic integer to display message history the first time and
