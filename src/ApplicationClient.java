@@ -90,7 +90,8 @@ public class ApplicationClient implements ApplicationInterface {
 
                     try {
                         String choice = br.readLine();
-                        bw.write("Check Block/Friends: " + receiver);
+                        bw.write("Check Block/Friends: " + receiver + "\n");
+                        bw.flush();
                         if(choice.equals("This User Is Blocked")) {
                             //TODO CHECK TO MAYBE CHANGE TO CONTINUE
                             System.out.println("This User Is Blocked");

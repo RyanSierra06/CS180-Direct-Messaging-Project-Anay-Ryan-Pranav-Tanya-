@@ -93,10 +93,10 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                   }
                   passwordsFile.close();
                } else {
-                  user = new User(username, password);
                   output.write("Created New User!\n");
                   output.flush();
                }
+               user = new User(username, password);
             }
 
             else if (choice.startsWith("Name: ")) {

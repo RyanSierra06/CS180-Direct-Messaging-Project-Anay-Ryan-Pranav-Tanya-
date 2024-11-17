@@ -6,10 +6,8 @@ import java.util.Scanner;
 
 public class ReadMessageThread implements Runnable {
     BufferedReader br = null;
-    BufferedWriter bw = null;
 
     public ReadMessageThread(BufferedReader br) {
-        this.bw = bw;
         this.br = br;
     }
 
