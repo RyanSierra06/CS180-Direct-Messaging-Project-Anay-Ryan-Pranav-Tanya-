@@ -46,7 +46,7 @@ public interface UserInterface {
 
     boolean unblockUser(String previouslyBlockedUser);
 
-    String readMessages(String reciver);
+    String readMessages(String receiver);
 
     String findUser(String username);
 
