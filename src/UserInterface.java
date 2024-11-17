@@ -10,6 +10,7 @@
  */
 
 public interface UserInterface {
+
     void createUser(String username, String password);
 
     void setName(String name);
@@ -55,6 +56,4 @@ public interface UserInterface {
     boolean removeFriend(String oldFriend);
 
     boolean checkUserExists(String username1);
-
-    
 }

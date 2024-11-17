@@ -16,6 +16,8 @@ import org.junit.runner.notification.Failure;
  * @version Nov 3, 2024
  *
  */
+
+@RunWith(Enclosed.class) // Ensure nested test classes are executed
 public class UserTestCases {
 
     public static void main(String[] args) {
@@ -30,16 +32,17 @@ public class UserTestCases {
     }
 
     /**
-    * A set of public test cases to run
-    *
-    * This is the User Test Cases 
-    *
-    * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
-    *
-    * @version Nov 3, 2024
-    *
-    */
+     * A set of public test cases to run
+     *
+     * This is the User Test Cases 
+     *
+     * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
+     *
+     * @version Nov 3, 2024
+     *
+     */
     public static class TestCase {
+
         @Test(timeout = 1000)
         public void programTestCase() {
 
@@ -56,7 +59,7 @@ public class UserTestCases {
             secondUser.setReceiveAnyone(false);
 
             Message msg = new Message(initialUser, "text", "hehehe");
-            boolean menatToBreak = initialUser.sendMessage(msg, secondUser.getUsername());
+            boolean meantToBreak = initialUser.sendMessage(msg, secondUser.getUsername());
 
             boolean addedFriend = secondUser.addFriend(initialUser.getUsername());
             boolean addedFriend2 = initialUser.addFriend(secondUser.getUsername());
@@ -73,7 +76,7 @@ public class UserTestCases {
 
 
             boolean ableToBlock = initialUser.blockUser(thirdUser.getUsername());
-            String userOneblocks = initialUser.getBlockedUsers();
+            String userOneBlocks = initialUser.getBlockedUsers();
             boolean removedBlock = initialUser.unblockUser(thirdUser.getUsername());
             String userOnePostBlocks = initialUser.getBlockedUsers();
 
@@ -84,7 +87,7 @@ public class UserTestCases {
             boolean msgRemoved = initialUser.deleteMessage(secondUser.getUsername(), msg);
             String userFinder = initialUser.findUser(thirdUser.getUsername());
 
-            Assert.assertEquals("1", menatToBreak, false);
+            Assert.assertEquals("1", meantToBreak, false);
             Assert.assertEquals("2", addedFriend, true);
             Assert.assertEquals("3", addedFriend2, true);
 
@@ -92,7 +95,7 @@ public class UserTestCases {
             Assert.assertEquals("5", user1Friends, secondUser.getUsername());
 
             Assert.assertEquals("6", ableToBlock, true);
-            Assert.assertEquals("7", userOneblocks, thirdUser.getUsername());
+            Assert.assertEquals("7", userOneBlocks, thirdUser.getUsername());
             Assert.assertEquals("8", removedBlock, true);
             Assert.assertEquals("9", userOnePostBlocks, "");
 
@@ -129,7 +132,31 @@ public class UserTestCases {
             Assert.assertEquals("19", initialUserFriends, secondUser.getUsername());
             Assert.assertEquals("20", initialUserBlocked, "user3");
             Assert.assertEquals("21", msg, "");
+            
+            // UPDATED FOR PHASE 2
+            // Test case for updating user profile description
+            initialUser.setProfileDescription("Updated profile description");
+            Assert.assertEquals("22", initialUser.getProfileDescription(), "Updated profile description");
+
+            // UPDATED FOR PHASE 2
+            // Test case for updating user profile picture
+            initialUser.setProfilePicture("./files/newProfilePic.jpg");
+            Assert.assertEquals("23", initialUser.getProfilePicture(), "./files/newProfilePic.jpg");
+
+            // UPDATED FOR PHASE 2
+            // Test case for receiving messages after update
+            Message updatedMessage = new Message(secondUser, "text", "updatedMessage");
+            boolean sentMessage = secondUser.sendMessage(updatedMessage, initialUser.getUsername());
+            Assert.assertEquals("24", sentMessage, true);
+            String receivedMessage = initialUser.readMessages(secondUser.getUsername());
+            Assert.assertEquals("25", receivedMessage, "user2-user1-updatedMessage\n");
+
+            // UPDATED FOR PHASE 2
+            // Test case for updating friend status after user update
+            boolean addedNewFriend = initialUser.addFriend(secondUser.getUsername());
+            Assert.assertEquals("26", addedNewFriend, true);
+            String updatedFriendsList = initialUser.getFriends();
+            Assert.assertEquals("27", updatedFriendsList, secondUser.getUsername());
         }
     }
-
 }
