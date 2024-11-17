@@ -72,10 +72,10 @@ public class ApplicationClient implements ApplicationInterface {
                         bw.write("Profile Information: " + "\n");
                         bw.flush();
                         System.out.println("sent prfoile info request");
-                        System.out.println(br.readLine());
-                        System.out.println(br.readLine());
-                        System.out.println(br.readLine());
-
+                        System.out.println("Name: " + br.readLine());
+                        System.out.println("Description: " + br.readLine());
+                        System.out.println("Picture: " + br.readLine());
+                        
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
