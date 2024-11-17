@@ -607,4 +607,14 @@ public class User implements UserInterface {
         }
     }
 
+    public static boolean checkIsFriend(String otherUsername, String thisUsername) {
+        try(BufferedReader br = new BufferedReader(new FileReader("files/" + otherUsername + ".txt"))) {
+            br.readLine();
+            br.readLine();
+            return br.readLine().contains(thisUsername);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }
