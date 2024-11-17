@@ -112,7 +112,7 @@ public class ApplicationClient implements ApplicationInterface {
                         write.start();
                     } while(true);
                     displayMessageHistoryCounter++;
-
+                    actionsAfterLogin(bw, br, sc);
                 }
 
                 case "6" -> {
@@ -270,9 +270,8 @@ public class ApplicationClient implements ApplicationInterface {
 
                 } while (!validPass);
 
-                bw.write("Username: " + user + "\n");
-                bw.flush();
-                bw.write("Password: " + pass + "\n");
+                bw.write("Username Create: " + user + "\n");
+                bw.write("Password Create: " + pass + "\n");
                 bw.flush();
 
                 System.out.println("Created Login!");
@@ -287,8 +286,8 @@ public class ApplicationClient implements ApplicationInterface {
 
                 File f = new File("files/" + user + ".txt");
                 if (f.exists()) {
-                    bw.write("Username: " + user + "\n");
-                    bw.write("Password: " + pass + "\n");
+                    bw.write("Username Login: " + user + "\n");
+                    bw.write("Password Login: " + pass + "\n");
                     bw.flush();
                     while(true) {
                         if(!br.readLine().equals("Correct Password")) {
