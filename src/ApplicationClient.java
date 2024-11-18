@@ -98,7 +98,7 @@ public class ApplicationClient implements ApplicationInterface {
                             System.out.println(choice);
                             break;
                         }
-                        
+
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -128,7 +128,15 @@ public class ApplicationClient implements ApplicationInterface {
                                 bw.flush();
                                 break;
                             } else if(message.equals("DELETE") || type.equals("DELETE")) {
+                                System.out.println("What is the message text of the message you want to delete");
+                                message = sc.nextLine();
                                 bw.write("DELETE" + receiver + "-" + message + "-" + type + "\n");
+                                String result = br.readLine();
+                                if(result.equals("Successful Delete Message")) {
+                                    System.out.println("Message Was Deleted");
+                                } else if(result.equals("This Messages Does Not Exist")) {
+                                    System.out.println("This Message Doesnt Exist");
+                                }
                             }else {
                                 bw.write("Message: " + receiver + "-" + message + "-" + type + "-" + displayMessageHistoryCounter + "\n");
                                 bw.flush();
@@ -138,9 +146,7 @@ public class ApplicationClient implements ApplicationInterface {
                         }
                     } while(true);
                     displayMessageHistoryCounter++;
-
                     read.interrupt();
-
                     actionsAfterLogin(bw, br, sc);
                 }
 

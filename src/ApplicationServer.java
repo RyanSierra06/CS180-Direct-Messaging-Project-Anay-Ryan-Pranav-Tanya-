@@ -99,7 +99,7 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                   output.write("Created New User!\n");
                   output.flush();
                }
-               
+
                if(passed) {
                   user = new User(username, password);
                }
@@ -234,7 +234,7 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                output.flush();
             }
 
-            else if(choice.equals("DELETE")) {
+            else if(choice.startsWith("DELETE")) {
                String receiver = choice.substring("DELETE: ".length(), choice.indexOf("-"));
 
                choice = choice.substring(choice.indexOf("-") + 1);
@@ -243,7 +243,35 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                choice = choice.substring(choice.indexOf("-") + 1);
                String type = choice;
 
-               user.deleteMessage(receiver, new Message(user, type, message));
+               String first = "";
+               String second = "";
+               StringBuilder sb = new StringBuilder();
+               if (receiver.compareTo(username) < 0) {
+                  first = receiver;
+                  second = user.getUsername();
+               } else if (receiver.compareTo(username) > 0) {
+                  second = receiver;
+                  first = user.getUsername();
+               }
+               BufferedReader br = new BufferedReader(new FileReader("files/" + first + "-" + second + ".txt"));
+               String line = "";
+               boolean condition = false;
+               while((line = br.readLine()) != null) {
+                  String[] parts = line.split("-");
+                  if(parts[2].equals(message)) {
+                     user.deleteMessage(receiver, new Message(user, type, message));
+                     output.write("Successful Delete Message\n");
+                     output.flush();
+                     condition = true;
+                     break;
+                  }
+               }
+               if(!condition) {
+                  output.write("This Messages Does Not Exist\n");
+                  output.flush();
+               }
+
+
             }
 
             else {
