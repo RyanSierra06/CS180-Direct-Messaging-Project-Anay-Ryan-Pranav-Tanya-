@@ -59,7 +59,13 @@ public interface UserInterface {
 
     boolean checkUserExists(String username1);
 
-    static boolean checkCanReceiveAnyone(String username) { return true; };
+    String findMostRecentMessages(String otherUsername);
 
-    static boolean checkIsFriend(String otherUsername, String thisUsername) { return true; }
+    static boolean checkCanReceiveAnyone(String otherUsername) {return true;}
+
+    static boolean checkIsFriend(String otherUsername, String thisUsername) {return true;}
+
+    public static String[] otherUserProfile(String otherUsername) { return new String[] {""}; }
+
+
 }

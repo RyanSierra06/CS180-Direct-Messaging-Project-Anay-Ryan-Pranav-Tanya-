@@ -137,7 +137,7 @@ public class UserTestCases {
             secondUser.addFriend(initialUser.getUsername());
             boolean bool = User.checkCanReceiveAnyone(initialUser.getUsername());
             boolean bool2 = User.checkIsFriend(initialUser.getUsername(), secondUser.getUsername());
-            
+
             Assert.assertEquals("22", true, bool);
             Assert.assertEquals("23", true, bool2);
 

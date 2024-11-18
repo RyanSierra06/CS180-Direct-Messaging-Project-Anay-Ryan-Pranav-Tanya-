@@ -10,6 +10,7 @@ import java.io.*;
  * Group PJ -- Message
  *
  * This is the Message class
+ * (See the ReadMe for more details)
  *
  * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
  *

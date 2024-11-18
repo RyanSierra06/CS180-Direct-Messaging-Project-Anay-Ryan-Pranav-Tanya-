@@ -21,11 +21,12 @@ import java.io.*;
 /**
  * Group PJ -- User
  *
- * This is the User class 
+ * This is the User class
+ * (See the ReadMe for more details)
  *
  * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
  *
- * @version Nov 3, 2024
+ * @version Nov 17, 2024
  *
  */
 

@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class ReadMessageThread implements Runnable {
     String first;
     String second;
-    
+
     boolean exit = false;
 
     public ReadMessageThread(String user1, String user2) {
@@ -37,7 +37,7 @@ public class ReadMessageThread implements Runnable {
                     break;
                 }
             }
-            
+
         } catch(IOException e) {
             e.printStackTrace();
         }

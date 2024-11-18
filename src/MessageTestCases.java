@@ -31,15 +31,15 @@ public class MessageTestCases {
     }
 
     /**
-    * A set of public test cases to run
-    *
-    * This is the Message Test Cases 
-    *
-    * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
-    *
-    * @version Nov 3, 2024
-    *
-    */
+     * A set of public test cases to run
+     *
+     * This is the Message Test Cases 
+     *
+     * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
+     *
+     * @version Nov 3, 2024
+     *
+     */
     public static class TestCase {
 
         @Test(timeout = 1000)
@@ -73,7 +73,7 @@ public class MessageTestCases {
             User userTest2 = new User("testUser", "testPassword");
             Message messageTest4 = new Message(userTest2, "text", "test message");
             Assert.assertEquals(messageTest4.assignToUser(messageTest4.getMessageText(),
-                "text", userTest2.getUsername()), true);
+                    "text", userTest2.getUsername()), true);
         }
 
         @Test(timeout = 1000)

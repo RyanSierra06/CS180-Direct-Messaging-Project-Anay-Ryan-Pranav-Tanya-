@@ -6,11 +6,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.text.html.StyleSheet;
 
 /**
- * Group PJ -- Application Server
+ * Project 4 -- ApplicationServer
  *
- * This is the Application Server class.
+ * This is the ApplicationServer class which starts the server to house each of the threads of the different clients
  *
- * @version Nov 14, 2024
+ * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
+ *
+ * @version Nov 17, 2024
  *
  */
 

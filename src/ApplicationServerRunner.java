@@ -1,6 +1,17 @@
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * Project 4 -- ApplicationServerRunner
+ *
+ * This is the ApplicationServerRunner which is used to run the Application Server class
+ *
+ * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
+ *
+ * @version Nov 17, 2024
+ *
+ */
+
 public class ApplicationServerRunner {
     public static void main(String[] args) {
         try {
@@ -16,6 +27,6 @@ public class ApplicationServerRunner {
         } catch(Exception e) {
             e.printStackTrace();
         }
-        
+
     }
 }

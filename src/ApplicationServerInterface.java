@@ -2,18 +2,17 @@ import java.io.*;
 import java.net.*;
 
 /**
- * Project 4 -- ApplicationInterface
+ * Project 4 -- ApplicationServerInterface
  *
- * This is the ApplicationInterface interface
+ * This is the ApplicationServerInterface which is used for the Application Server class
  *
  * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
  *
- * @version Nov 14, 2024
+ * @version Nov 17, 2024
  *
  */
 
 public interface ApplicationServerInterface {
-    static void handleClient(Socket socket){};
-    static String handleAction(String actionCode, String username){ return "";};
+    void handleClient(Socket clientSocket);
 }
 

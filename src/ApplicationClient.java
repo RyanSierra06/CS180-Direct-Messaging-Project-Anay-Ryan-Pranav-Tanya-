@@ -1,12 +1,23 @@
 import java.io.*;
 import java.net.*;
 import java.util.Scanner;
+/**
+ * Project 4 -- ApplicationClient
+ *
+ * Runs a client for each user, asking them to log-in and then do further actions for direct messaging and their account modification
+ * (See the ReadMe for more details)
+ *
+ * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
+ *
+ * @version Nov 17, 2024
+ *
+ */
 
 public class ApplicationClient implements ApplicationClientInterface {
     private static final int SERVER_PORT = 4242;
     private static final Object gateKeep = new Object();
 
-    private void actionsAfterLogin(BufferedWriter bw, BufferedReader br, Scanner sc) {
+    public void actionsAfterLogin(BufferedWriter bw, BufferedReader br, Scanner sc) {
         boolean exit = false;
         int displayMessageHistoryCounter = 0;
 
@@ -132,7 +143,7 @@ public class ApplicationClient implements ApplicationClientInterface {
                     } catch(IOException e) {
                         e.printStackTrace();
                     }
-                    
+
 
                     Thread read = new Thread(new ReadMessageThread(receiver, username));
                     read.start();
