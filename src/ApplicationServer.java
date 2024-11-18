@@ -15,15 +15,15 @@ import javax.swing.text.html.StyleSheet;
  */
 
 public class ApplicationServer implements ApplicationServerInterface, Runnable {
-    private static final int portNumber = 4242;
-    private final Socket clientSocket;
+    private static int portNumber = 4242;
+    private final Socket cs;
 
     public ApplicationServer(Socket clientSocket) {
-        this.clientSocket = clientSocket;
+        this.cs = clientSocket;
     }
 
     public void run() {
-        handleClient(clientSocket);
+        handleClient(cs);
     }
 
     public void handleClient(Socket clientSocket) {
@@ -70,7 +70,8 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                     boolean passed = false;
                     File f = new File("files/" + username + ".txt");
                     if (f.exists()) {
-                        BufferedReader passwordsFile = new BufferedReader(new FileReader(new File("files/usernamesAndPasswords.txt")));
+                        BufferedReader passwordsFile = new BufferedReader(new FileReader(
+                              new File("files/usernamesAndPasswords.txt")));
                         String userDetails = passwordsFile.readLine();
                         while (userDetails != null) {
                             String[] details = userDetails.split("-");
@@ -120,10 +121,12 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                     if (user.isBlocked(receiver, user.getUsername())) {
                         output.write("One of you has blocked the other\n");
                         output.flush();
-                    } else if (!User.checkCanReceiveAnyone(receiver) && !User.checkIsFriend(receiver, user.getUsername())) {
+                    } else if (!User.checkCanReceiveAnyone(receiver) &&
+                           !User.checkIsFriend(receiver, user.getUsername())) {
                         output.write("The reciever Doesnt Accept Messages from Non-Friends\n");
                         output.flush();
-                    } else if (!User.checkCanReceiveAnyone(user.getUsername()) && !User.checkIsFriend(user.getUsername(), receiver)) {
+                    } else if (!User.checkCanReceiveAnyone(user.getUsername()) &&
+                           !User.checkIsFriend(user.getUsername(), receiver)) {
                         output.write("You can't message Non-Friends, please friend this person first\n");
                         output.flush();
                     } else {
@@ -175,7 +178,8 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                         output.flush();
                         System.out.println("we just sent a message");
                     } else if (Integer.parseInt(counter) > 0) {
-                        //Second time, so everything is already printed, we just want the new messages to start coming in
+                        //Second time, so everything is already printed, we just want the new messages to start
+                        //coming in
                         user.sendMessage(new Message(user, type, thisMessage), otherUser);
                         output.write("Message: " + "\n" + user.findMostRecentMessages(otherUser) + "\n");
                         output.flush();

@@ -244,11 +244,7 @@ public class User implements UserInterface {
             br.readLine();
             br.readLine();
             String friends = br.readLine();
-            if (friends.contains(senderUsername)) {
-                return true;
-            }
-
-            return false;
+            return friends.contains(senderUsername);
         } catch (IOException e) {
             // e.printStackTrace();
             return false;
@@ -324,12 +320,9 @@ public class User implements UserInterface {
             String thisLine2 = thisUsernameBR.readLine();
             otherUsernameBR.readLine();
             String otherLine2 = otherUsernameBR.readLine();
+            
+            return (thisLine2.contains(otherUsername) || otherLine2.contains(thisUsername));
 
-            if (thisLine2.contains(otherUsername) || otherLine2.contains(thisUsername)) {
-                return true;
-            } else {
-                return false;
-            }
         } catch (IOException e) {
             //e.printStackTrace();
             return false;

@@ -15,7 +15,7 @@ import java.util.Scanner;
 
 public class ApplicationClient implements ApplicationClientInterface {
     private static final int SERVER_PORT = 4242;
-    private static final Object gateKeep = new Object();
+    private static Object gateKeep = new Object();
 
     public void actionsAfterLogin(BufferedWriter bw, BufferedReader br, Scanner sc) {
         boolean exit = false;
@@ -160,8 +160,8 @@ public class ApplicationClient implements ApplicationClientInterface {
                             }
                         }
 
-                        System.out.println("Enter your message: (to quit messaging at any point, type \"quit\") (to " +
-                                "delete the last message you sent, type \"DELETE\")");
+                        System.out.println("Enter your message: (to quit messaging at any point, type \"quit\") " +
+                                "(to " + "delete the last message you sent, type \"DELETE\")");
                         String message = sc.nextLine();
                         try {
                             if (message.equals("quit") || type.equals("quit")) {
@@ -180,7 +180,8 @@ public class ApplicationClient implements ApplicationClientInterface {
                                     System.out.println("This Message Doesnt Exist");
                                 }
                             } else {
-                                bw.write("Message: " + receiver + "-" + message + "-" + type + "-" + displayMessageHistoryCounter + "\n");
+                                bw.write("Message: " + receiver + "-" + message + "-" + type + "-"
+                                    + displayMessageHistoryCounter + "\n");
                                 bw.flush();
                             }
                         } catch (IOException e) {
@@ -291,16 +292,15 @@ public class ApplicationClient implements ApplicationClientInterface {
         }
     }
 
-
-    public static void main(String args[]) throws IOException {
+    public static void main(String[] args) throws IOException {
         Scanner sc = new Scanner(System.in);
         ApplicationClient client = new ApplicationClient();
         System.out.println("Welcome to the Social Media Application (Phase 1)");
 
         String userMenu = "User Menu";
-        String CHOICE_1 = "1. CREATE A NEW ACCOUNT";
-        String CHOICE_2 = "2. LOGIN WITH EXISTING ACCOUNT";
-        String CHOICE_3 = "3. EXIT";
+        String choice1 = "1. CREATE A NEW ACCOUNT";
+        String choice2 = "2. LOGIN WITH EXISTING ACCOUNT";
+        String choice3 = "3. EXIT";
 
         String choice = "";
 
@@ -311,9 +311,9 @@ public class ApplicationClient implements ApplicationClientInterface {
         boolean validChoice = false;
         do {
             System.out.println(userMenu);
-            System.out.println(CHOICE_1);
-            System.out.println(CHOICE_2);
-            System.out.println(CHOICE_3);
+            System.out.println(choice1);
+            System.out.println(choice2);
+            System.out.println(choice3);
             choice = sc.nextLine();
             if ("123".contains(choice)) {
                 validChoice = true;

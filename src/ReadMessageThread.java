@@ -32,14 +32,14 @@ public class ReadMessageThread implements Runnable {
     public void run() {
         try {
 
-            while(true) {
+            while (true) {
                 File f = new File("files/" + first + "-" + second + ".txt");
 
-                if(f.exists()) {
+                if (f.exists()) {
                     BufferedReader br = new BufferedReader(new FileReader("files/" + first + "-" + second + ".txt"));
-                    while(!exit) {
+                    while (!exit) {
                         String message;
-                        while((message = br.readLine()) != null) {
+                        while ((message = br.readLine()) != null) {
                             System.out.println(message);
                         }
                     }
@@ -48,7 +48,7 @@ public class ReadMessageThread implements Runnable {
                 }
             }
 
-        } catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
