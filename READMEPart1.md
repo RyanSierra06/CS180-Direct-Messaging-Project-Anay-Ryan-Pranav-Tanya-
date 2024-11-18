@@ -5,13 +5,13 @@ Use the UserTestCases and MessageTestCases files to run and test both classes. I
 
 
 ## Who did what?
-Submitted on Vocareum - Pranav
-User.java - Ryan, Pranav
-UserInterface.java - Ryan, Pranav
-Message.java - Anay
-MessageInterface.java - Anay
-MessageTestCases.java - Tanya
-UserTestCases.java - Tanya
+- Submitted on Vocareum - Pranav
+- User.java - Ryan, Pranav
+- UserInterface.java - Ryan, Pranav
+- Message.java - Anay
+- MessageInterface.java - Anay
+- MessageTestCases.java - Tanya
+- UserTestCases.java - Tanya
 
 ## Class Descriptions
 The user class is the central class of the program and it has a bunch of uitilty functions for the current and later versions of the program. The User class acts as the database, creating and changing files within the files directory. There are 3 different type of files the User databse creates. The first is "username.txt" which houses all the infomation about the user including their blocked list, friends list, and atributes about their profile. The second one is "usernamesAndPasswords.txt" which houses all the different users created throughout the entire use of the server and client use. The third is "firstUsername-secondUsername.txt" which houses all the messages between 2 users. 
