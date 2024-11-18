@@ -8,13 +8,11 @@ import org.junit.runner.notification.Failure;
 
 /**
  * A framework to run MessageTestCases
- *
- * This is the Message Test Cases 
+ * <p>
+ * This is the Message Test Cases
  *
  * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
- *
  * @version Nov 3, 2024
- *
  */
 
 @RunWith(Enclosed.class) // Ensure nested test classes are executed
@@ -32,13 +30,11 @@ public class MessageTestCases {
 
     /**
      * A set of public test cases to run
-     *
-     * This is the Message Test Cases 
+     * <p>
+     * This is the Message Test Cases
      *
      * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
-     *
      * @version Nov 3, 2024
-     *
      */
     public static class TestCase {
 

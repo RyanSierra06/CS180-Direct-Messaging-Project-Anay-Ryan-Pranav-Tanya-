@@ -7,6 +7,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Group PJ -- ReadMessageThread.java
+ * <p>
+ * This is the ReadMessageThread
+ * (see more in the ReadMe)
+ *
+ * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
+ * @version Nov 17, 2024
+ */
+
 public class ReadMessageThread implements Runnable {
     String first;
     String second;

@@ -1,16 +1,16 @@
 import java.io.*;
 import java.net.*;
 import java.util.Scanner;
+
 /**
  * Project 4 -- ApplicationClient
- *
- * Runs a client for each user, asking them to log-in and then do further actions for direct messaging and their account modification
+ * <p>
+ * Runs a client for each user, asking them to log-in and then do further actions for direct
+ * messaging and their account modification
  * (See the ReadMe for more details)
  *
  * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
- *
  * @version Nov 17, 2024
- *
  */
 
 public class ApplicationClient implements ApplicationClientInterface {
@@ -96,14 +96,14 @@ public class ApplicationClient implements ApplicationClientInterface {
                     System.out.println("Which users profile do you want to view (Please enter a valid username)");
                     String username = sc.nextLine();
                     try {
-                        bw.write("Check Profile of: "  + username + "\n");
+                        bw.write("Check Profile of: " + username + "\n");
                         bw.flush();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
                     try {
                         String firstLine = br.readLine();
-                        if(firstLine.equals("This User Doesnt Exist")) {
+                        if (firstLine.equals("This User Doesnt Exist")) {
                             System.out.println("This User Doesnt Exist");
                         } else {
                             System.out.println("Name: " + firstLine);
@@ -123,7 +123,7 @@ public class ApplicationClient implements ApplicationClientInterface {
                         bw.flush();
 
                         String choice = br.readLine();
-                        if(choice.equals("Can message")) {
+                        if (choice.equals("Can message")) {
                             System.out.println("Entered DM");
                         } else {
                             System.out.println(choice);
@@ -140,7 +140,7 @@ public class ApplicationClient implements ApplicationClientInterface {
                         bw.write("Give username\n");
                         bw.flush();
                         username = br.readLine();
-                    } catch(IOException e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
 
@@ -151,8 +151,8 @@ public class ApplicationClient implements ApplicationClientInterface {
                     do {
                         System.out.println("What message type is this (Image/Text)? ");
                         String type = sc.nextLine();
-                        while(true) {
-                            if(!type.equalsIgnoreCase("Image") && !type.equalsIgnoreCase("Text")) {
+                        while (true) {
+                            if (!type.equalsIgnoreCase("Image") && !type.equalsIgnoreCase("Text")) {
                                 System.out.println("Invalid message type, please try again");
                                 type = sc.nextLine();
                             } else {
@@ -160,22 +160,23 @@ public class ApplicationClient implements ApplicationClientInterface {
                             }
                         }
 
-                        System.out.println("Enter your message: (to quit messaging at any point, type \"quit\") (to delete the last message you sent, type \"DELETE\")");
+                        System.out.println("Enter your message: (to quit messaging at any point, type \"quit\") (to " +
+                                "delete the last message you sent, type \"DELETE\")");
                         String message = sc.nextLine();
                         try {
-                            if(message.equals("quit") || type.equals("quit")) {
+                            if (message.equals("quit") || type.equals("quit")) {
                                 bw.write("quit\n");
                                 bw.flush();
                                 break;
-                            } else if(message.equals("DELETE") || type.equals("DELETE")) {
+                            } else if (message.equals("DELETE") || type.equals("DELETE")) {
                                 System.out.println("What is the message text of the message you want to delete");
                                 message = sc.nextLine();
                                 bw.write("DELETE: " + receiver + "-" + message + "-" + type + "\n");
                                 bw.flush();
                                 String result = br.readLine();
-                                if(result.equals("Successful Delete Message")) {
+                                if (result.equals("Successful Delete Message")) {
                                     System.out.println("Message Was Deleted");
-                                } else if(result.equals("This Messages Does Not Exist")) {
+                                } else if (result.equals("This Messages Does Not Exist")) {
                                     System.out.println("This Message Doesnt Exist");
                                 }
                             } else {
@@ -185,7 +186,7 @@ public class ApplicationClient implements ApplicationClientInterface {
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
-                    } while(true);
+                    } while (true);
                     displayMessageHistoryCounter++;
                     read.interrupt();
                     actionsAfterLogin(bw, br, sc);
@@ -339,7 +340,7 @@ public class ApplicationClient implements ApplicationClientInterface {
                     bw.write("Username Create: " + user + "\n");
                     bw.flush();
 
-                    if(br.readLine().equals("New User")) {
+                    if (br.readLine().equals("New User")) {
                         validUser = true;
                     } else {
                         System.out.println("Username is in use, select a new username");
@@ -372,20 +373,20 @@ public class ApplicationClient implements ApplicationClientInterface {
                 bw.write("Username Login: " + user + "\n");
                 bw.flush();
                 boolean tryAgain = true;
-                while(tryAgain) {
+                while (tryAgain) {
                     System.out.println("Enter the password: ");
                     String pass = sc.nextLine().trim();
                     bw.write("Password Login: " + pass + "\n");
                     bw.flush();
                     String line = br.readLine();
-                    if(line.equals("Logged In!") || line.equals("Created New User!")) {
-                        if(line.equals("Logged In!")) {
+                    if (line.equals("Logged In!") || line.equals("Created New User!")) {
+                        if (line.equals("Logged In!")) {
                             System.out.println("Welcome Old User");
                         } else {
                             System.out.println("Welcome New User");
                         }
                         tryAgain = false;
-                    } else if(line.equals("Wrong Password")) {
+                    } else if (line.equals("Wrong Password")) {
                         System.out.println("Wrong password try again");
                     }
                 }

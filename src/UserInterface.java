@@ -1,12 +1,10 @@
 /**
  * Group PJ -- UserInterface
- *
+ * <p>
  * This is the User interface
  *
  * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
- *
  * @version Nov 3, 2024
- *
  */
 
 public interface UserInterface {
@@ -61,9 +59,15 @@ public interface UserInterface {
 
     String findMostRecentMessages(String otherUsername);
 
-    static boolean checkCanReceiveAnyone(String otherUsername) {return true;}
+    static boolean checkCanReceiveAnyone(String otherUsername) {
+        return true;
+    }
 
-    static boolean checkIsFriend(String otherUsername, String thisUsername) { return true; }
+    static boolean checkIsFriend(String otherUsername, String thisUsername) {
+        return true;
+    }
 
-    static String[] otherUserProfile(String otherUsername) { return new String[]{}; }
+    static String[] otherUserProfile(String otherUsername) {
+        return new String[]{};
+    }
 }

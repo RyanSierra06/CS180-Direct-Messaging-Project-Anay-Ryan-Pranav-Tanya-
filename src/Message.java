@@ -8,14 +8,12 @@ import java.io.*;
 
 /**
  * Group PJ -- Message
- *
+ * <p>
  * This is the Message class
  * (See the ReadMe for more details)
  *
  * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
- *
  * @version Nov 3, 2024
- *
  */
 
 public class Message implements MessageInterface {

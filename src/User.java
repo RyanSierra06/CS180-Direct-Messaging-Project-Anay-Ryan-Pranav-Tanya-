@@ -20,14 +20,12 @@ import java.io.*;
 
 /**
  * Group PJ -- User
- *
+ * <p>
  * This is the User class
  * (See the ReadMe for more details)
  *
  * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
- *
  * @version Nov 17, 2024
- *
  */
 
 public class User implements UserInterface {
@@ -67,7 +65,7 @@ public class User implements UserInterface {
                             createUser(username, password);
                             return;
                         }
-                    } else if(vars[0].equals(username)) {
+                    } else if (vars[0].equals(username)) {
                         this.username = null;
                     } else {
                         line = br.readLine();
@@ -313,21 +311,21 @@ public class User implements UserInterface {
     }
 
     public boolean isBlocked(String thisUsername, String otherUsername) {
-        if(!checkUserExists(thisUsername)) {
+        if (!checkUserExists(thisUsername)) {
             return false;
         }
-        if(!checkUserExists(otherUsername)) {
+        if (!checkUserExists(otherUsername)) {
             return false;
         }
 
-        try(BufferedReader thisUsernameBR = new BufferedReader(new FileReader("files/" + thisUsername + ".txt"));
-            BufferedReader otherUsernameBR = new BufferedReader(new FileReader("files/" + otherUsername + ".txt"))) {
+        try (BufferedReader thisUsernameBR = new BufferedReader(new FileReader("files/" + thisUsername + ".txt"));
+             BufferedReader otherUsernameBR = new BufferedReader(new FileReader("files/" + otherUsername + ".txt"))) {
             thisUsernameBR.readLine();
             String thisLine2 = thisUsernameBR.readLine();
             otherUsernameBR.readLine();
             String otherLine2 = otherUsernameBR.readLine();
 
-            if(thisLine2.contains(otherUsername) || otherLine2.contains(thisUsername)) {
+            if (thisLine2.contains(otherUsername) || otherLine2.contains(thisUsername)) {
                 return true;
             } else {
                 return false;
@@ -398,7 +396,6 @@ public class User implements UserInterface {
             return "something broke";
         }
     }
-
 
 
     public String getFriends() {
@@ -477,9 +474,9 @@ public class User implements UserInterface {
         String messageHistory = readMessages(otherUsername);
         String[] messages = messageHistory.split("\n");
         StringBuilder result = new StringBuilder();
-        for(int i = messages.length - 1; i >= 0; i--) {
-            if(messages[i].startsWith(this.username) || i == 0) {
-                for(int j = i; j < messages.length; j++) {
+        for (int i = messages.length - 1; i >= 0; i--) {
+            if (messages[i].startsWith(this.username) || i == 0) {
+                for (int j = i; j < messages.length; j++) {
                     result.append(messages[j]).append("\n");
                 }
             }
@@ -571,7 +568,7 @@ public class User implements UserInterface {
     }
 
     public static boolean checkCanReceiveAnyone(String otherUsername) {
-        try(BufferedReader br = new BufferedReader(new FileReader("files/" + otherUsername + ".txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("files/" + otherUsername + ".txt"))) {
             return br.readLine().endsWith("true");
         } catch (Exception e) {
             return false;
@@ -579,7 +576,7 @@ public class User implements UserInterface {
     }
 
     public static boolean checkIsFriend(String otherUsername, String thisUsername) {
-        try(BufferedReader br = new BufferedReader(new FileReader("files/" + otherUsername + ".txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("files/" + otherUsername + ".txt"))) {
             br.readLine();
             br.readLine();
             return br.readLine().contains(thisUsername);
@@ -591,11 +588,11 @@ public class User implements UserInterface {
     public static String[] otherUserProfile(String otherUsername) {
         boolean condition = false;
         String[] result = new String[3];
-        try(BufferedReader br = new BufferedReader(new FileReader("files/usernamesAndPasswords.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("files/usernamesAndPasswords.txt"))) {
             String message = "";
-            while((message = br.readLine()) != null) {
+            while ((message = br.readLine()) != null) {
                 String[] parts = message.split("-");
-                if(parts[0].equals(otherUsername)) {
+                if (parts[0].equals(otherUsername)) {
                     condition = true;
                 }
             }
@@ -603,10 +600,10 @@ public class User implements UserInterface {
             e.printStackTrace();
         }
 
-        if(!condition) {
+        if (!condition) {
             return new String[]{""};
         } else {
-            try(BufferedReader br2 = new BufferedReader(new FileReader("files/" + otherUsername + ".txt"))) {
+            try (BufferedReader br2 = new BufferedReader(new FileReader("files/" + otherUsername + ".txt"))) {
                 System.out.println("files/" + otherUsername + ".txt");
                 String[] parts = br2.readLine().split("-");
                 System.out.println(parts.length);
