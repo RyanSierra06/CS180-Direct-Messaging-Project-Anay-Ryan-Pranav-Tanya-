@@ -63,9 +63,7 @@ public interface UserInterface {
 
     static boolean checkCanReceiveAnyone(String otherUsername) {return true;}
 
-    static boolean checkIsFriend(String otherUsername, String thisUsername) {return true;}
+    static boolean checkIsFriend(String otherUsername, String thisUsername) { return true; }
 
-    public static String[] otherUserProfile(String otherUsername) { return new String[] {""}; }
-
-
+    static String[] otherUserProfile(String otherUsername) { return new String[]{}; }
 }

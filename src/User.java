@@ -320,21 +320,18 @@ public class User implements UserInterface {
             return false;
         }
 
-        try(BufferedReader thisUsernameBR = new BufferedReader(new FileReader("files/" + thisUsername));
-            BufferedReader otherUsernameBR = new BufferedReader(new FileReader("files/" + otherUsername))) {
+        try(BufferedReader thisUsernameBR = new BufferedReader(new FileReader("files/" + thisUsername + ".txt"));
+            BufferedReader otherUsernameBR = new BufferedReader(new FileReader("files/" + otherUsername + ".txt"))) {
             thisUsernameBR.readLine();
-            thisUsernameBR.readLine();
-            String thisLine3 = thisUsernameBR.readLine();
+            String thisLine2 = thisUsernameBR.readLine();
             otherUsernameBR.readLine();
-            otherUsernameBR.readLine();
-            String otherLine3 = otherUsernameBR.readLine();
+            String otherLine2 = otherUsernameBR.readLine();
 
-            if(thisLine3.contains(otherUsername) || otherLine3.contains(thisUsername)) {
+            if(thisLine2.contains(otherUsername) || otherLine2.contains(thisUsername)) {
                 return true;
             } else {
                 return false;
             }
-
         } catch (IOException e) {
             //e.printStackTrace();
             return false;

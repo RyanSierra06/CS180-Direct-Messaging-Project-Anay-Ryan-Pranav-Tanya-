@@ -142,8 +142,13 @@ public class UserTestCases {
             Assert.assertEquals("23", true, bool2);
 
             initialUser.blockUser(secondUser.getUsername());
-            boolean bool3 = initialUser.isBlocked(initialUserName, secondUser.getUsername());
+            boolean bool3 = initialUser.isBlocked(initialUser.getUsername(), secondUser.getUsername());
             Assert.assertEquals("24", true, bool3);
+
+            String[] profileInfo = User.otherUserProfile(initialUser.getUsername());
+            Assert.assertEquals("25", "Dan", profileInfo[0]);
+            Assert.assertEquals("26", "Hi I'm Dan", profileInfo[1]);
+            Assert.assertEquals("27", "./files/Danpfp.jpg", profileInfo[2]);
         }
     }
 }
