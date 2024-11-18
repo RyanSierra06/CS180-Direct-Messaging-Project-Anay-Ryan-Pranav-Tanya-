@@ -40,7 +40,7 @@ The fifth allows you to view another users profile information, as long as that 
 The sixth is where the direct messaging comes in. The user is first given the entire message history the other specified user, and is is then prompted to start sending more messages. It starts by asking the user to give the type of message they're sending (Image or Text), as well as the message itself they're trying to send.
 Each time you boot up a new dm between 2 users, the entire message history is displayed so you know where your conversation left off. 
 As the other person sends more messages, and as more messages are being sent to the given user, it updates in the terminal in real time. It's a little ugly right now, and messages will come into the terminal right as theyre received, but thats beacause we can only have one terminal open instead of having multiple frames to display the messages in different areas. This is an easy fix for the GUI though, and everything else runs perfeclty fine.
-Messaging also checks to see if the user you're messaging can receive messages from anyone, and if not, if the user is friends with the other person they're messaging. 
+Messaging also checks to see if the user you're messaging can receive messages from anyone, and if not, if the users are friends with each other before they can start messaging. 
 The seventh allows the user to block another user, as long as that user exists, and the eight is there to unblock a user, still checking to make sure the user exists.
 The ninth Shows the user all of their currently blocked users.
 The tenth Allows the user to enter a friend to add, and add that friend as long as its a valid user.
