@@ -1,5 +1,7 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -25,7 +27,9 @@ public class ReadMessageThread implements Runnable {
                     break;
                 } else {
                     String message;
+                    // BufferedWriter messagesTerminal = new BufferedWriter(new FileWriter(new File("files/messagesTerminal.txt")));
                     while((message = br.readLine()) != null) {
+                        // messagesTerminal.write(message + "\n");
                         System.out.println(message);
                     }
                 }
