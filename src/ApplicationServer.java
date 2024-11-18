@@ -93,10 +93,10 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                   }
                   passwordsFile.close();
                } else {
-                  user = new User(username, password);
                   output.write("Created New User!\n");
                   output.flush();
                }
+               user = new User(username, password);
             }
 
             else if (choice.startsWith("Name: ")) {
@@ -128,8 +128,10 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                String receiver = choice.substring("Check Block/Friends: ".length());
                if(user.isBlocked(receiver, user.getUsername())){
                   output.write("This User Is Blocked\n");
-               } else if(!User.checkCanReceiveAnyone(receiver) && user.getFriends().contains(receiver)) {
+                  output.flush();
+               } else if(!User.checkCanReceiveAnyone(receiver) && !user.getFriends().contains(receiver)) {
                   output.write("This User Doesnt Accept Messages from Non-Friends\n");
+                  output.flush();
                }
             }
 
@@ -150,34 +152,24 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                String counter = choice;
                System.out.println(counter);
 
-               if(user.isBlocked(user.getUsername(), otherUser)) {
-                  output.write("Block Error: Failed to send message." + "\n");
+
+               String first = (user.getUsername().compareTo(otherUser) > 0 ? otherUser : user.getUsername());
+               String second = (user.getUsername().equals(first) ? otherUser : user.getUsername());
+               File f = new File("files/" + first + "-" + second + ".txt");
+
+               System.out.println("we reached this point");
+
+               if (Integer.parseInt(counter) == 0) {
+                  //First time coming back so print the message history
+                  user.sendMessage(new Message(user, type, thisMessage), otherUser);
+                  String messageHistory = user.readMessages(otherUser);
+                  output.write("Message: " + "\n" + messageHistory + "\n");
                   output.flush();
-               } else if(!user.getReceiveAnyone() && !user.getFriends().contains(otherUser)) {
-                  //TODO CHANGE TO ADD IMPLEMENTATION FOR CAN RECEIVE FROM ON FRIENDS
-                  output.write("This User Doesnt Accept Messages from Non-Friends" + "\n");
+               } else if(Integer.parseInt(counter) > 0) {
+                  //Second time, so everything is already printed, we just want the new messages to start coming in
+                  user.sendMessage(new Message(user, type, thisMessage), otherUser);
+                  output.write("Message: " + "\n" + user.findMostRecentMessages(otherUser) + "\n");
                   output.flush();
-               }
-
-               else {
-                  String first = (user.getUsername().compareTo(otherUser) > 0 ? otherUser : user.getUsername());
-                  String second = (user.getUsername().equals(first) ? otherUser : user.getUsername());
-                  File f = new File("files/" + first + "-" + second + ".txt");
-
-                  System.out.println("we reached this point");
-
-                  if (Integer.parseInt(counter) == 0) {
-                     //First time coming back so print the message history
-                     user.sendMessage(new Message(user, type, thisMessage), otherUser);
-                     String messageHistory = user.readMessages(otherUser);
-                     output.write("Message: " + "\n" + messageHistory + "\n");
-                     output.flush();
-                  } else if(Integer.parseInt(counter) > 0) {
-                     //Second time, so everything is already printed, we just want the new messages to start coming in
-                     user.sendMessage(new Message(user, type, thisMessage), otherUser);
-                     output.write("Message: " + "\n" + user.findMostRecentMessages(otherUser) + "\n");
-                     output.flush();
-                  }
                }
 
 
@@ -224,6 +216,18 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
 
             else if(choice.equals("quit")) {
                output.write("quit");
+            }
+
+            else if(choice.equals("DELETE")) {
+               String receiver = choice.substring("DELETE: ".length(), choice.indexOf("-"));
+
+               choice = choice.substring(choice.indexOf("-") + 1);
+               String message = choice.substring(0, choice.indexOf("-"));
+
+               choice = choice.substring(choice.indexOf("-") + 1);
+               String type = choice;
+
+               user.deleteMessage(receiver, new Message(user, type, message));
             }
 
             else {

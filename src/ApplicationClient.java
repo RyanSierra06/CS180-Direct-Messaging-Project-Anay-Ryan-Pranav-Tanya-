@@ -87,11 +87,9 @@ public class ApplicationClient implements ApplicationInterface {
                 case "5" -> {
                     System.out.println("Enter receiver username: ");
                     String receiver = sc.nextLine();
-
                     try {
+                        bw.write("Check Block/Friends: " + receiver);
                         String choice = br.readLine();
-                        bw.write("Check Block/Friends: " + receiver + "\n");
-                        bw.flush();
                         if(choice.equals("This User Is Blocked")) {
                             //TODO CHECK TO MAYBE CHANGE TO CONTINUE
                             System.out.println("This User Is Blocked");
@@ -109,25 +107,35 @@ public class ApplicationClient implements ApplicationInterface {
                     read.start();
 
                     do {
-                        System.out.println("What message type is this? ");
+                        System.out.println("What message type is this (Image/Text)? ");
                         String type = sc.nextLine();
-                        System.out.println("Enter your message: (to quit messaging at any point, type \"quit\"");
+                        while(true) {
+                            if(!type.equalsIgnoreCase("Image") && !type.equalsIgnoreCase("Text")) {
+                                System.out.println("Invalid message type, please try again");
+                                type = sc.nextLine();
+                            } else {
+                                break;
+                            }
+                        }
+
+                        //TODO HERE IF THE USER AT ANY POINT TYPES "DELETE" DELETE THE LAST MESSAGE THEY SENT
+                        System.out.println("Enter your message: (to quit messaging at any point, type \"quit\") (to delete the last message you sent, type \"DELETE\")");
                         String message = sc.nextLine();
                         Thread write = new Thread(new WriteMessageThread(bw, sc, receiver, type, displayMessageHistoryCounter));
-
                         try {
                             if(message.equals("quit") || type.equals("quit")) {
                                 bw.write("quit\n");
                                 bw.flush();
                                 break;
-                            } else {
+                            } else if(message.equals("DELETE") || type.equals("DELETE")) {
+                                bw.write("DELETE" + receiver + "-" + message + "-" + type + "\n");
+                            }else {
                                 bw.write("Message: " + receiver + "-" + message + "-" + type + "-" + displayMessageHistoryCounter + "\n");
                                 bw.flush();
                             }
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
-
                         write.start();
                     } while(true);
                     displayMessageHistoryCounter++;
@@ -276,15 +284,16 @@ public class ApplicationClient implements ApplicationInterface {
                         System.out.println("Username contains '-'. Try again!");
                     } else if (user.isEmpty()) {
                         System.out.println("Empty username! Try again!");
-                    } else {
-                        File f = new File("files/"+ user + ".txt");
-                        if (f.exists()) {
-                            System.out.println("Username already exists! Try again!");
-                        } else {
-                            validUser = true;
-                        }
                     }
 
+                    bw.write("Username Create: " + user + "\n");
+                    bw.flush();
+
+                    if(br.readLine().equals("New User")) {
+                        validUser = true;
+                    } else {
+                        System.out.println("Username is in use, select a new username");
+                    }
                 } while (!validUser);
 
                 do {
@@ -294,14 +303,12 @@ public class ApplicationClient implements ApplicationInterface {
                         System.out.println("Password contains '-'. Try again!");
                     } else if (pass.isEmpty()) {
                         System.out.println("Empty password! Try again!");
-
                     } else {
                         validPass = true;
                     }
 
                 } while (!validPass);
 
-                bw.write("Username Create: " + user + "\n");
                 bw.write("Password Create: " + pass + "\n");
                 bw.flush();
 
@@ -312,26 +319,28 @@ public class ApplicationClient implements ApplicationInterface {
             case "2" -> {
                 System.out.println("Enter the username: ");
                 String user = sc.nextLine().trim();
-                System.out.println("Enter the password: ");
-                String pass = sc.nextLine().trim();
-
-                File f = new File("files/" + user + ".txt");
-                if (f.exists()) {
-                    bw.write("Username Login: " + user + "\n");
+                bw.write("Username Login: " + user + "\n");
+                bw.flush();
+                boolean tryAgain = true;
+                while(tryAgain) {
+                    System.out.println("Enter the password: ");
+                    String pass = sc.nextLine().trim();
                     bw.write("Password Login: " + pass + "\n");
                     bw.flush();
-                    while(true) {
-                        if(!br.readLine().equals("Correct Password")) {
-                            break;
+                    String line = br.readLine();
+                    if(line.equals("Logged In!") || line.equals("Created New User!")) {
+                        if(line.equals("Logged In!")) {
+                            System.out.println("Welcome Old User");
                         } else {
-                            System.out.println(br.readLine());
+                            System.out.println("Welcome New User");
                         }
+                        tryAgain = false;
+                    } else if(line.equals("Wrong Password")) {
+                        System.out.println("Wrong password try again");
                     }
-
-                    client.actionsAfterLogin(bw, br, sc);
-                } else {
-                    System.out.println("Sorry User does not exist!");
                 }
+
+                client.actionsAfterLogin(bw, br, sc);
             }
 
             case "3" -> {
