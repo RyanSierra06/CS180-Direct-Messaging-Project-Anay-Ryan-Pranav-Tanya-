@@ -51,7 +51,7 @@ This threaded class allows for the same file to be updated concurrently by the s
 
 
 ## How to Run 
-Start by running the ApplicationServerRunner.java in your first terminal. Then, in your other terminals, run as many ApplicationClient.java clients as you want. Within each of those clients, you can start DMing whoever you want, and editing each of your individual user profiles, friends, and blocked users. 
+Start by running the ApplicationServerRunner.java in your first terminal. Then, in your other terminals, run as many ApplicationClient.java clients as you want. Within each of those clients, you can start DMing whoever you want, and editing each of your individual user profiles, friends, and blocked users. See the other java files for more specificity on what each of the commands can do.
 
 
 
