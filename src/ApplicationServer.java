@@ -73,6 +73,7 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
 
             else if (choice.startsWith("Password Login: ")) {
                password = choice.substring("Password Login: ".length());
+               boolean passed = false;
                File f = new File("files/" + username + ".txt");
                if(f.exists()) {
                   BufferedReader passwordsFile = new BufferedReader(new FileReader(new File("files/usernamesAndPasswords.txt")));
@@ -82,6 +83,7 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                      if(details[0].equals(username) && details[1].equals(password)) {
                         output.write("Logged In!\n");
                         output.flush();
+                        passed = true;
                         break;
                      } else if(details[0].equals(username) && !details[1].equals(password)) {
                         output.write("Wrong Password\n");
@@ -93,10 +95,14 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                   }
                   passwordsFile.close();
                } else {
+                  passed = true;
                   output.write("Created New User!\n");
                   output.flush();
                }
-               user = new User(username, password);
+               
+               if(passed) {
+                  user = new User(username, password);
+               }
             }
 
             else if (choice.startsWith("Name: ")) {
@@ -127,10 +133,16 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
             else if(choice.startsWith("Check Block/Friends: ")) {
                String receiver = choice.substring("Check Block/Friends: ".length());
                if(user.isBlocked(receiver, user.getUsername())){
-                  output.write("This User Is Blocked\n");
+                  output.write("One of you has blocked the other\n");
                   output.flush();
-               } else if(!User.checkCanReceiveAnyone(receiver) && !user.getFriends().contains(receiver)) {
-                  output.write("This User Doesnt Accept Messages from Non-Friends\n");
+               } else if(!User.checkCanReceiveAnyone(receiver) && !User.checkIsFriend(receiver, user.getUsername())) {
+                  output.write("The reciever Doesnt Accept Messages from Non-Friends\n");
+                  output.flush();
+               } else if(!User.checkCanReceiveAnyone(user.getUsername()) && !User.checkIsFriend(user.getUsername(), receiver)) {
+                  output.write("You can't message Non-Friends, please friend this person first\n");
+                  output.flush();
+               } else {
+                  output.write("Can message\n");
                   output.flush();
                }
             }
@@ -151,25 +163,28 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
 
                String counter = choice;
                System.out.println(counter);
-
-
                String first = (user.getUsername().compareTo(otherUser) > 0 ? otherUser : user.getUsername());
                String second = (user.getUsername().equals(first) ? otherUser : user.getUsername());
-               File f = new File("files/" + first + "-" + second + ".txt");
+               // File f = new File("files/" + first + "-" + second + ".txt");
 
+               System.out.println("we reached this point");
                System.out.println("we reached this point");
 
                if (Integer.parseInt(counter) == 0) {
                   //First time coming back so print the message history
-                  user.sendMessage(new Message(user, type, thisMessage), otherUser);
+                  System.out.println("before we send message");
+                  boolean messageSent = user.sendMessage(new Message(user, type, thisMessage), otherUser);
+                  System.out.println("we just sent a message");
                   String messageHistory = user.readMessages(otherUser);
                   output.write("Message: " + "\n" + messageHistory + "\n");
                   output.flush();
+                  System.out.println("we just sent a message");
                } else if(Integer.parseInt(counter) > 0) {
                   //Second time, so everything is already printed, we just want the new messages to start coming in
                   user.sendMessage(new Message(user, type, thisMessage), otherUser);
                   output.write("Message: " + "\n" + user.findMostRecentMessages(otherUser) + "\n");
                   output.flush();
+                  System.out.println("we just sent a message");
                }
 
 
@@ -215,7 +230,8 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
             }
 
             else if(choice.equals("quit")) {
-               output.write("quit");
+               output.write("quit+\n");
+               output.flush();
             }
 
             else if(choice.equals("DELETE")) {

@@ -88,16 +88,17 @@ public class ApplicationClient implements ApplicationInterface {
                     System.out.println("Enter receiver username: ");
                     String receiver = sc.nextLine();
                     try {
-                        bw.write("Check Block/Friends: " + receiver);
+                        bw.write("Check Block/Friends: " + receiver + "\n");
+                        bw.flush();
+
                         String choice = br.readLine();
-                        if(choice.equals("This User Is Blocked")) {
-                            //TODO CHECK TO MAYBE CHANGE TO CONTINUE
-                            System.out.println("This User Is Blocked");
-                            break;
-                        } else if(choice.equals("This User Doesnt Accept Messages from Non-Friends")) {
-                            System.out.println("This User Doesnt Accept Messages from Non-Friends");
+                        if(choice.equals("Can message")) {
+                            System.out.println("Entered DM");
+                        } else {
+                            System.out.println(choice);
                             break;
                         }
+                        
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -121,7 +122,6 @@ public class ApplicationClient implements ApplicationInterface {
                         //TODO HERE IF THE USER AT ANY POINT TYPES "DELETE" DELETE THE LAST MESSAGE THEY SENT
                         System.out.println("Enter your message: (to quit messaging at any point, type \"quit\") (to delete the last message you sent, type \"DELETE\")");
                         String message = sc.nextLine();
-                        Thread write = new Thread(new WriteMessageThread(bw, sc, receiver, type, displayMessageHistoryCounter));
                         try {
                             if(message.equals("quit") || type.equals("quit")) {
                                 bw.write("quit\n");
@@ -136,9 +136,11 @@ public class ApplicationClient implements ApplicationInterface {
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
-                        write.start();
                     } while(true);
                     displayMessageHistoryCounter++;
+
+                    read.interrupt();
+
                     actionsAfterLogin(bw, br, sc);
                 }
 
@@ -233,6 +235,7 @@ public class ApplicationClient implements ApplicationInterface {
                     }
                     System.out.println("Logging out...");
                     exit = true;
+                    break;
                 }
 
                 default -> System.out.println("Invalid option. Please try again.");

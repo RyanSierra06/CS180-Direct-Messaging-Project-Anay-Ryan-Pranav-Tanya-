@@ -38,7 +38,7 @@ public class User implements UserInterface {
     private String profilePicture;
     private String userFileName;
     private boolean receiveAnyone;
-    private final Object mainLock = new Object();
+    private static Object mainLock = new Object();
 
     public User(String username, String password) {
         try (BufferedReader br = new BufferedReader(new FileReader("files/usernamesAndPasswords.txt"))) {
@@ -247,13 +247,11 @@ public class User implements UserInterface {
             br.readLine();
             br.readLine();
             String friends = br.readLine();
-            User fr = new User(senderUsername, "tempPass");
             if (friends.contains(senderUsername)) {
                 return true;
-            } else {
-                return fr.receiveAnyone;
             }
-
+            
+            return false;
         } catch (IOException e) {
             // e.printStackTrace();
             return false;
@@ -262,10 +260,16 @@ public class User implements UserInterface {
 
     public boolean sendMessage(Message message, String reciver) {
         synchronized (mainLock) {
+            System.out.println("YUH");
+            System.out.println(message.getMessageText());
+            System.out.println(message.getType());
+            System.out.println(message.getMainUser());
+            
             if (!checkUserExists(reciver)) {
                 return false;
             }
             if (this.canReceiveFrom(reciver)) {
+                System.out.print("We are writing");
                 String first = (this.username.compareTo(reciver) > 0 ? reciver : this.username);
                 String second = (this.username.equals(first) ? reciver : this.username);
                 try (PrintWriter pw = new PrintWriter(new FileWriter(new File("files/"

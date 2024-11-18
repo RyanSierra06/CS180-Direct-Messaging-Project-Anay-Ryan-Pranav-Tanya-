@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 public class ReadMessageThread implements Runnable {
     BufferedReader br = null;
+    boolean exit = false;
 
     public ReadMessageThread(BufferedReader br) {
         this.br = br;
@@ -14,7 +15,7 @@ public class ReadMessageThread implements Runnable {
     @Override
     public void run() {
         try {
-            while(true) {
+            while(!exit) {
                 String isBlocked = br.readLine();
                 if(isBlocked.equals("Block Error: Failed to send message.")) {
                     return;
@@ -33,5 +34,9 @@ public class ReadMessageThread implements Runnable {
         } catch(IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void stopThread() {
+        exit = true;
     }
 }

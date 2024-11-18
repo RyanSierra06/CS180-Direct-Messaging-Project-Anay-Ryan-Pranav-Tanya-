@@ -10,7 +10,7 @@ public class WriteMessageThread implements Runnable {
     int displayMessageHistoryCounter;
     
 
-    public WriteMessageThread(BufferedWriter bw, Scanner sc, String receiver, String type, int displayMessageHistoryCounter) {
+    public WriteMessageThread(BufferedWriter bw, String message, String receiver, String type, int displayMessageHistoryCounter) {
         this.bw = bw;
         this.sc = sc;
         this.receiver = receiver;
