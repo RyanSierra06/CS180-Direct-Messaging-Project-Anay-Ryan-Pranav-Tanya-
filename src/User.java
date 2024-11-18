@@ -241,10 +241,10 @@ public class User implements UserInterface {
             return false;
         }
         try (BufferedReader br = new BufferedReader(new FileReader(new File("files/" + this.userFileName)))) {
-            br.readLine();
+            String firstLine = br.readLine();
             br.readLine();
             String friends = br.readLine();
-            return friends.contains(senderUsername);
+            return friends.contains(senderUsername) || firstLine.endsWith("true");
         } catch (IOException e) {
             // e.printStackTrace();
             return false;

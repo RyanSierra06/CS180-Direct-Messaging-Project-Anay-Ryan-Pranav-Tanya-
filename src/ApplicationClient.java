@@ -38,7 +38,7 @@ public class ApplicationClient implements ApplicationClientInterface {
             System.out.println("13. Set Can Receive from anyone");
             System.out.println("14. Log Out");
 
-            System.out.print("Choose an action (1-13): ");
+            System.out.print("Choose an action (1-14): ");
             String action = sc.nextLine().trim();
 
             switch (action) {

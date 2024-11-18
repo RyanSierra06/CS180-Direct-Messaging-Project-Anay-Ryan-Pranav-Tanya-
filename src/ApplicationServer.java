@@ -131,8 +131,10 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                         output.flush();
                     } else {
                         output.write("Can message\n");
+                        System.out.println("Said theyre clear");
                         output.flush();
                     }
+
                 } else if (choice.startsWith("Check Profile of: ")) {
                     String otherUsername = choice.substring("Check Profile of: ".length());
                     String[] parts = User.otherUserProfile(otherUsername);
@@ -146,6 +148,7 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                         output.write(parts[2] + "\n");
                         output.flush();
                     }
+
                 } else if (choice.startsWith("Message: ")) {
 
                     String otherUser = choice.substring("Message: ".length(), choice.indexOf("-"));
@@ -172,7 +175,7 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                         //First time coming back so print the message history
                         System.out.println("before we send message");
                         boolean messageSent = user.sendMessage(new Message(user, type, thisMessage), otherUser);
-                        System.out.println("we just sent a message");
+                        System.out.println("we just sent a message" + messageSent);
                         String messageHistory = user.readMessages(otherUser);
                         output.write("Message: " + "\n" + messageHistory + "\n");
                         output.flush();
