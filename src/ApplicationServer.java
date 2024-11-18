@@ -151,7 +151,8 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                String otherUsername = choice.substring("Check Profile of: ".length());
                String[] parts = User.otherUserProfile(otherUsername);
                if(parts.length < 1 ) {
-                  output.write("This User Doessnt Exist");
+                  output.write("This User Doesnt Exist");
+                  output.flush();
                }
                output.write(parts[0] + "\n");
                output.write(parts[1] + "\n");

@@ -94,7 +94,7 @@ public class ApplicationClient implements ApplicationInterface {
                         throw new RuntimeException(e);
                     }
                     try {
-                        if(br.readLine().equals("This User Doessnt Exist")) {
+                        if(br.readLine().equals("This User Doesnt Exist")) {
                             System.out.println("Username already exists. Please try again.");
                         } else {
                             System.out.println("Name" + br.readLine());
