@@ -116,6 +116,7 @@ public class ApplicationClient implements ApplicationClientInterface {
                 }
 
                 case "6" -> {
+                    // TODO fix reentering chat
                     System.out.println("Enter receiver username: ");
                     String receiver = sc.nextLine();
                     try {

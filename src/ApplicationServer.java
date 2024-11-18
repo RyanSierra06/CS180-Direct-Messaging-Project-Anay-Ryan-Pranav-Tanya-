@@ -171,7 +171,7 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                     System.out.println("we reached this point");
                     System.out.println("we reached this point");
 
-                    if (Integer.parseInt(counter) == 0) {
+                  //   if (Integer.parseInt(counter) == 0) {
                         //First time coming back so print the message history
                         System.out.println("before we send message");
                         boolean messageSent = user.sendMessage(new Message(user, type, thisMessage), otherUser);
@@ -180,14 +180,14 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                         output.write("Message: " + "\n" + messageHistory + "\n");
                         output.flush();
                         System.out.println("we just sent a message");
-                    } else if (Integer.parseInt(counter) > 0) {
-                        //Second time, so everything is already printed, we just want the new messages to start
-                        //coming in
-                        user.sendMessage(new Message(user, type, thisMessage), otherUser);
-                        output.write("Message: " + "\n" + user.findMostRecentMessages(otherUser) + "\n");
-                        output.flush();
-                        System.out.println("we just sent a message");
-                    }
+                  //   } else if (Integer.parseInt(counter) > 0) {
+                  //       //Second time, so everything is already printed, we just want the new messages to start
+                  //       //coming in
+                  //       user.sendMessage(new Message(user, type, thisMessage), otherUser);
+                  //       output.write("Message: " + "\n" + user.findMostRecentMessages(otherUser) + "\n");
+                  //       output.flush();
+                  //       System.out.println("we just sent a message");
+                  //   }
                 } else if (choice.startsWith("Block User: ")) {
                     blockUser = choice.substring("Block User: ".length());
                     user.blockUser(blockUser);
