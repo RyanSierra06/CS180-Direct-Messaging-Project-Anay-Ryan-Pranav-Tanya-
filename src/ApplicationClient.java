@@ -19,15 +19,16 @@ public class ApplicationClient implements ApplicationInterface {
             System.out.println("2. Set Profile Description");
             System.out.println("3. Set Profile Picture");
             System.out.println("4. View Profile Information");
-            System.out.println("5. Send Message");
-            System.out.println("6. Block User");
-            System.out.println("7. Unblock User");
-            System.out.println("8. View Blocked Users");
-            System.out.println("9. Add Friend");
-            System.out.println("10. Remove Friend");
-            System.out.println("11. View Friends");
-            System.out.println("12. Set Can Receive from anyone");
-            System.out.println("13. Log Out");
+            System.out.println("5. View Another Users Profile");
+            System.out.println("6. Send Message");
+            System.out.println("7. Block User");
+            System.out.println("8. Unblock User");
+            System.out.println("9. View Blocked Users");
+            System.out.println("10. Add Friend");
+            System.out.println("11. Remove Friend");
+            System.out.println("12. View Friends");
+            System.out.println("13. Set Can Receive from anyone");
+            System.out.println("14. Log Out");
 
             System.out.print("Choose an action (1-13): ");
             String action = sc.nextLine().trim();
@@ -83,8 +84,29 @@ public class ApplicationClient implements ApplicationInterface {
                         throw new RuntimeException(e);
                     }
                 }
-
                 case "5" -> {
+                    System.out.println("Which users profile do you want to view (Please enter a valid username)");
+                    String username = sc.nextLine();
+                    try {
+                        bw.write("Check Profile of: "  + username + "\n");
+                        bw.flush();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    try {
+                        if(br.readLine().equals("This User Doessnt Exist")) {
+                            System.out.println("Username already exists. Please try again.");
+                        } else {
+                            System.out.println("Name" + br.readLine());
+                            System.out.println("Description" + br.readLine());
+                            System.out.println("Picture" + br.readLine());
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                case "6" -> {
                     System.out.println("Enter receiver username: ");
                     String receiver = sc.nextLine();
                     try {
@@ -130,7 +152,8 @@ public class ApplicationClient implements ApplicationInterface {
                             } else if(message.equals("DELETE") || type.equals("DELETE")) {
                                 System.out.println("What is the message text of the message you want to delete");
                                 message = sc.nextLine();
-                                bw.write("DELETE" + receiver + "-" + message + "-" + type + "\n");
+                                bw.write("DELETE: " + receiver + "-" + message + "-" + type + "\n");
+                                bw.flush();
                                 String result = br.readLine();
                                 if(result.equals("Successful Delete Message")) {
                                     System.out.println("Message Was Deleted");
@@ -150,7 +173,7 @@ public class ApplicationClient implements ApplicationInterface {
                     actionsAfterLogin(bw, br, sc);
                 }
 
-                case "6" -> {
+                case "7" -> {
                     System.out.print("Enter username to block: ");
                     String blockUser = sc.nextLine();
                     try {
@@ -163,7 +186,7 @@ public class ApplicationClient implements ApplicationInterface {
                     System.out.println(blockUser + " has been blocked.");
                 }
 
-                case "7" -> {
+                case "8" -> {
                     System.out.print("Enter username to unblock: ");
                     String unblockUser = sc.nextLine();
                     try {
@@ -175,7 +198,7 @@ public class ApplicationClient implements ApplicationInterface {
                     System.out.println(unblockUser + " has been unblocked.");
                 }
 
-                case "8" -> {
+                case "9" -> {
                     try {
                         bw.write("Blocked Users: " + "\n");
                         bw.flush();
@@ -186,7 +209,7 @@ public class ApplicationClient implements ApplicationInterface {
                     }
                 }
 
-                case "9" -> {
+                case "10" -> {
                     System.out.print("Enter username to add as friend: ");
                     String newFriend = sc.nextLine();
                     try {
@@ -198,7 +221,7 @@ public class ApplicationClient implements ApplicationInterface {
                     System.out.println(newFriend + " added to friends.");
                 }
 
-                case "10" -> {
+                case "11" -> {
                     System.out.print("Enter username to remove from friends: ");
                     String oldFriend = sc.nextLine();
                     try {
@@ -210,7 +233,7 @@ public class ApplicationClient implements ApplicationInterface {
                     System.out.println(oldFriend + " removed from friends.");
                 }
 
-                case "11" -> {
+                case "12" -> {
                     try {
                         bw.write("Friend List: " + "\n");
                         bw.flush();
@@ -219,7 +242,7 @@ public class ApplicationClient implements ApplicationInterface {
                         throw new RuntimeException(e);
                     }
                 }
-                case "12" -> {
+                case "13" -> {
                     System.out.println("Do you want to receive messages from anyone (yes/no)");
                     String choice = sc.nextLine();
                     boolean yesNo = choice.equalsIgnoreCase("yes");
@@ -232,7 +255,7 @@ public class ApplicationClient implements ApplicationInterface {
                     System.out.println("Changed Can Receive Anyone to: " + yesNo + "\n");
                 }
 
-                case "13" -> {
+                case "14" -> {
                     try {
                         bw.write("Exit");
                         bw.flush();

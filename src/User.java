@@ -250,7 +250,7 @@ public class User implements UserInterface {
             if (friends.contains(senderUsername)) {
                 return true;
             }
-            
+
             return false;
         } catch (IOException e) {
             // e.printStackTrace();
@@ -264,7 +264,7 @@ public class User implements UserInterface {
             System.out.println(message.getMessageText());
             System.out.println(message.getType());
             System.out.println(message.getMainUser());
-            
+
             if (!checkUserExists(reciver)) {
                 return false;
             }
@@ -620,5 +620,36 @@ public class User implements UserInterface {
             return false;
         }
     }
+
+    public static String[] otherUserProfile(String otherUsername) {
+        boolean condition = false;
+        String[] result = new String[2];
+        try(BufferedReader br = new BufferedReader(new FileReader("files/usernamesAndPasswords.txt"))) {
+            String message = "";
+            while((message = br.readLine()) != null) {
+                String[] parts = message.split("-");
+                if(parts[0].equals(otherUsername)) {
+                    condition = true;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if(!condition) {
+            return new String[0];
+        } else {
+            try(BufferedReader br = new BufferedReader(new FileReader("files/" + otherUsername + ".txt"))) {
+                String[] parts = br.readLine().split("-");
+                result[0] = parts[1];
+                result[1] = parts[2];
+                result[2] = parts[3];
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
 
 }

@@ -147,6 +147,18 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                }
             }
 
+            else if (choice.startsWith("Check Profile of: ")) {
+               String otherUsername = choice.substring("Check Profile of: ".length());
+               String[] parts = User.otherUserProfile(otherUsername);
+               if(parts.length < 1 ) {
+                  output.write("This User Doessnt Exist");
+               }
+               output.write(parts[0] + "\n");
+               output.write(parts[1] + "\n");
+               output.write(parts[2] + "\n");
+               output.flush();
+            }
+
             else if (choice.startsWith("Message: ")) {
 
                String otherUser = choice.substring("Message: ".length(), choice.indexOf("-"));
@@ -234,7 +246,7 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                output.flush();
             }
 
-            else if(choice.startsWith("DELETE")) {
+            else if(choice.startsWith("DELETE: ")) {
                String receiver = choice.substring("DELETE: ".length(), choice.indexOf("-"));
 
                choice = choice.substring(choice.indexOf("-") + 1);
@@ -258,7 +270,7 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                boolean condition = false;
                while((line = br.readLine()) != null) {
                   String[] parts = line.split("-");
-                  if(parts[2].equals(message)) {
+                  if(parts[2].equals(message) && parts[0].equals(username)) {
                      user.deleteMessage(receiver, new Message(user, type, message));
                      output.write("Successful Delete Message\n");
                      output.flush();
