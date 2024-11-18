@@ -44,7 +44,6 @@ public class User implements UserInterface {
         try (BufferedReader br = new BufferedReader(new FileReader("files/usernamesAndPasswords.txt"))) {
             String line = br.readLine();
             if (line == null || line.isEmpty()) {
-                // System.out.println("ITS EMPTY \n \n \n");
                 createUser(username, password);
                 return;
             } else {
@@ -65,7 +64,6 @@ public class User implements UserInterface {
                             return;
                         } catch (IOException e) {
                             createUser(username, password);
-                            // e.printStackTrace();
                             return;
                         }
                     } else if(vars[0].equals(username)) {
@@ -343,35 +341,6 @@ public class User implements UserInterface {
 
     }
 
-    public boolean isUnBlocked(String thisUsername, String otherUsername) {
-        if(!checkUserExists(thisUsername)) {
-            return false;
-        }
-        if(!checkUserExists(otherUsername)) {
-            return false;
-        }
-
-        try(BufferedReader thisUsernameBR = new BufferedReader(new FileReader("files/" + thisUsername));
-            BufferedReader otherUsernameBR = new BufferedReader(new FileReader("files/" + otherUsername))) {
-            thisUsernameBR.readLine();
-            thisUsernameBR.readLine();
-            String thisLine3 = thisUsernameBR.readLine();
-            otherUsernameBR.readLine();
-            otherUsernameBR.readLine();
-            String otherLine3 = otherUsernameBR.readLine();
-
-            if(!thisLine3.contains(otherUsername) || !otherLine3.contains(thisUsername)) {
-                return true;
-            } else {
-                return false;
-            }
-
-        } catch (IOException e) {
-            //e.printStackTrace();
-            return false;
-        }
-    }
-
     public boolean deleteMessage(String reciver, Message message) {
         synchronized (mainLock) {
             if (!checkUserExists(reciver)) {
@@ -623,7 +592,7 @@ public class User implements UserInterface {
 
     public static String[] otherUserProfile(String otherUsername) {
         boolean condition = false;
-        String[] result = new String[2];
+        String[] result = new String[3];
         try(BufferedReader br = new BufferedReader(new FileReader("files/usernamesAndPasswords.txt"))) {
             String message = "";
             while((message = br.readLine()) != null) {
@@ -637,10 +606,12 @@ public class User implements UserInterface {
         }
 
         if(!condition) {
-            return new String[0];
+            return new String[]{""};
         } else {
-            try(BufferedReader br = new BufferedReader(new FileReader("files/" + otherUsername + ".txt"))) {
-                String[] parts = br.readLine().split("-");
+            try(BufferedReader br2 = new BufferedReader(new FileReader("files/" + otherUsername + ".txt"))) {
+                System.out.println("files/" + otherUsername + ".txt");
+                String[] parts = br2.readLine().split("-");
+                System.out.println(parts.length);
                 result[0] = parts[1];
                 result[1] = parts[2];
                 result[2] = parts[3];
@@ -648,6 +619,7 @@ public class User implements UserInterface {
                 e.printStackTrace();
             }
         }
+
         return result;
     }
 

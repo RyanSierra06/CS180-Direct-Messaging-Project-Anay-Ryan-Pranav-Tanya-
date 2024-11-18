@@ -3,6 +3,8 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.swing.text.html.StyleSheet;
+
 /**
  * Group PJ -- Application Server
  *
@@ -49,7 +51,6 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
             System.out.println(choice);
 
             if (choice.startsWith("Username Create: ")) {
-               //TODO change choice to maybe input.readLine() or input.readLine() to choice
                username = choice.substring("Username Create: ".length());
                File f = new File("files/" + username + ".txt");
                if(f.exists()) {
@@ -62,7 +63,6 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
             }
 
             else if (choice.startsWith("Username Login: ")) {
-               //TODO change choice to maybe input.readLine() or input.readLine() to choice
                username = choice.substring("Username Login: ".length());
             }
 
@@ -150,14 +150,16 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
             else if (choice.startsWith("Check Profile of: ")) {
                String otherUsername = choice.substring("Check Profile of: ".length());
                String[] parts = User.otherUserProfile(otherUsername);
-               if(parts.length < 1 ) {
-                  output.write("This User Doesnt Exist");
+               System.out.println(parts.length);
+               if(parts.length <= 1 ) {
+                  output.write("This User Doesnt Exist\n");
+                  output.flush();
+               } else {
+                  output.write(parts[0] + "\n");
+                  output.write(parts[1] + "\n");
+                  output.write(parts[2] + "\n");
                   output.flush();
                }
-               output.write(parts[0] + "\n");
-               output.write(parts[1] + "\n");
-               output.write(parts[2] + "\n");
-               output.flush();
             }
 
             else if (choice.startsWith("Message: ")) {
@@ -178,7 +180,6 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                System.out.println(counter);
                String first = (user.getUsername().compareTo(otherUser) > 0 ? otherUser : user.getUsername());
                String second = (user.getUsername().equals(first) ? otherUser : user.getUsername());
-               // File f = new File("files/" + first + "-" + second + ".txt");
 
                System.out.println("we reached this point");
                System.out.println("we reached this point");
@@ -199,12 +200,6 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                   output.flush();
                   System.out.println("we just sent a message");
                }
-
-
-               //TODO back in the client, once you're in case 5, start a
-               // loop to keep messaging that user until a certain value is types
-               // Maybe have an atomic integer to display message history the first time and
-               // then go into just the straight messages back and fourth
             }
 
 
@@ -285,6 +280,9 @@ public class ApplicationServer implements ApplicationServerInterface, Runnable {
                }
 
 
+            } else if(choice.equals("Give username")) {
+               output.write(username + "\n");
+               output.flush();
             }
 
             else {

@@ -9,7 +9,7 @@
  *
  */
 
-public interface ApplicationInterface {
+public interface ApplicationClientInterface {
     static void actionsAfterLogin(User currentUser) {
     }
 

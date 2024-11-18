@@ -1,11 +1,8 @@
 import java.io.*;
 import java.net.*;
 import java.util.Scanner;
-//TODO Add functionality for can recieve messages from anyone in case 5
-// Fix texting (display who the messsage is from), basically who sent it
-// make sure it keeps asking for messages
 
-public class ApplicationClient implements ApplicationInterface {
+public class ApplicationClient implements ApplicationClientInterface {
     private static final int SERVER_PORT = 4242;
     private static final Object gateKeep = new Object();
 
@@ -94,12 +91,13 @@ public class ApplicationClient implements ApplicationInterface {
                         throw new RuntimeException(e);
                     }
                     try {
-                        if(br.readLine().equals("This User Doesnt Exist")) {
-                            System.out.println("Username already exists. Please try again.");
+                        String firstLine = br.readLine();
+                        if(firstLine.equals("This User Doesnt Exist")) {
+                            System.out.println("This User Doesnt Exist");
                         } else {
-                            System.out.println("Name" + br.readLine());
-                            System.out.println("Description" + br.readLine());
-                            System.out.println("Picture" + br.readLine());
+                            System.out.println("Name: " + firstLine);
+                            System.out.println("Description: " + br.readLine());
+                            System.out.println("Picture: " + br.readLine());
                         }
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -125,8 +123,18 @@ public class ApplicationClient implements ApplicationInterface {
                         throw new RuntimeException(e);
                     }
 
+                    String username = "";
 
-                    Thread read = new Thread(new ReadMessageThread(br));
+                    try {
+                        bw.write("Give username\n");
+                        bw.flush();
+                        username = br.readLine();
+                    } catch(IOException e) {
+                        e.printStackTrace();
+                    }
+                    
+
+                    Thread read = new Thread(new ReadMessageThread(receiver, username));
                     read.start();
 
                     do {
@@ -141,7 +149,6 @@ public class ApplicationClient implements ApplicationInterface {
                             }
                         }
 
-                        //TODO HERE IF THE USER AT ANY POINT TYPES "DELETE" DELETE THE LAST MESSAGE THEY SENT
                         System.out.println("Enter your message: (to quit messaging at any point, type \"quit\") (to delete the last message you sent, type \"DELETE\")");
                         String message = sc.nextLine();
                         try {
@@ -160,7 +167,7 @@ public class ApplicationClient implements ApplicationInterface {
                                 } else if(result.equals("This Messages Does Not Exist")) {
                                     System.out.println("This Message Doesnt Exist");
                                 }
-                            }else {
+                            } else {
                                 bw.write("Message: " + receiver + "-" + message + "-" + type + "-" + displayMessageHistoryCounter + "\n");
                                 bw.flush();
                             }

@@ -16,6 +16,8 @@ import org.junit.runner.notification.Failure;
  * @version Nov 3, 2024
  *
  */
+
+@RunWith(Enclosed.class) // Ensure nested test classes are executed
 public class MessageTestCases {
     public static void main(String[] args) {
         Result result = JUnitCore.runClasses(TestCase.class);

@@ -39,6 +39,8 @@ public interface UserInterface {
 
     boolean blockUser(String blockUser);
 
+    boolean isBlocked(String thisUsername, String otherUsername);
+
     boolean deleteMessage(String receiver, Message message);
 
     String getBlockedUsers();
@@ -56,4 +58,8 @@ public interface UserInterface {
     boolean removeFriend(String oldFriend);
 
     boolean checkUserExists(String username1);
+
+    static boolean checkCanReceiveAnyone(String username) { return true; };
+
+    static boolean checkIsFriend(String otherUsername, String thisUsername) { return true; }
 }

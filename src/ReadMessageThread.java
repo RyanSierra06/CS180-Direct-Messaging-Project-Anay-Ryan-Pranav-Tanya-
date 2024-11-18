@@ -1,40 +1,43 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ReadMessageThread implements Runnable {
-    BufferedReader br = null;
+    String first;
+    String second;
+    
     boolean exit = false;
 
-    public ReadMessageThread(BufferedReader br) {
-        this.br = br;
+    public ReadMessageThread(String user1, String user2) {
+        first = (user1.compareTo(user2) > 0 ? user2 : user1);
+        second = (user1.equals(first) ? user2 : user1);
     }
 
     @Override
     public void run() {
         try {
-            while(!exit) {
-                String isBlocked = br.readLine();
-                if(isBlocked.equals("Block Error: Failed to send message.")) {
-                    return;
-                } else if(isBlocked.equals("This User Doesnt Accept Messages from Non-Friends")) {
-                    return;
-                } else if(isBlocked.equalsIgnoreCase("quit")) {
-                    break;
-                } else {
-                    String message;
-                    // BufferedWriter messagesTerminal = new BufferedWriter(new FileWriter(new File("files/messagesTerminal.txt")));
-                    while((message = br.readLine()) != null) {
-                        // messagesTerminal.write(message + "\n");
-                        System.out.println(message);
+
+            while(true) {
+                File f = new File("files/" + first + "-" + second + ".txt");
+
+                if(f.exists()) {
+                    BufferedReader br = new BufferedReader(new FileReader("files/" + first + "-" + second + ".txt"));
+                    while(!exit) {
+                        String message;
+                        while((message = br.readLine()) != null) {
+                            System.out.println(message);
+                        }
                     }
+                    br.close();
+                    break;
                 }
             }
-
+            
         } catch(IOException e) {
             e.printStackTrace();
         }

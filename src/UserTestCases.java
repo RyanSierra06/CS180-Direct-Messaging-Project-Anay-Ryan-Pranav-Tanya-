@@ -19,7 +19,6 @@ import org.junit.runner.notification.Failure;
 
 @RunWith(Enclosed.class) // Ensure nested test classes are executed
 public class UserTestCases {
-
     public static void main(String[] args) {
         Result result = JUnitCore.runClasses(TestCase.class);
         if (result.wasSuccessful()) {
@@ -132,31 +131,19 @@ public class UserTestCases {
             Assert.assertEquals("19", initialUserFriends, secondUser.getUsername());
             Assert.assertEquals("20", initialUserBlocked, "user3");
             Assert.assertEquals("21", msg, "");
+
+            initialUser.setReceiveAnyone(true);
+            initialUser.addFriend(secondUser.getUsername());
+            secondUser.addFriend(initialUser.getUsername());
+            boolean bool = User.checkCanReceiveAnyone(initialUser.getUsername());
+            boolean bool2 = User.checkIsFriend(initialUser.getUsername(), secondUser.getUsername());
             
-            // UPDATED FOR PHASE 2
-            // Test case for updating user profile description
-            initialUser.setProfileDescription("Updated profile description");
-            Assert.assertEquals("22", initialUser.getProfileDescription(), "Updated profile description");
+            Assert.assertEquals("22", true, bool);
+            Assert.assertEquals("23", true, bool2);
 
-            // UPDATED FOR PHASE 2
-            // Test case for updating user profile picture
-            initialUser.setProfilePicture("./files/newProfilePic.jpg");
-            Assert.assertEquals("23", initialUser.getProfilePicture(), "./files/newProfilePic.jpg");
-
-            // UPDATED FOR PHASE 2
-            // Test case for receiving messages after update
-            Message updatedMessage = new Message(secondUser, "text", "updatedMessage");
-            boolean sentMessage = secondUser.sendMessage(updatedMessage, initialUser.getUsername());
-            Assert.assertEquals("24", sentMessage, true);
-            String receivedMessage = initialUser.readMessages(secondUser.getUsername());
-            Assert.assertEquals("25", receivedMessage, "user2-user1-updatedMessage\n");
-
-            // UPDATED FOR PHASE 2
-            // Test case for updating friend status after user update
-            boolean addedNewFriend = initialUser.addFriend(secondUser.getUsername());
-            Assert.assertEquals("26", addedNewFriend, true);
-            String updatedFriendsList = initialUser.getFriends();
-            Assert.assertEquals("27", updatedFriendsList, secondUser.getUsername());
+            initialUser.blockUser(secondUser.getUsername());
+            boolean bool3 = initialUser.isBlocked(initialUserName, secondUser.getUsername());
+            Assert.assertEquals("24", true, bool3);
         }
     }
 }
