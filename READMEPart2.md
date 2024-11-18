@@ -5,12 +5,14 @@ Use the UserTestCases and MessageTestCases files to run and test both classes. I
 
 
 ## Who did what?
-Submitted on Vocareum - Pranav
-ApplicationServer.java - Pranav & Ryan & Tanya
-ApplicationServerRunner.java - Pranav & Ryan
-ApplicationClient.java - Pranav & Ryan & Anay
-ReadMessageThread.java - Pranav & Ryan
-READMEPart2.md - Ryan
+- Submitted on Vocareum - Pranav
+- ApplicationServer.java - Pranav & Ryan & Tanya
+- ApplicationServerRunner.java - Pranav & Ryan
+- ApplicationServerInterface.java - Tanya
+- ApplicationClient.java - Pranav & Ryan & Anay
+- ApplicationClientInterface.java - Anay
+- ReadMessageThread.java - Pranav & Ryan
+- READMEPart2.md - Ryan
 
 
 ## Class Descriptions
@@ -23,6 +25,9 @@ Because each we make a new thread everytime a client is created, we allow the se
 
 ApplicationServerRunner.java:
 - This class is used to actaully run the server on our localhost, and it's the basis for the multi threading of the client classes within the main server.
+
+ApplicationServerInterface.java:
+- This houses all the methods we used for the ApplicationServer.java class
 
 ApplicationClient.java:
 - This is the client which is used to take user input each time a user wants to log-in or create a new account.
@@ -42,6 +47,9 @@ The tenth Allows the user to enter a friend to add, and add that friend as long 
 The eleventh alllows the user to remove a friend, still checking to make sure its a valid user, and the twelfth returns your entire friend list.
 The thirteenth allows you to change if you can receive messages from anyone, or just messages from people who you have added as friends.
 Finally, the foruteenth allows you to exit the program and log you out, still keep the server running though.
+
+ApplicationClientInterface.java:
+- This houses all the methods we used for the ApplicationClient.java class
 
 
 ReadMessageThread.java:
