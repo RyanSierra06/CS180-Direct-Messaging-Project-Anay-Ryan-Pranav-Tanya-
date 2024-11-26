@@ -380,7 +380,7 @@ public class User implements UserInterface {
             br.readLine();
             String blockedUsers = br.readLine();
             for (String s : blockedUsers.split("-")) {
-                sb.append(s);
+                sb.append(s).append(" ");
             }
 
             return sb.toString();
@@ -398,7 +398,7 @@ public class User implements UserInterface {
             br.readLine();
             String friends = br.readLine();
             for (String s : friends.split("-")) {
-                sb.append(s);
+                sb.append(s).append(" ");
             }
 
             return sb.toString();
