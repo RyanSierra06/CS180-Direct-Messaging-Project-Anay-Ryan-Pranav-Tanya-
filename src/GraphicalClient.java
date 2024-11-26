@@ -24,12 +24,12 @@ import java.util.Scanner;
 //TODO, when working on phase 3, the main classes that work together are Graphical Client, Graphical Server, and ReadMessageThread as well as User and Message for the database
 
 public class GraphicalClient extends JComponent implements GraphicalClientInterface {
-    //TODO make the graphical client interface
     //TODO consider changing all the null parent components to the frame on the JOptionPanes
     private static final int SERVER_PORT = 4243;
     private static Object gateKeep = new Object();
     public String[] message = {""};
     public String[] receiver = {""};
+    Thread read;
 
 
 
@@ -73,6 +73,9 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
         frame.add(enterButton);
         enterButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+//                if(read != null) {
+//                    read.interrupt();
+//                }
                 if(receiver[0].equals("")) {
                     JOptionPane.showMessageDialog(null, "Please Click Send Message To Get Started", "Send Message", JOptionPane.INFORMATION_MESSAGE);
                 } else {
@@ -89,12 +92,25 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                         try {
                             bw.write("Message: " + receiver[0] + "-" + message[0] + "-" + type + "\n");
                             bw.flush();
-
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }
                     }
                 }
+//                if(read != null) {
+//                    textArea.setText("");
+//                    String username = "";
+//                    try {
+//                        bw.write("Give username\n");
+//                        bw.flush();
+//                        username = br.readLine();
+//                        System.out.println(username);
+//                    } catch (IOException ex) {
+//                        throw new RuntimeException(ex);
+//                    }
+//                    read = new Thread(new ReadMessageThread(receiver[0], username, socket, textArea, frame));
+//                    read.start();
+//                }
             }
         });
 
@@ -105,7 +121,9 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
         frame.add(deleteButton);
         deleteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                //TODO currently not working, but this probably has to do with the messages not concurrently showing since its messing up the readLines()
+                if(read == null) {
+                    read.interrupt();
+                }
                 if(receiver[0].equals("")) {
                     JOptionPane.showMessageDialog(null, "Please Click Send Message To Get Started", "Send Message", JOptionPane.INFORMATION_MESSAGE);
                 } else {
@@ -124,7 +142,7 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                             bw.write("DELETE: " + receiver[0] + "-" + message[0] + "-" + type + "\n");
                             bw.flush();
                             result = br.readLine();
-                            System.out.println(result);
+                            System.out.println("LOOK HERE: " + result);
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }
@@ -134,7 +152,19 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                             JOptionPane.showMessageDialog(null, "This Message Doesnt Exist", "Delete Message", JOptionPane.INFORMATION_MESSAGE);
                         }
                     }
-
+                }
+                if(read != null) {
+                    textArea.setText("");
+                    String username = "";
+                    try {
+                        bw.write("Give username\n");
+                        bw.flush();
+                        username = br.readLine();
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    read = new Thread(new ReadMessageThread(receiver[0], username, socket, textArea, frame));
+                    read.start();
                 }
             }
         });
@@ -147,6 +177,9 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
         JButton setNameButton = new JButton("Set Name");
         setNameButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if(read != null) {
+                    read.interrupt();
+                }
                 String name = JOptionPane.showInputDialog(null, "What do you want to set your name to?", "Set Name", JOptionPane.PLAIN_MESSAGE );
                 if(name != null) {
                     try {
@@ -157,12 +190,27 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                     }
                     JOptionPane.showMessageDialog(null, "Name updated successfully.", "Set Name", JOptionPane.INFORMATION_MESSAGE);
                 }
-
+                if(read != null) {
+                    String username = "";
+                    try {
+                        bw.write("Give username\n");
+                        bw.flush();
+                        username = br.readLine();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    textArea.setText("");
+                    read = new Thread(new ReadMessageThread(receiver[0], username, socket, textArea, frame));
+                    read.start();
+                }
             }
         });
         JButton setProfileDescriptionButton = new JButton("Set Profile Description");
         setProfileDescriptionButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if(read != null) {
+                    read.interrupt();
+                }
                 String description = JOptionPane.showInputDialog(null, "Enter profile description: ", "Set Profile Description", JOptionPane.PLAIN_MESSAGE );
                 if(description != null && !description.isEmpty() && !description.contains("-")) {
                     try {
@@ -175,11 +223,27 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                 } else {
                     JOptionPane.showMessageDialog(null, "Profile descriptions cannot contain a \"-\"", "Set Profile Description", JOptionPane.ERROR_MESSAGE);
                 }
+                if(read != null) {
+                    String username = "";
+                    try {
+                        bw.write("Give username\n");
+                        bw.flush();
+                        username = br.readLine();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    textArea.setText("");
+                    read = new Thread(new ReadMessageThread(receiver[0], username, socket, textArea, frame));
+                    read.start();
+                }
             }
         });
         JButton setProfilePictureButton = new JButton("Set Profile Picture");
         setProfilePictureButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if(read != null) {
+                    read.interrupt();
+                }
                 String imagePath = "";
                 Object[] images = {"Dog", "Cat", "Bear", "Lion"};
                 String selectedOption = (String) JOptionPane.showInputDialog(null,"Pick the image you want for your profile:", "Set Profile Picture", JOptionPane.DEFAULT_OPTION, null, images, images[0]);
@@ -188,8 +252,8 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                     try {
                         bw.write("Profile Picture: " + imagePath + "\n");
                         bw.flush();
-
-                        if(br.readLine().equals("Image Found")) {
+                        String choice = br.readLine();
+                        if(choice.equals("Image Found")) {
                             System.out.println("Image Found");
                             File imageFile = new File(imagePath);
                             BufferedImage image = ImageIO.read(imageFile);
@@ -199,23 +263,35 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                             imageLabel.setPreferredSize(new Dimension(100,100));
                             JOptionPane.showMessageDialog(null, imageLabel, "New Profile Picture", JOptionPane.PLAIN_MESSAGE);
 
-                        } else if(br.readLine().equals("Image file not found.")) {
-                            JOptionPane.showMessageDialog(null, "Image file not found.", "Set Profile Picture", JOptionPane.ERROR_MESSAGE);
-                        } else if(br.readLine().equals("Failed to load the image")) {
-                            JOptionPane.showMessageDialog(null, "Failed to load the image:\n", "Set Profile Picture", JOptionPane.ERROR_MESSAGE);
-                        } else if(br.readLine().equals("No input provided.")) {
-                            JOptionPane.showMessageDialog(null, "No input provided.", "Set Profile Picture", JOptionPane.WARNING_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(null, choice, "Set Profile Picture", JOptionPane.ERROR_MESSAGE);
                         }
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
                     System.out.println("Profile picture updated.");
                 }
+                if(read != null) {
+                    String username = "";
+                    try {
+                        bw.write("Give username\n");
+                        bw.flush();
+                        username = br.readLine();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    textArea.setText("");
+                    read = new Thread(new ReadMessageThread(receiver[0], username, socket, textArea, frame));
+                    read.start();
+                }
             }
         });
         JButton viewProfileInformationButton = new JButton("View Profile Information");
         viewProfileInformationButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if(read != null) {
+                    read.interrupt();
+                }
                 try {
                     bw.write("Profile Information: " + "\n");
                     bw.flush();
@@ -245,11 +321,27 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                 } catch (IOException e1) {
                     throw new RuntimeException(e1);
                 }
+                if(read != null) {
+                    String username = "";
+                    try {
+                        bw.write("Give username\n");
+                        bw.flush();
+                        username = br.readLine();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    textArea.setText("");
+                    read = new Thread(new ReadMessageThread(receiver[0], username, socket, textArea, frame));
+                    read.start();
+                }
             }
         });
         JButton viewOtherProfileInformationButton = new JButton("View Another Users Profile");
         viewOtherProfileInformationButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if(read != null) {
+                    read.interrupt();
+                }
                 String username = JOptionPane.showInputDialog(null, "Which users profile do you want to view (Please enter a valid username)", "View Another Users Profile", JOptionPane.QUESTION_MESSAGE);
                 if(username != null) {
                     try {
@@ -292,6 +384,19 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                         throw new RuntimeException(e1);
                     }
                 }
+                if(read != null) {
+                    String name = "";
+                    try {
+                        bw.write("Give username\n");
+                        bw.flush();
+                        name = br.readLine();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    textArea.setText("");
+                    read = new Thread(new ReadMessageThread(receiver[0], name, socket, textArea, frame));
+                    read.start();
+                }
             }
         });
 
@@ -307,7 +412,9 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
         JButton sendMessageButton = new JButton("Send Message");
         sendMessageButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // TODO fix reentering chat
+                if(read != null) {
+                    read.interrupt();
+                }
                 String receiverInput = JOptionPane.showInputDialog(null, "Enter The User You Want To Message", "Send Message", JOptionPane.QUESTION_MESSAGE);
                 if(receiverInput != null) {
                     try {
@@ -328,25 +435,13 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                                 e1.printStackTrace();
                             }
                             System.out.println("here");
-                            Thread read = new Thread(new ReadMessageThread(receiverInput, username, socket));
+                            textArea.setText("");
+                            read = new Thread(new ReadMessageThread(receiverInput, username, socket, textArea, frame));
                             read.start();
-                            System.out.println("thread issue");
-
-                            StringBuilder messageHistory = new StringBuilder();
-                            String line = "";
-                            System.out.println("start of while");
-                            int counter = 0;
-                            while ((line = br.readLine()) != null) {
-                                //TODO issue with updating without being stuck in the while loop
-                                System.out.println("reading: " + line);
-                                messageHistory.append(line).append("\n");
-                                textArea.setText(messageHistory.toString());
-                                frame.repaint();
-                            }
                         } else {
                             //cant message
                             JOptionPane.showMessageDialog(null, choice, "Send Message", JOptionPane.PLAIN_MESSAGE);
-                            //goes back to the larger frame
+                            //goes back to the larger frame71
                         }
 
                     } catch (IOException e1) {
@@ -358,6 +453,9 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
         JButton blockUserButton = new JButton("Block User");
         blockUserButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if(read != null) {
+                    read.interrupt();
+                }
                 String blockUser = JOptionPane.showInputDialog(null, "Enter username to block: ", "Block User", JOptionPane.QUESTION_MESSAGE);
                 if(blockUser != null) {
                     try {
@@ -377,11 +475,27 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                         throw new RuntimeException(e1);
                     }
                 }
+                if(read != null) {
+                    String name = "";
+                    try {
+                        bw.write("Give username\n");
+                        bw.flush();
+                        name = br.readLine();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    textArea.setText("");
+                    read = new Thread(new ReadMessageThread(receiver[0], name, socket, textArea, frame));
+                    read.start();
+                }
             }
         });
         JButton unblockUserButton = new JButton("Unblock User");
         unblockUserButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if(read != null) {
+                    read.interrupt();
+                }
                 String unblockUser = JOptionPane.showInputDialog(null, "Enter username to unblock: ", "Block User", JOptionPane.QUESTION_MESSAGE);
                 if(unblockUser != null) {
                     try {
@@ -398,17 +512,46 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                         throw new RuntimeException(e1);
                     }
                 }
+                if(read != null) {
+                    String name = "";
+                    try {
+                        bw.write("Give username\n");
+                        bw.flush();
+                        name = br.readLine();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    textArea.setText("");
+                    read = new Thread(new ReadMessageThread(receiver[0], name, socket, textArea, frame));
+                    read.start();
+                }
             }
         });
         JButton viewBlockedUsersButton = new JButton("View Blocked Users");
         viewBlockedUsersButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if(read != null) {
+                    read.interrupt();
+                }
                 try {
                     bw.write("Blocked Users: " + "\n");
                     bw.flush();
                     JOptionPane.showMessageDialog(null, "Blocked Users: " + br.readLine(), "Block Users", JOptionPane.INFORMATION_MESSAGE);
                 } catch (IOException e1) {
                     throw new RuntimeException(e1);
+                }
+                if(read != null) {
+                    String name = "";
+                    try {
+                        bw.write("Give username\n");
+                        bw.flush();
+                        name = br.readLine();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    textArea.setText("");
+                    read = new Thread(new ReadMessageThread(receiver[0], name, socket, textArea, frame));
+                    read.start();
                 }
             }
         });
@@ -432,6 +575,9 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
         JButton addFriendButton = new JButton("Add Friend");
         addFriendButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if(read != null) {
+                    read.interrupt();
+                }
                 String newFriend = JOptionPane.showInputDialog(null,"Enter username to add as friend: ", "Add Friend", JOptionPane.QUESTION_MESSAGE);
                 if(newFriend != null) {
                     try {
@@ -449,11 +595,27 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                         throw new RuntimeException(e1);
                     }
                 }
+                if(read != null) {
+                    String name = "";
+                    try {
+                        bw.write("Give username\n");
+                        bw.flush();
+                        name = br.readLine();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    textArea.setText("");
+                    read = new Thread(new ReadMessageThread(receiver[0], name, socket, textArea, frame));
+                    read.start();
+                }
             }
         });
         JButton removeFriendButton = new JButton("Remove Friend");
         removeFriendButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if(read != null) {
+                    read.interrupt();
+                }
                 String oldFriend = JOptionPane.showInputDialog(null,"Enter username to remove from friends: ", "Remove Friend", JOptionPane.QUESTION_MESSAGE);
                 if(oldFriend != null) {
                     try {
@@ -470,11 +632,27 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                         throw new RuntimeException(e1);
                     }
                 }
+                if(read != null) {
+                    String name = "";
+                    try {
+                        bw.write("Give username\n");
+                        bw.flush();
+                        name = br.readLine();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    textArea.setText("");
+                    read = new Thread(new ReadMessageThread(receiver[0], name, socket, textArea, frame));
+                    read.start();
+                }
             }
         });
         JButton viewFriendButton = new JButton("View Friends");
         viewFriendButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if(read != null) {
+                    read.interrupt();
+                }
                 try {
                     bw.write("Friend List: " + "\n");
                     bw.flush();
@@ -482,11 +660,27 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                 } catch (IOException e1) {
                     throw new RuntimeException(e1);
                 }
+                if(read != null) {
+                    String name = "";
+                    try {
+                        bw.write("Give username\n");
+                        bw.flush();
+                        name = br.readLine();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    textArea.setText("");
+                    read = new Thread(new ReadMessageThread(receiver[0], name, socket, textArea, frame));
+                    read.start();
+                }
             }
         });
         JButton canReceiveFromButton = new JButton("Change Receiving Options (Friends/All)");
         canReceiveFromButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if(read != null) {
+                    read.interrupt();
+                }
                 int num = JOptionPane.showConfirmDialog(null, "Do you want to receive messages from anyone (yes/no)", "Change Receiving Options", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                 if(num != JOptionPane.CLOSED_OPTION) {
                     int choice = Integer.parseInt(String.valueOf(num));
@@ -502,6 +696,19 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                     } else {
                         JOptionPane.showMessageDialog(null, "You can now receive messages from only friends", "Change Receiving Options", JOptionPane.INFORMATION_MESSAGE);
                     }
+                }
+                if(read != null) {
+                    String name = "";
+                    try {
+                        bw.write("Give username\n");
+                        bw.flush();
+                        name = br.readLine();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    textArea.setText("");
+                    read = new Thread(new ReadMessageThread(receiver[0], name, socket, textArea, frame));
+                    read.start();
                 }
             }
         });

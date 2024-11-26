@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -17,13 +18,17 @@ public class ReadMessageThread implements Runnable {
     String first;
     String second;
     Socket socket;
+    JTextArea textArea;
+    JFrame frame;
 
     boolean exit = false;
 
-    public ReadMessageThread(String user1, String user2, Socket socket) {
+    public ReadMessageThread(String user1, String user2, Socket socket, JTextArea textArea, JFrame frame) {
         first = (user1.compareTo(user2) > 0 ? user2 : user1);
         second = (user1.equals(first) ? user2 : user1);
         this.socket = socket;
+        this.textArea = textArea;
+        this.frame = frame;
     }
 
     @Override
@@ -34,22 +39,25 @@ public class ReadMessageThread implements Runnable {
 
                 if (f.exists()) {
                     BufferedReader br = new BufferedReader(new FileReader("files/" + first + "-" + second + ".txt"));
-                    BufferedWriter output = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
                     while (!exit) {
                         String message;
                         while ((message = br.readLine()) != null) {
-                            output.write("In The Thread: " + message + "\n");
-                            output.flush();
-                            System.out.println(message);
+                            if(!message.isEmpty()) {
+                                String[] parts = message.split("-");
+                                System.out.println("THIS IS A MESSAGE LOOK AT ME HERE: " + message);
+                                if(!parts[2].isEmpty()) {
+                                    textArea.append(parts[0] + ": " + parts[2] + "\n");
+                                    frame.repaint();
+                                }
+                            }
                         }
                     }
                     br.close();
-                    output.close();
                     System.out.println("closing socket");
                     break;
                 } else {
                     BufferedWriter bw = new BufferedWriter(new FileWriter("files/" + first + "-" + second + ".txt"));
-                    bw.write(first + "-" + second +  " " + "\n");
+                    bw.write(first + "-" + second +  "-" + "\n");
                     bw.flush();
                     bw.close();
                 }

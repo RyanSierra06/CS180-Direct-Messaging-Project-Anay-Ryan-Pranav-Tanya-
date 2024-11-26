@@ -191,26 +191,9 @@ public class GraphicalServer implements ApplicationServerInterface, Runnable {
                     String first = (user.getUsername().compareTo(otherUser) > 0 ? otherUser : user.getUsername());
                     String second = (user.getUsername().equals(first) ? otherUser : user.getUsername());
 
-                    System.out.println("we reached this point");
-                    System.out.println("we reached this point");
-
-                    //   if (Integer.parseInt(counter) == 0) {
-                    //First time coming back so print the message history
                     System.out.println("before we send message");
                     boolean messageSent = user.sendMessage(new Message(user, type, thisMessage), otherUser);
-                    System.out.println("we just sent a message" + messageSent);
-                    String messageHistory = user.readMessages(otherUser);
-                    output.write("Message: " + "\n" + messageHistory + "\n");
-                    output.flush();
-                    System.out.println("we just sent a message");
-                    //   } else if (Integer.parseInt(counter) > 0) {
-                    //       //Second time, so everything is already printed, we just want the new messages to start
-                    //       //coming in
-                    //       user.sendMessage(new Message(user, type, thisMessage), otherUser);
-                    //       output.write("Message: " + "\n" + user.findMostRecentMessages(otherUser) + "\n");
-                    //       output.flush();
-                    //       System.out.println("we just sent a message");
-                    //   }
+                    System.out.println("we just sent a message: " + messageSent);
                 } else if (choice.startsWith("Block User: ")) {
                     blockUser = choice.substring("Block User: ".length());
                     boolean check = user.blockUser(blockUser);
@@ -227,7 +210,7 @@ public class GraphicalServer implements ApplicationServerInterface, Runnable {
                     if(check) {
                         output.write("Successful\n");
                         output.flush();
-                    } else{
+                    } else {
                         output.write("Failed\n");
                         output.flush();
                     }
