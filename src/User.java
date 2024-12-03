@@ -412,28 +412,36 @@ public class User implements UserInterface {
         if (!checkUserExists(previouslyBlockedUser)) {
             return false;
         }
+        if(previouslyBlockedUser.equals(username)) {
+            return false;
+        }
         try (BufferedReader br = new BufferedReader(new FileReader("files/" + this.userFileName))) {
             String line1 = br.readLine();
             String line2 = br.readLine();
-            int startInd = line2.indexOf(previouslyBlockedUser);
-            int endInd = line2.indexOf(previouslyBlockedUser) + previouslyBlockedUser.length();
-            if (startInd == 0 && endInd == line2.length()) {
-                line2 = "";
-            } else if (startInd == 0) {
-                line2 = line2.substring(0, startInd) + line2.substring(endInd + 1);
-            } else if (endInd == line2.length()) {
-                line2 = line2.substring(0, startInd - 1) + line2.substring(endInd);
-            } else {
-                line2 = line2.substring(0, startInd - 1) + line2.substring(endInd);
-            }
-            String line3 = br.readLine();
+            if(line2.contains(previouslyBlockedUser)) {
+                int startInd = line2.indexOf(previouslyBlockedUser);
+                int endInd = line2.indexOf(previouslyBlockedUser) + previouslyBlockedUser.length();
+                if (startInd == 0 && endInd == line2.length()) {
+                    line2 = "";
+                } else if (startInd == 0) {
+                    line2 = line2.substring(0, startInd) + line2.substring(endInd + 1);
+                } else if (endInd == line2.length()) {
+                    line2 = line2.substring(0, startInd - 1) + line2.substring(endInd);
+                } else {
+                    line2 = line2.substring(0, startInd - 1) + line2.substring(endInd);
+                }
+                String line3 = br.readLine();
 
-            BufferedWriter bw = new BufferedWriter(new FileWriter(new File("files/" + this.userFileName), false));
-            bw.write(line1 + "\n");
-            bw.write(line2 + "\n");
-            bw.write(line3 + "\n");
-            bw.close();
-            return true;
+                BufferedWriter bw = new BufferedWriter(new FileWriter(new File("files/" + this.userFileName), false));
+                bw.write(line1 + "\n");
+                bw.write(line2 + "\n");
+                bw.write(line3 + "\n");
+                bw.close();
+                return true;
+            } else {
+                return false;
+            }
+
         } catch (IOException e) {
             // e.printStackTrace();
             return false;
@@ -524,31 +532,40 @@ public class User implements UserInterface {
     }
 
     public boolean removeFriend(String oldFriend) {
+        System.out.println("In the user class");
         if (!checkUserExists(oldFriend)) {
+            System.out.println("Shouldnt happpen");
             return false;
         }
         try (BufferedReader br = new BufferedReader(new FileReader("files/" + this.userFileName))) {
+            System.out.println("Redaing into the file for remove");
             String line1 = br.readLine();
             String line2 = br.readLine();
             String line3 = br.readLine();
-            String newLine3 = "";
-            if (!(line3.indexOf("-") == -1)) {
-                String[] line3Part = line3.split("-");
-
-                for (String parts : line3Part) {
-                    if (parts == oldFriend) {
-                        continue;
+            if(!line3.contains(oldFriend)) {
+                return false;
+            } else {
+                System.out.println("Found the else");
+                String newLine3 = "";
+                if (line3.contains("-")) {
+                    String[] line3Part = line3.split("-");
+                    System.out.println("this shouldn't happen");
+                    for (String parts : line3Part) {
+                        if (parts.equals(oldFriend)) {
+                            continue;
+                        }
+                        newLine3 += parts + "-";
                     }
-                    newLine3 += parts + "-";
                 }
+                System.out.println("Finding File");
+                BufferedWriter bw = new BufferedWriter(new FileWriter(new File("files/" + this.userFileName), false));
+                bw.write(line1 + "\n");
+                bw.write(line2 + "\n");
+                bw.write(newLine3 + "\n");
+                bw.close();
+                System.out.println("Ending editiing the file");
+                return true;
             }
-
-            BufferedWriter bw = new BufferedWriter(new FileWriter(new File("files/" + this.userFileName), false));
-            bw.write(line1 + "\n");
-            bw.write(line2 + "\n");
-            bw.write(newLine3 + "\n");
-            bw.close();
-            return true;
         } catch (IOException e) {
             // e.printStackTrace();
             return false;

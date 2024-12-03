@@ -1,3 +1,5 @@
+import org.w3c.dom.Text;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -21,10 +23,9 @@ import java.util.Scanner;
  * @version Nov 17, 2024
  */
 
-//TODO, when working on phase 3, the main classes that work together are Graphical Client, Graphical Server, and ReadMessageThread as well as User and Message for the database
+//TODO FIX ALL THE OPTION PANES TO EXIT CORRECTLY
 
 public class GraphicalClient extends JComponent implements GraphicalClientInterface {
-    //TODO consider changing all the null parent components to the frame on the JOptionPanes
     private static final int SERVER_PORT = 4243;
     private static Object gateKeep = new Object();
     public String[] message = {""};
@@ -40,15 +41,14 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        //text area should update concurrently with new messages being sent and received as well as the second the user enters a dm with another person, all of those messages show up.
-        JTextArea textArea = new JTextArea(10, 30);
-        textArea.setEditable(false);
-        textArea.setText("Click the \"Send Message\" Button To View Your Message History");
-        textArea.append("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        textArea.append("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        textArea.append("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-
-        JScrollPane scrollPane = new JScrollPane(textArea);
+        //text area should update concurrently with new messages being sent and received as well
+        //as the second the user enters a dm with another person, all of those messages show up.
+        JTextPane textPane = new JTextPane();
+        textPane.setEditable(false);
+        textPane.setText("Click the \"Send Message\" Button To View Your Message History" +
+                "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" +
+                "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        JScrollPane scrollPane = new JScrollPane(textPane);
         scrollPane.setBounds(250, 100, 700, 570);
 
         frame.add(scrollPane);
@@ -73,44 +73,58 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
         frame.add(enterButton);
         enterButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-//                if(read != null) {
-//                    read.interrupt();
-//                }
-                if(receiver[0].equals("")) {
-                    JOptionPane.showMessageDialog(null, "Please Click Send Message To Get Started", "Send Message", JOptionPane.INFORMATION_MESSAGE);
+                String initialCheck = "";
+                try {
+                    bw.write("Check Block/Friends: " + receiver[0] + "\n");
+                    bw.flush();
+                    initialCheck = br.readLine();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                if(initialCheck.equals("One of you has blocked the other")) {
+                    JOptionPane.showMessageDialog(null, "You Currently have this user blocked or are blocked by this user", "Send Message", JOptionPane.INFORMATION_MESSAGE);
+                } else if(textField.getText().trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "You Can't Send An Empty Message", "Send Message", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    message[0] = textField.getText();
-                    String type = JOptionPane.showInputDialog(null, "What Message Type Is This (Image/Text)?", "Send Message", JOptionPane.QUESTION_MESSAGE);
-                    if(type != null) {
-                        while (true) {
-                            if (!type.equalsIgnoreCase("Image") && !type.equalsIgnoreCase("Text")) {
-                                type = JOptionPane.showInputDialog(null, "Invalid message type, please try again", "Send Message", JOptionPane.ERROR_MESSAGE);
-                            } else {
-                                break;
+                    if(receiver[0].equals("")) {
+                        JOptionPane.showMessageDialog(null, "Please Click Send Message To Get Started", "Send Message", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        String type = JOptionPane.showInputDialog(null, "What Message Type Is This (Image/Text)?", "Send Message", JOptionPane.QUESTION_MESSAGE);
+                        if(type != null) {
+                            while (true) {
+                                if (!type.equalsIgnoreCase("Image") && !type.equalsIgnoreCase("Text")) {
+                                    type = JOptionPane.showInputDialog(null, "Invalid message type, please try again", "Send Message", JOptionPane.ERROR_MESSAGE);
+                                } else {
+                                    break;
+                                }
                             }
-                        }
-                        try {
-                            bw.write("Message: " + receiver[0] + "-" + message[0] + "-" + type + "\n");
-                            bw.flush();
-                        } catch (IOException ex) {
-                            throw new RuntimeException(ex);
+                            try {
+                                if(type.equalsIgnoreCase("Image")) {
+                                    bw.write("Check Valid Image File " + textField.getText() + "\n");
+                                    bw.flush();
+                                    String valid = br.readLine();
+                                    if(valid.equals("Valid Image")) {
+                                        if(textField.getText().contains("file://")) {
+                                            message[0] = "<p><img src='" + textField.getText().replaceAll(" ", "%20") + "' alt='' width='300' height='200'>" + "</p>";
+                                        } else {
+                                            message[0] = "<p><img src='file://" + textField.getText().replaceAll(" ", "%20") + "' alt='' width='300' height='200'>" + "</p>";
+                                        }
+                                        bw.write("Message: " + receiver[0] + "-" + message[0] + "-" + type + "\n");
+                                        bw.flush();
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "The File Path You Entered Was Invalid", "Send Message", JOptionPane.ERROR_MESSAGE);
+                                    }
+                                } else {
+                                    message[0] = textField.getText();
+                                    bw.write("Message: " + receiver[0] + "-" + message[0] + "-" + type + "\n");
+                                    bw.flush();
+                                }
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
                         }
                     }
                 }
-//                if(read != null) {
-//                    textArea.setText("");
-//                    String username = "";
-//                    try {
-//                        bw.write("Give username\n");
-//                        bw.flush();
-//                        username = br.readLine();
-//                        System.out.println(username);
-//                    } catch (IOException ex) {
-//                        throw new RuntimeException(ex);
-//                    }
-//                    read = new Thread(new ReadMessageThread(receiver[0], username, socket, textArea, frame));
-//                    read.start();
-//                }
             }
         });
 
@@ -121,50 +135,53 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
         frame.add(deleteButton);
         deleteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(read == null) {
-                    read.interrupt();
+                pauseThread();
+                String initialCheck = "";
+                try {
+                    bw.write("Check Block/Friends: " + receiver[0] + "\n");
+                    bw.flush();
+                    initialCheck = br.readLine();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
                 }
-                if(receiver[0].equals("")) {
-                    JOptionPane.showMessageDialog(null, "Please Click Send Message To Get Started", "Send Message", JOptionPane.INFORMATION_MESSAGE);
+                if(initialCheck.equals("One of you has blocked the other")) {
+                    JOptionPane.showMessageDialog(null, "You Currently have this user blocked or are blocked by this user", "Send Message", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    message[0] = textField.getText();
-                    String type = JOptionPane.showInputDialog(null, "What Message Type Is This (Image/Text)?", "Delete Message", JOptionPane.QUESTION_MESSAGE);
-                    if(type != null) {
-                        while (true) {
-                            if (!type.equalsIgnoreCase("Image") && !type.equalsIgnoreCase("Text")) {
-                                type = JOptionPane.showInputDialog(null, "Invalid message type, please try again", "Delete Message", JOptionPane.ERROR_MESSAGE);
-                            } else {
-                                break;
+                    if(receiver[0].equals("")) {
+                        JOptionPane.showMessageDialog(null, "Please Click Send Message To Get Started", "Send Message", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        message[0] = textField.getText();
+                        String type = JOptionPane.showInputDialog(null, "What Message Type Is This (Image/Text)?", "Delete Message", JOptionPane.QUESTION_MESSAGE);
+                        if(textField.getText().trim().isEmpty()) {
+                            JOptionPane.showMessageDialog(null, "Cant Delete An Empty Message", "Delete Message", JOptionPane.ERROR_MESSAGE);
+                        } else if(type != null) {
+                            while (true) {
+                                if (!type.equalsIgnoreCase("Image") && !type.equalsIgnoreCase("Text")) {
+                                    type = JOptionPane.showInputDialog(null, "Invalid message type, please try again", "Delete Message", JOptionPane.ERROR_MESSAGE);
+                                } else {
+                                    break;
+                                }
+                            }
+                            String result = "";
+                            try {
+                                bw.write("DELETE: " + receiver[0] + "-" + message[0] + "-" + type + "\n");
+                                bw.flush();
+                                result = br.readLine();
+                                System.out.println("LOOK HERE: " + result);
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                            if (result.equals("Successful Delete Message")) {
+                                JOptionPane.showMessageDialog(null, "Message Was Deleted", "Delete Message", JOptionPane.INFORMATION_MESSAGE);
+                            } else if (result.equals("This Messages Does Not Exist")) {
+                                JOptionPane.showMessageDialog(null, "This Message Doesnt Exist", "Delete Message", JOptionPane.INFORMATION_MESSAGE);
+                            } else if(result.equals("You Dont Own This Image")) {
+                                JOptionPane.showMessageDialog(null, "This Is A Message You Didnt Send, Therefore You Can't Delete It", "Delete Message", JOptionPane.INFORMATION_MESSAGE);
+
                             }
                         }
-                        String result = "";
-                        try {
-                            bw.write("DELETE: " + receiver[0] + "-" + message[0] + "-" + type + "\n");
-                            bw.flush();
-                            result = br.readLine();
-                            System.out.println("LOOK HERE: " + result);
-                        } catch (IOException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                        if (result.equals("Successful Delete Message")) {
-                            JOptionPane.showMessageDialog(null, "Message Was Deleted", "Delete Message", JOptionPane.INFORMATION_MESSAGE);
-                        } else if (result.equals("This Messages Does Not Exist")) {
-                            JOptionPane.showMessageDialog(null, "This Message Doesnt Exist", "Delete Message", JOptionPane.INFORMATION_MESSAGE);
-                        }
+                        continueThread(br, bw, socket, frame, textPane);
                     }
-                }
-                if(read != null) {
-                    textArea.setText("");
-                    String username = "";
-                    try {
-                        bw.write("Give username\n");
-                        bw.flush();
-                        username = br.readLine();
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    read = new Thread(new ReadMessageThread(receiver[0], username, socket, textArea, frame));
-                    read.start();
                 }
             }
         });
@@ -177,11 +194,12 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
         JButton setNameButton = new JButton("Set Name");
         setNameButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(read != null) {
-                    read.interrupt();
-                }
+                pauseThread();
                 String name = JOptionPane.showInputDialog(null, "What do you want to set your name to?", "Set Name", JOptionPane.PLAIN_MESSAGE );
-                if(name != null) {
+                if(name == null) {
+                    return;
+                }
+                if(!name.trim().isEmpty() && !name.contains("-")) {
                     try {
                         bw.write("Name: " + name + "\n");
                         bw.flush();
@@ -189,30 +207,21 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                         throw new RuntimeException(e1);
                     }
                     JOptionPane.showMessageDialog(null, "Name updated successfully.", "Set Name", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Name either contained a \"-\" or was empty", "Set Name", JOptionPane.ERROR_MESSAGE);
                 }
-                if(read != null) {
-                    String username = "";
-                    try {
-                        bw.write("Give username\n");
-                        bw.flush();
-                        username = br.readLine();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                    textArea.setText("");
-                    read = new Thread(new ReadMessageThread(receiver[0], username, socket, textArea, frame));
-                    read.start();
-                }
+                continueThread(br, bw, socket, frame, textPane);
             }
         });
         JButton setProfileDescriptionButton = new JButton("Set Profile Description");
         setProfileDescriptionButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(read != null) {
-                    read.interrupt();
-                }
+                pauseThread();
                 String description = JOptionPane.showInputDialog(null, "Enter profile description: ", "Set Profile Description", JOptionPane.PLAIN_MESSAGE );
-                if(description != null && !description.isEmpty() && !description.contains("-")) {
+                if(description == null) {
+                    return;
+                }
+                if(!description.trim().isEmpty() && !description.contains("-")) {
                     try {
                         bw.write("Profile Description: " + description + "\n");
                         bw.flush();
@@ -221,77 +230,55 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                     }
                     JOptionPane.showMessageDialog(null, "Profile description updated.", "Set Profile Description", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    JOptionPane.showMessageDialog(null, "Profile descriptions cannot contain a \"-\"", "Set Profile Description", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Profile descriptions either contained a \"-\" or was empty", "Set Profile Description", JOptionPane.ERROR_MESSAGE);
                 }
-                if(read != null) {
-                    String username = "";
-                    try {
-                        bw.write("Give username\n");
-                        bw.flush();
-                        username = br.readLine();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                    textArea.setText("");
-                    read = new Thread(new ReadMessageThread(receiver[0], username, socket, textArea, frame));
-                    read.start();
-                }
+                continueThread(br, bw, socket, frame, textPane);
             }
         });
         JButton setProfilePictureButton = new JButton("Set Profile Picture");
         setProfilePictureButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(read != null) {
-                    read.interrupt();
+                pauseThread();
+                String imagePath = JOptionPane.showInputDialog(null, "Please enter the file path to the image you want to set as your profile picture", "Set Profile Picture", JOptionPane.PLAIN_MESSAGE );
+                //to test, go copy the absolute path from any of the images
+                if(imagePath == null || imagePath.trim().isEmpty()) {
+                    return;
                 }
-                String imagePath = "";
-                Object[] images = {"Dog", "Cat", "Bear", "Lion"};
-                String selectedOption = (String) JOptionPane.showInputDialog(null,"Pick the image you want for your profile:", "Set Profile Picture", JOptionPane.DEFAULT_OPTION, null, images, images[0]);
-                imagePath = "files/" + selectedOption + ".jpeg";
-                if(selectedOption != null) {
-                    try {
-                        bw.write("Profile Picture: " + imagePath + "\n");
-                        bw.flush();
-                        String choice = br.readLine();
-                        if(choice.equals("Image Found")) {
-                            System.out.println("Image Found");
-                            File imageFile = new File(imagePath);
-                            BufferedImage image = ImageIO.read(imageFile);
-                            Image scaledImage = image.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-                            ImageIcon imageIcon = new ImageIcon(scaledImage);
-                            JLabel imageLabel = new JLabel(imageIcon);
-                            imageLabel.setPreferredSize(new Dimension(100,100));
-                            JOptionPane.showMessageDialog(null, imageLabel, "New Profile Picture", JOptionPane.PLAIN_MESSAGE);
-
-                        } else {
-                            JOptionPane.showMessageDialog(null, choice, "Set Profile Picture", JOptionPane.ERROR_MESSAGE);
+                if(imagePath.contains("-")) {
+                    do {
+                        imagePath = JOptionPane.showInputDialog(null, "Your input contained a \"-\". Please enter the file path to the image you want to set as your profile picture", "Set Profile Picture", JOptionPane.PLAIN_MESSAGE);
+                        if(imagePath == null || imagePath.trim().isEmpty()) {
+                            break;
                         }
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                    System.out.println("Profile picture updated.");
+                    } while (imagePath.contains("-"));
                 }
-                if(read != null) {
-                    String username = "";
-                    try {
-                        bw.write("Give username\n");
-                        bw.flush();
-                        username = br.readLine();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
+                try {
+                    bw.write("Profile Picture: " + imagePath + "\n");
+                    bw.flush();
+                    String choice = br.readLine();
+                    if(choice.equals("Image Found")) {
+                        System.out.println("Image Found");
+                        File imageFile = new File(imagePath);
+                        BufferedImage image = ImageIO.read(imageFile);
+                        Image scaledImage = image.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+                        ImageIcon imageIcon = new ImageIcon(scaledImage);
+                        JLabel imageLabel = new JLabel(imageIcon);
+                        imageLabel.setPreferredSize(new Dimension(100,100));
+                        JOptionPane.showMessageDialog(null, imageLabel, "New Profile Picture", JOptionPane.PLAIN_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, choice, "Set Profile Picture", JOptionPane.ERROR_MESSAGE);
                     }
-                    textArea.setText("");
-                    read = new Thread(new ReadMessageThread(receiver[0], username, socket, textArea, frame));
-                    read.start();
+                } catch (IOException e1) {
+                    System.out.println("");
                 }
+                System.out.println("Profile picture updated.");
+                continueThread(br, bw, socket, frame, textPane);
             }
         });
         JButton viewProfileInformationButton = new JButton("View Profile Information");
         viewProfileInformationButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(read != null) {
-                    read.interrupt();
-                }
+                pauseThread();
                 try {
                     bw.write("Profile Information: " + "\n");
                     bw.flush();
@@ -299,7 +286,7 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                     String desc = br.readLine();
                     String picPath = br.readLine();
 
-                    if(picPath == null || picPath.isEmpty() || picPath.equals(" ")) {
+                    if(picPath == null || picPath.trim().isEmpty() || picPath.equals(" ")) {
                         JOptionPane.showMessageDialog(null, "Name: " + name + "\n" + "Description: " + desc + "\n" + "Profile Picture: None Set" + "\n");
                     } else {
                         File imageFile = new File(picPath);
@@ -321,29 +308,15 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                 } catch (IOException e1) {
                     throw new RuntimeException(e1);
                 }
-                if(read != null) {
-                    String username = "";
-                    try {
-                        bw.write("Give username\n");
-                        bw.flush();
-                        username = br.readLine();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                    textArea.setText("");
-                    read = new Thread(new ReadMessageThread(receiver[0], username, socket, textArea, frame));
-                    read.start();
-                }
+                continueThread(br, bw, socket, frame, textPane);
             }
         });
         JButton viewOtherProfileInformationButton = new JButton("View Another Users Profile");
         viewOtherProfileInformationButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(read != null) {
-                    read.interrupt();
-                }
+                pauseThread();
                 String username = JOptionPane.showInputDialog(null, "Which users profile do you want to view (Please enter a valid username)", "View Another Users Profile", JOptionPane.QUESTION_MESSAGE);
-                if(username != null) {
+                if(username != null && !username.trim().isEmpty()) {
                     try {
                         bw.write("Check Profile of: " + username + "\n");
                         bw.flush();
@@ -359,7 +332,7 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                             String desc = br.readLine();
                             String picPath = br.readLine();
 
-                            if(picPath == null || picPath.isEmpty() || picPath.equals(" ")) {
+                            if(picPath == null || picPath.trim().isEmpty()) {
                                 JOptionPane.showMessageDialog(null, "Name: " + name + "\n" + "Description: " + desc + "\n" + "Profile Picture: None Set" + "\n");
                             } else {
                                 File imageFile = new File(picPath);
@@ -384,19 +357,7 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                         throw new RuntimeException(e1);
                     }
                 }
-                if(read != null) {
-                    String name = "";
-                    try {
-                        bw.write("Give username\n");
-                        bw.flush();
-                        name = br.readLine();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                    textArea.setText("");
-                    read = new Thread(new ReadMessageThread(receiver[0], name, socket, textArea, frame));
-                    read.start();
-                }
+                continueThread(br, bw, socket, frame, textPane);
             }
         });
 
@@ -412,38 +373,39 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
         JButton sendMessageButton = new JButton("Send Message");
         sendMessageButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(read != null) {
-                    read.interrupt();
-                }
+                pauseThread();
                 String receiverInput = JOptionPane.showInputDialog(null, "Enter The User You Want To Message", "Send Message", JOptionPane.QUESTION_MESSAGE);
-                if(receiverInput != null) {
+                if(receiverInput != null && !receiverInput.trim().isEmpty()) {
                     try {
-                        bw.write("Check Block/Friends: " + receiverInput + "\n");
-                        bw.flush();
-                        String choice = br.readLine();
-                        if (choice.equals("Can message")) {
-                            messagesLabel.setText("Message History: " + receiverInput);
-                            textField.setText("");
-                            JOptionPane.showMessageDialog(null, "Entered DM", "Send Message", JOptionPane.INFORMATION_MESSAGE);
-                            receiver[0] = receiverInput;
-                            String username = "";
-                            try {
-                                bw.write("Give username\n");
-                                bw.flush();
-                                username = br.readLine();
-                            } catch (IOException e1) {
-                                e1.printStackTrace();
-                            }
-                            System.out.println("here");
-                            textArea.setText("");
-                            read = new Thread(new ReadMessageThread(receiverInput, username, socket, textArea, frame));
-                            read.start();
-                        } else {
-                            //cant message
-                            JOptionPane.showMessageDialog(null, choice, "Send Message", JOptionPane.PLAIN_MESSAGE);
-                            //goes back to the larger frame71
+                        String username = "";
+                        try {
+                            bw.write("Give username\n");
+                            bw.flush();
+                            username = br.readLine();
+                        } catch (IOException e1) {
+                            System.out.println("");
                         }
-
+                        if(username.equals(receiverInput)) {
+                            JOptionPane.showMessageDialog(null, "You cannot message yourself", "Send Message", JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            bw.write("Check Block/Friends: " + receiverInput + "\n");
+                            bw.flush();
+                            String choice = br.readLine();
+                            if (choice.equals("Can message")) {
+                                messagesLabel.setText("Message History: " + receiverInput);
+                                textField.setText("");
+                                JOptionPane.showMessageDialog(null, "Entered DM", "Send Message", JOptionPane.INFORMATION_MESSAGE);
+                                receiver[0] = receiverInput;
+                                System.out.println("here");
+                                textPane.setText("");
+                                read = new Thread(new ReadMessageThread(receiverInput, username, socket, textPane, frame));
+                                read.start();
+                            } else {
+                                //cant message
+                                JOptionPane.showMessageDialog(null, choice, "Send Message", JOptionPane.PLAIN_MESSAGE);
+                                //goes back to the larger frame71
+                            }
+                        }
                     } catch (IOException e1) {
                         throw new RuntimeException(e1);
                     }
@@ -453,86 +415,85 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
         JButton blockUserButton = new JButton("Block User");
         blockUserButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(read != null) {
-                    read.interrupt();
-                }
+                pauseThread();
                 String blockUser = JOptionPane.showInputDialog(null, "Enter username to block: ", "Block User", JOptionPane.QUESTION_MESSAGE);
-                if(blockUser != null) {
+                if(blockUser != null && !blockUser.trim().isEmpty()) {
                     try {
-                        bw.write("Block User: " + blockUser + "\n");
-                        bw.flush();
-                        String check = br.readLine();
-                        if(check.equals("Successful")) {
-                            bw.write("Remove Friend: " + blockUser + "\n");
-                            br.readLine();
-                            JOptionPane.showMessageDialog(null, blockUser + " has been blocked", "Block User", JOptionPane.INFORMATION_MESSAGE);
-                        } else if(check.equals("Failed")) {
-                            JOptionPane.showMessageDialog(null, blockUser + " doesnt exist", "Block User", JOptionPane.INFORMATION_MESSAGE);
+                        String username = "";
+                        try {
+                            bw.write("Give username\n");
+                            bw.flush();
+                            username = br.readLine();
+                        } catch (IOException e1) {
+                            System.out.println(e1.getMessage());
                         }
-
-
+                        if(username.equals(blockUser)) {
+                            JOptionPane.showMessageDialog(null, "You cannot block yourself", "Block User", JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            bw.write("Block User: " + blockUser + "\n");
+                            bw.flush();
+                            String check = br.readLine();
+                            if(check.equals("Successful")) {
+                                System.out.println("Removeing Friend");
+                                bw.write("Remove Friend: " + blockUser + "\n");
+                                bw.flush();
+                                br.readLine();
+                                System.out.println("Finished Removeing Friend");
+                                JOptionPane.showMessageDialog(null, blockUser + " has been blocked", "Block User", JOptionPane.INFORMATION_MESSAGE);
+                            } else if(check.equals("Failed")) {
+                                JOptionPane.showMessageDialog(null, blockUser + " doesnt exist", "Block User", JOptionPane.INFORMATION_MESSAGE);
+                            }
+                        }
                     } catch (IOException e1) {
-                        throw new RuntimeException(e1);
+                        System.out.println(e1.getMessage());
                     }
                 }
-                if(read != null) {
-                    String name = "";
-                    try {
-                        bw.write("Give username\n");
-                        bw.flush();
-                        name = br.readLine();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                    textArea.setText("");
-                    read = new Thread(new ReadMessageThread(receiver[0], name, socket, textArea, frame));
-                    read.start();
+                if(blockUser != receiver[0]) {
+                    continueThread(br, bw, socket, frame, textPane);
                 }
+
             }
         });
         JButton unblockUserButton = new JButton("Unblock User");
         unblockUserButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(read != null) {
-                    read.interrupt();
-                }
+                pauseThread();
+                String username = "";
                 String unblockUser = JOptionPane.showInputDialog(null, "Enter username to unblock: ", "Block User", JOptionPane.QUESTION_MESSAGE);
-                if(unblockUser != null) {
+                if(unblockUser != null && !unblockUser.trim().isEmpty()) {
                     try {
-                        bw.write("Unblock User: " + unblockUser + "\n");
-                        bw.flush();
-                        String check = br.readLine();
-                        if(check.equals("Successful")) {
-                            JOptionPane.showMessageDialog(null, unblockUser + " has been unblocked", "Block User", JOptionPane.INFORMATION_MESSAGE);
-                        } else if(check.equals("Failed")) {
-                            JOptionPane.showMessageDialog(null, unblockUser + " doesnt exist", "Block User", JOptionPane.INFORMATION_MESSAGE);
+                        try {
+                            bw.write("Give username\n");
+                            bw.flush();
+                            username = br.readLine();
+                        } catch (IOException e1) {
+                            System.out.println("");
+                        }
+
+                        if(username.equals(unblockUser)) {
+                            JOptionPane.showMessageDialog(null, "You Cannot Block Yourself", "Block User", JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            bw.write("Unblock User: " + unblockUser + "\n");
+                            bw.flush();
+                            String check = br.readLine();
+                            if(check.equals("Successful")) {
+                                JOptionPane.showMessageDialog(null, unblockUser + " has been unblocked", "Block User", JOptionPane.INFORMATION_MESSAGE);
+                            } else if(check.equals("Failed")) {
+                                JOptionPane.showMessageDialog(null, unblockUser + " doesnt exist", "Block User", JOptionPane.INFORMATION_MESSAGE);
+                            }
                         }
 
                     } catch (IOException e1) {
                         throw new RuntimeException(e1);
                     }
                 }
-                if(read != null) {
-                    String name = "";
-                    try {
-                        bw.write("Give username\n");
-                        bw.flush();
-                        name = br.readLine();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                    textArea.setText("");
-                    read = new Thread(new ReadMessageThread(receiver[0], name, socket, textArea, frame));
-                    read.start();
-                }
+                continueThread(br, bw, socket, frame, textPane);
             }
         });
         JButton viewBlockedUsersButton = new JButton("View Blocked Users");
         viewBlockedUsersButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(read != null) {
-                    read.interrupt();
-                }
+                pauseThread();
                 try {
                     bw.write("Blocked Users: " + "\n");
                     bw.flush();
@@ -540,19 +501,7 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                 } catch (IOException e1) {
                     throw new RuntimeException(e1);
                 }
-                if(read != null) {
-                    String name = "";
-                    try {
-                        bw.write("Give username\n");
-                        bw.flush();
-                        name = br.readLine();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                    textArea.setText("");
-                    read = new Thread(new ReadMessageThread(receiver[0], name, socket, textArea, frame));
-                    read.start();
-                }
+                continueThread(br, bw, socket, frame, textPane);
             }
         });
         JPanel westPanel = new JPanel(new GridBagLayout());
@@ -575,84 +524,69 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
         JButton addFriendButton = new JButton("Add Friend");
         addFriendButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(read != null) {
-                    read.interrupt();
-                }
+                pauseThread();
+                String username = "";
                 String newFriend = JOptionPane.showInputDialog(null,"Enter username to add as friend: ", "Add Friend", JOptionPane.QUESTION_MESSAGE);
-                if(newFriend != null) {
+                if(newFriend != null && !newFriend.trim().isEmpty()) {
                     try {
-                        bw.write("Add Friend: " + newFriend + "\n");
+                        bw.write("Give username\n");
                         bw.flush();
-                        String check = br.readLine();
-                        if(check.equals("Successful")) {
-                            bw.write("Unblock User: " + newFriend + "\n");
-                            br.readLine();
-                            JOptionPane.showMessageDialog(null, newFriend + " has been added to friends", "Add Friend", JOptionPane.INFORMATION_MESSAGE);
+                        username = br.readLine();
+                        if(username.equals(newFriend)) {
+                            JOptionPane.showMessageDialog(null, "You cannot add yourself as a friend", "Add Friend", JOptionPane.ERROR_MESSAGE);
                         } else {
-                            JOptionPane.showMessageDialog(null, newFriend + " doesn't exist", "Add Friend", JOptionPane.INFORMATION_MESSAGE);
+                            bw.write("Add Friend: " + newFriend + "\n");
+                            bw.flush();
+                            String check = br.readLine();
+                            if(check.equals("Successful")) {
+                                bw.write("Unblock User: " + newFriend + "\n");
+                                br.readLine();
+                                JOptionPane.showMessageDialog(null, newFriend + " has been added to friends", "Add Friend", JOptionPane.INFORMATION_MESSAGE);
+                            } else {
+                                JOptionPane.showMessageDialog(null, newFriend + " doesn't exist", "Add Friend", JOptionPane.INFORMATION_MESSAGE);
+                            }
                         }
                     } catch (IOException e1) {
                         throw new RuntimeException(e1);
                     }
                 }
-                if(read != null) {
-                    String name = "";
-                    try {
-                        bw.write("Give username\n");
-                        bw.flush();
-                        name = br.readLine();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                    textArea.setText("");
-                    read = new Thread(new ReadMessageThread(receiver[0], name, socket, textArea, frame));
-                    read.start();
-                }
+                continueThread(br, bw, socket, frame, textPane);
             }
         });
         JButton removeFriendButton = new JButton("Remove Friend");
         removeFriendButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(read != null) {
-                    read.interrupt();
-                }
+                pauseThread();
+                String username = "";
                 String oldFriend = JOptionPane.showInputDialog(null,"Enter username to remove from friends: ", "Remove Friend", JOptionPane.QUESTION_MESSAGE);
-                if(oldFriend != null) {
+                if(oldFriend != null && !oldFriend.trim().isEmpty()) {
                     try {
-                        bw.write("Remove Friend: " + oldFriend + "\n");
+                        bw.write("Give username\n");
                         bw.flush();
-                        String check = br.readLine();
-                        if(check.equals("Successful")) {
-                            JOptionPane.showMessageDialog(null, oldFriend + " has been removed from friends", "Remove Friend", JOptionPane.INFORMATION_MESSAGE);
+                        username = br.readLine();
+                        if(username.equals(oldFriend)) {
+                            JOptionPane.showMessageDialog(null, "You cannot remove yourself as a friend", "Add Friend", JOptionPane.ERROR_MESSAGE);
                         } else {
-                            JOptionPane.showMessageDialog(null, oldFriend + " doesn't exist", "Remove Friend", JOptionPane.INFORMATION_MESSAGE);
+                            bw.write("Remove Friend: " + oldFriend + "\n");
+                            bw.flush();
+                            String check = br.readLine();
+                            if(check.equals("Successful")) {
+                                JOptionPane.showMessageDialog(null, oldFriend + " has been removed from friends", "Remove Friend", JOptionPane.INFORMATION_MESSAGE);
+                            } else {
+                                JOptionPane.showMessageDialog(null, oldFriend + " doesn't exist", "Remove Friend", JOptionPane.INFORMATION_MESSAGE);
+                            }
                         }
-
                     } catch (IOException e1) {
                         throw new RuntimeException(e1);
                     }
                 }
-                if(read != null) {
-                    String name = "";
-                    try {
-                        bw.write("Give username\n");
-                        bw.flush();
-                        name = br.readLine();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                    textArea.setText("");
-                    read = new Thread(new ReadMessageThread(receiver[0], name, socket, textArea, frame));
-                    read.start();
-                }
+                continueThread(br, bw, socket, frame, textPane);
             }
         });
         JButton viewFriendButton = new JButton("View Friends");
         viewFriendButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(read != null) {
-                    read.interrupt();
-                }
+                pauseThread();
                 try {
                     bw.write("Friend List: " + "\n");
                     bw.flush();
@@ -660,27 +594,13 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                 } catch (IOException e1) {
                     throw new RuntimeException(e1);
                 }
-                if(read != null) {
-                    String name = "";
-                    try {
-                        bw.write("Give username\n");
-                        bw.flush();
-                        name = br.readLine();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                    textArea.setText("");
-                    read = new Thread(new ReadMessageThread(receiver[0], name, socket, textArea, frame));
-                    read.start();
-                }
+                continueThread(br, bw, socket, frame, textPane);
             }
         });
         JButton canReceiveFromButton = new JButton("Change Receiving Options (Friends/All)");
         canReceiveFromButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(read != null) {
-                    read.interrupt();
-                }
+                pauseThread();
                 int num = JOptionPane.showConfirmDialog(null, "Do you want to receive messages from anyone (yes/no)", "Change Receiving Options", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                 if(num != JOptionPane.CLOSED_OPTION) {
                     int choice = Integer.parseInt(String.valueOf(num));
@@ -697,19 +617,7 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                         JOptionPane.showMessageDialog(null, "You can now receive messages from only friends", "Change Receiving Options", JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
-                if(read != null) {
-                    String name = "";
-                    try {
-                        bw.write("Give username\n");
-                        bw.flush();
-                        name = br.readLine();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                    textArea.setText("");
-                    read = new Thread(new ReadMessageThread(receiver[0], name, socket, textArea, frame));
-                    read.start();
-                }
+                continueThread(br, bw, socket, frame, textPane);
             }
         });
 
@@ -721,6 +629,29 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
         frame.add(eastPanel, BorderLayout.SOUTH);
 
         frame.setVisible(true);
+    }
+
+
+    public void pauseThread() {
+        if(read != null) {
+            read.interrupt();
+        }
+    }
+
+    public void continueThread(BufferedReader br, BufferedWriter bw, Socket socket, JFrame frame, JTextPane textPane) {
+        if(read != null) {
+            String name = "";
+            try {
+                bw.write("Give username\n");
+                bw.flush();
+                name = br.readLine();
+            } catch (IOException e1) {
+                System.out.println("");
+            }
+            textPane.setText("");
+            read = new Thread(new ReadMessageThread(receiver[0], name, socket, textPane, frame));
+            read.start();
+        }
     }
 
     public static void main(String[] args) throws IOException {

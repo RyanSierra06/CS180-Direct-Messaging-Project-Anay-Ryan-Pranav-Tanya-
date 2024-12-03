@@ -3,6 +3,7 @@ import java.io.*;
 import java.net.*;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 
 /**
  * Project 4 -- ApplicationServer
@@ -13,8 +14,7 @@ import javax.imageio.ImageIO;
  * @version Nov 17, 2024
  */
 
-public class GraphicalServer implements ApplicationServerInterface, Runnable {
-    //TODO make the interface for GraphicalServer
+public class GraphicalServer implements GraphicalServerInterface, Runnable {
     private static int portNumber = 4243;
     private final Socket cs;
 
@@ -280,6 +280,19 @@ public class GraphicalServer implements ApplicationServerInterface, Runnable {
                             condition = true;
                             System.out.println("Message Found");
                             break;
+                        } else if(parts[2].contains(message.replaceAll(" ", "%20")) && parts[2].startsWith("<p><img src='")) {
+                            user.deleteMessage(receiver, new Message(user, type, parts[2]));
+                            output.write("Successful Delete Message\n");
+                            output.flush();
+                            condition = true;
+                            System.out.println("Image Message Found");
+                            break;
+                        } else if(parts[2].contains(message) && parts[1].equals(username)) {
+                            output.write("You Dont Own This Image\n");
+                            output.flush();
+                            condition = true;
+                            System.out.println("User Doesn't own that image");
+                            break;
                         }
                     }
                     if (!condition) {
@@ -298,6 +311,50 @@ public class GraphicalServer implements ApplicationServerInterface, Runnable {
                     output.flush();
                     System.out.println(choice);
 
+                } else if (choice.startsWith("Check Valid Image File ")) {
+                    String check = choice.substring("Check Valid Image File ".length());
+                    try {
+                        File imageFile = new File(check);
+                        BufferedImage image = ImageIO.read(imageFile);
+
+                        if (image == null) {
+                            output.write("Invalid Image\n");
+                            output.flush();
+                        } else {
+                            output.write("Valid Image\n");
+                            output.flush();
+                        }
+                    } catch (Exception e) {
+                        output.write("Invalid Image\n");
+                        output.flush();
+                    }
+
+                } else if(choice.startsWith("Check Valid Image Link ")) {
+                    String check = choice.substring("Check Valid Image Link ".length());
+                    try {
+                        URL url = new URL(check);
+
+                        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                        connection.setRequestMethod("GET");
+                        connection.setConnectTimeout(1000);
+                        connection.setReadTimeout(1000);
+
+                        int responseCode = connection.getResponseCode();
+
+                        if (responseCode == HttpURLConnection.HTTP_OK) {
+                            String contentType = connection.getContentType();
+
+                            if (contentType != null && contentType.startsWith("image")) {
+                                output.write("Valid Image\n");
+                                output.flush();
+                            }
+                        }
+                    } catch (Exception e) {
+                        output.write("Invalid Image\n");
+                        output.flush();
+                    }
+                    output.write("Invalid Image\n");
+                    output.flush();
                 } else {
                     System.out.println("None of the commands");
                 }

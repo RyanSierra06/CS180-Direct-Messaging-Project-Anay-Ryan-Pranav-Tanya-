@@ -29,8 +29,8 @@ public class Message implements MessageInterface {
             this.messageImage = "";
             this.type = type;
         } else if (type.equalsIgnoreCase("image")) {
-            this.messageImage = message;
-            this.messageText = "";
+            this.messageText = message;
+            this.messageImage = "";
             this.type = type;
         } else {
             this.messageImage = "";
@@ -40,7 +40,7 @@ public class Message implements MessageInterface {
     }
 
     public boolean assignToUser(String message, String type1, String userName) {
-        try (PrintWriter pw = new PrintWriter(new File("files/" + userName + "Messages.txt"))) {
+        try (PrintWriter pw = new PrintWriter("files/" + userName + "Messages.txt")) {
             //message
             //message
             //message
