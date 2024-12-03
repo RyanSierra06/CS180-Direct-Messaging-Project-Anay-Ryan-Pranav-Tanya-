@@ -382,7 +382,7 @@ public class User implements UserInterface {
             for (String s : blockedUsers.split("-")) {
                 sb.append(s).append(" ");
             }
-
+            
             return sb.toString();
         } catch (IOException e) {
             // e.printStackTrace();
@@ -574,7 +574,16 @@ public class User implements UserInterface {
 
     public boolean checkUserExists(String username1) {
         File f = new File("files/" + username1 + ".txt");
-        return f.exists();
+        if(f.exists()) {
+            try {
+                if(f.getCanonicalPath().contains("files/" + username1 + ".txt")) {
+                    return true;
+                }            
+            } catch(Exception e) {
+                return false;
+            }
+        }
+        return false;
     }
 
     public static boolean checkCanReceiveAnyone(String otherUsername) {
