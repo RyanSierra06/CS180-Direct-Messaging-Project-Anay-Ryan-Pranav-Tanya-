@@ -1,6 +1,9 @@
 import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -53,6 +56,14 @@ public class ReadMessageThread implements Runnable {
                                     System.out.println("THIS IS A MESSAGE LOOK AT ME HERE: " + message);
                                     if(!parts[2].equals(" ") && !parts[2].isEmpty()) {
                                         if(parts[2].startsWith("<p><img src='")) {
+                                            String profilePicture = parts[2].substring(13, parts[2].lastIndexOf("alt") - 2);
+                                            File file = new File(profilePicture);
+                                            String path = file.getAbsolutePath();
+                                            
+                                            parts[2] = "<p><img src='file://" + path + "' alt='' width='300' height='200'></p>";
+                                            // <p><img src='./files/<text>imagination.png' alt='' width='300' height='200'></p>
+                                            
+
                                             messageHistory = messageHistory + "<p>" + parts[0] + ":</p>" + parts[2];
                                         } else {
                                             messageHistory = messageHistory + "<p>" + parts[0] + ": " + parts[2] + "</p>";
@@ -88,6 +99,13 @@ public class ReadMessageThread implements Runnable {
                                     System.out.println("THIS IS A MESSAGE LOOK AT ME HERE: " + message);
                                     if(!parts[2].equals(" ") && !parts[2].isEmpty()) {
                                         if(parts[2].startsWith("<p><img src='")) {
+                                            String profilePicture = parts[2].substring(13, parts[2].lastIndexOf("alt") - 2);
+                                            File file = new File(profilePicture);
+                                            String path = file.getAbsolutePath();
+                                            
+                                            parts[2] = "<p><img src='" + path + "' alt='' width='300' height='200'></p>";
+                                            // <p><img src='./files/<text>imagination.png' alt='' width='300' height='200'></p>
+                                            
                                             messageHistory = messageHistory + "<p>" + parts[0] + ":</p>" + parts[2];
                                         } else {
                                             messageHistory = messageHistory + "<p>" + parts[0] + ": " + parts[2] + "</p>";

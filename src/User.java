@@ -1,4 +1,7 @@
 import java.io.*;
+import java.nio.file.*;
+import java.nio.*;
+
 
 // Example usernamesAndPasswords.txt
 // username-password
@@ -184,6 +187,25 @@ public class User implements UserInterface {
             String line1 = br.readLine();
             String line2 = br.readLine();
             String line3 = br.readLine();
+            String og = profilePicture;
+
+            try {
+                String fileName = profilePicture.substring(profilePicture.lastIndexOf("/") + 1);
+                System.out.println(fileName);
+                File f1 = new File(profilePicture);
+                File f2 = new File("./files/" + username + "<>" + fileName);
+
+                Files.copy(f1.toPath(), f2.toPath(), StandardCopyOption.COPY_ATTRIBUTES);
+                profilePicture = "./files/" + username + "<>" + fileName;
+
+
+            } catch(FileAlreadyExistsException e) {
+                profilePicture = og;
+                System.out.println("This file alr exists");
+                e.printStackTrace();
+            } catch(Exception e) {
+                profilePicture = og;
+            }           
 
             String[] params = line1.split("-");
             params[3] = profilePicture;
@@ -382,7 +404,7 @@ public class User implements UserInterface {
             for (String s : blockedUsers.split("-")) {
                 sb.append(s).append(" ");
             }
-            
+
             return sb.toString();
         } catch (IOException e) {
             // e.printStackTrace();

@@ -18,7 +18,6 @@ w-q-Sending Text Message
 w-q-Link TO the image
 w-q-Nice Image
 w-q-Nice Image
-w-q-<p><img src='file:///Users/ryansierra/IdeaProjects/GROUP%20PROJECT%20TEST/files/Dog.jpeg' alt='' width='300' height='200'></p>
 w-q-wassup
 q-w-Hello
 w-q-Yo?
@@ -31,5 +30,4 @@ w-q-nothing shows up for w now
 q-w-nope
 q-w-Hello Again
 w-q-HELLO
-w-q-<p><img src='file:///Users/ryansierra/IdeaProjects/GROUP%20PROJECT%20TEST/files/Bear.jpeg' alt='' width='300' height='200'></p>
 w-q-i unblocked u

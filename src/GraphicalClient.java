@@ -10,6 +10,9 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.*;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Scanner;
 
 /**
@@ -105,10 +108,57 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                                     String valid = br.readLine();
                                     if(valid.equals("Valid Image")) {
                                         if(textField.getText().contains("file://")) {
-                                            message[0] = "<p><img src='" + textField.getText().replaceAll(" ", "%20") + "' alt='' width='300' height='200'>" + "</p>";
+                                            String field = textField.getText();
+
+                                            String og = field;
+                                            String profilePicture = field.substring(8);
+                                            System.out.println(profilePicture);
+                                            // <p><img src='file:///Users/Pranav/Downloads/imagination.png' alt='' width='300' height='200'></p>
+
+                                            try {
+                                                String fileName = profilePicture.substring(profilePicture.lastIndexOf("/") + 1);
+                                                File f1 = new File(profilePicture);
+                                                File f2 = new File("./files/" + "<text>" + fileName);
+
+                                                Files.copy(f1.toPath(), f2.toPath(), StandardCopyOption.COPY_ATTRIBUTES);
+                                                profilePicture = "files/" + "<text>" + fileName;
+                                                field = field.substring(0, 8) + profilePicture;
+                                                System.out.println(field);
+                                            } catch(Exception e2) {
+                                                e2.printStackTrace();
+                                                field = og;
+                                            }
+                                            
+                                            message[0] = "<p><img src='" + field.replaceAll(" ", "%20") + "' alt='' width='300' height='200'>" + "</p>";
+
                                         } else {
-                                            message[0] = "<p><img src='file://" + textField.getText().replaceAll(" ", "%20") + "' alt='' width='300' height='200'>" + "</p>";
+
+                                            String field = textField.getText();
+
+                                            String og = field;
+                                            String profilePicture = field;
+                                            System.out.println(profilePicture);
+                                            // <p><img src='file:///Users/Pranav/Downloads/imagination.png' alt='' width='300' height='200'></p>
+
+                                            try {
+                                                
+                                                String fileName = profilePicture.substring(profilePicture.lastIndexOf("/") + 1);
+                                                File f1 = new File(profilePicture);
+                                                File f2 = new File("./files/" + "<text>" + fileName);
+
+                                                profilePicture = "files/" + "<text>" + fileName;
+                                                field = profilePicture;
+                                                Files.copy(f1.toPath(), f2.toPath(), StandardCopyOption.COPY_ATTRIBUTES);
+                                            } catch (FileAlreadyExistsException e1) {
+                                                e1.printStackTrace();
+                                            } catch(Exception e2) {
+                                                e2.printStackTrace();
+                                                field = og;
+                                            }
+
+                                            message[0] = "<p><img src='" + field.replaceAll(" ", "%20") + "' alt='' width='300' height='200'>" + "</p>";
                                         }
+
                                         bw.write("Message: " + receiver[0] + "-" + message[0] + "-" + type + "\n");
                                         bw.flush();
                                     } else {
