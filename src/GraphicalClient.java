@@ -627,6 +627,7 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                             String check = br.readLine();
                             if (check.equals("Successful")) {
                                 bw.write("Unblock User: " + newFriend + "\n");
+                                bw.flush();
                                 br.readLine();
                                 JOptionPane.showMessageDialog(null, newFriend + " has been added to friends", "Add Friend", JOptionPane.INFORMATION_MESSAGE, icon);
                             } else {
