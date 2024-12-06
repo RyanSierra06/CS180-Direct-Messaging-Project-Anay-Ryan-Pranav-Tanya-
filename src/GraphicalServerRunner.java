@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -13,13 +14,13 @@ import java.net.Socket;
 public class GraphicalServerRunner {
     public static void main(String[] args) {
         try {
-            ServerSocket ss = new ServerSocket(4243);
+            ServerSocket ss = new ServerSocket(4241);
 
             while (true) {
                 Socket client = ss.accept();
 
-                GraphicalServer appServer = new GraphicalServer(client);
-                Thread clinetThread = new Thread(appServer);
+                GraphicalServer graphicalServer = new GraphicalServer(client);
+                Thread clinetThread = new Thread(graphicalServer);
                 clinetThread.start();
             }
         } catch (Exception e) {

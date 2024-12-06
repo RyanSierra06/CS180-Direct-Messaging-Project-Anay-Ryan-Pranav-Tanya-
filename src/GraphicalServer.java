@@ -15,7 +15,7 @@ import javax.swing.*;
  */
 
 public class GraphicalServer implements GraphicalServerInterface, Runnable {
-    private static int portNumber = 4243;
+    private static int portNumber = 4241;
     private final Socket cs;
 
     public GraphicalServer(Socket clientSocket) {
@@ -355,6 +355,26 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
                     }
                     output.write("Invalid Image\n");
                     output.flush();
+                } else if(choice.startsWith("Run Thread: ")) {
+                    String usernameOne = choice.substring("Run Thread: ".length(), choice.indexOf("-"));
+                    choice = choice.substring(choice.indexOf("-") + 1);
+                    String usernameTwo = choice;
+                    System.out.println("usernameOne " + usernameOne + " usernameTwo "  + usernameTwo);
+
+                    String first = (usernameOne.compareTo(usernameTwo) > 0 ? usernameTwo : usernameOne);
+                    String second = (usernameOne.equals(first) ? usernameTwo : usernameOne);
+                    System.out.println("first " + first + " second "  + second);
+
+                    //Run Thread: username-receiver
+                    //read = new Thread(new ReadMessageThread(receiverInput, username, socket, textPane, frame));
+                    //read.start();
+                    Thread read = new Thread(new ReadMessageThreadGraphical(first, second, input, output));
+                    read.start();
+                    //read.start() should use the same buffered writer, sending all the information back to the client
+                } else if(choice.startsWith("Push Back: ")) {
+                    output.write(choice.substring("Push Back: ".length()) + "\n");
+                    output.flush();
+
                 } else {
                     System.out.println("None of the commands");
                 }
@@ -370,6 +390,4 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
             }
         }
     }
-
-
 }
