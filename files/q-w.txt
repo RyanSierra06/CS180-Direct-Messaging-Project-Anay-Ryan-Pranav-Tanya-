@@ -1,5 +1,4 @@
 w-q- 
-w-q-i love this app
 w-q-hey
 w-q-wassup
 w-q-yellow
@@ -27,7 +26,12 @@ q-w-Thats odd
 q-w-Y
 q-w-testing
 w-q-nothing shows up for w now
-q-w-nope
 q-w-Hello Again
 w-q-HELLO
 w-q-i unblocked u
+q-w-yo
+w-q-this better work
+w-q-<p><img src='files/<text>Background.png' alt='' width='300' height='200'></p>
+w-q-wus gud
+w-q-testing
+w-q-please
