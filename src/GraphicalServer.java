@@ -17,7 +17,7 @@ import javax.swing.*;
 public class GraphicalServer implements GraphicalServerInterface, Runnable {
     private static int portNumber = 4243;
     private final Socket cs;
-    private Thread t;
+    private Thread t; 
 
     public GraphicalServer(Socket clientSocket) {
         this.cs = clientSocket;
