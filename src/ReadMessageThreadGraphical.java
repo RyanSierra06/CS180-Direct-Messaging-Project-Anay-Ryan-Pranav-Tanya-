@@ -46,7 +46,7 @@ public class ReadMessageThreadGraphical implements Runnable {
                         // System.out.println(ft.compareTo(Files.getLastModifiedTime(Path.of(f.getAbsolutePath()))));
                         if(ft.compareTo(Files.getLastModifiedTime(Path.of(f.getAbsolutePath()))) < 0 || firstTime) {
                             ft = Files.getLastModifiedTime(Path.of(f.getAbsolutePath()));
-                            
+
                             messageHistory = "";
                             br = new BufferedReader(new FileReader(f));
                             String message;

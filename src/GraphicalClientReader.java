@@ -48,7 +48,7 @@ public class GraphicalClientReader implements Runnable {
             //     } else if(line.startsWith("<p>")) {
             //         messages.append(line);
             //     }
-                
+
             //     line = br.readLine();
             // }
 

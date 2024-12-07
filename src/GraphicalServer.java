@@ -91,11 +91,11 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
                         }
                         passwordsFile.close();
                     } else {
-                        if (input.readLine().equals("yes"))  {
+//                        if (input.readLine().equals("yes"))  {
                             passed = true;
                             output.write("Created New User!\n");
                             output.flush();
-                        }
+//                        }
                     }
 
                     if (passed) {
@@ -378,6 +378,4 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
             }
         }
     }
-
-
 }
