@@ -12,6 +12,7 @@ import java.net.Socket;
  */
 
 public interface GraphicalClientInterface {
-    void actionsAfterLogin(BufferedWriter bw, BufferedReader br, Socket socket);
+    void actionsAfterLogin(BufferedWriter bw, BufferedReader br, Socket socket, GraphicalClient client, String userNAME);
+    void actionsWithinDM(BufferedWriter bw, BufferedReader br, Socket socket, String reciver, GraphicalClient client, String userNAME);
 
 }

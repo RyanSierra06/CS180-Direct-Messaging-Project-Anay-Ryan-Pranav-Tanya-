@@ -17,6 +17,7 @@ import javax.swing.*;
 public class GraphicalServer implements GraphicalServerInterface, Runnable {
     private static int portNumber = 4243;
     private final Socket cs;
+    private Thread t;
 
     public GraphicalServer(Socket clientSocket) {
         this.cs = clientSocket;
@@ -260,11 +261,10 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
 
                     String first = "";
                     String second = "";
-                    StringBuilder sb = new StringBuilder();
                     if (receiver.compareTo(username) < 0) {
                         first = receiver;
                         second = user.getUsername();
-                    } else if (receiver.compareTo(username) > 0) {
+                    } else if (receiver.compareTo(username) >= 0) {
                         second = receiver;
                         first = user.getUsername();
                     }
@@ -275,29 +275,29 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
                         String[] parts = line.split("-");
                         if (parts[2].equals(message) && parts[0].equals(username)) {
                             user.deleteMessage(receiver, new Message(user, type, message));
-                            output.write("Successful Delete Message\n");
-                            output.flush();
+                            // output.write("Successful Delete Message\n");
+                            // output.flush();
                             condition = true;
                             System.out.println("Message Found");
                             break;
                         } else if(parts[2].contains(message.replaceAll(" ", "%20")) && parts[2].startsWith("<p><img src='")) {
                             user.deleteMessage(receiver, new Message(user, type, parts[2]));
-                            output.write("Successful Delete Message\n");
-                            output.flush();
+                            // output.write("Successful Delete Message\n");
+                            // output.flush();
                             condition = true;
                             System.out.println("Image Message Found");
                             break;
-                        } else if(parts[2].contains(message) && parts[1].equals(username)) {
-                            output.write("You Dont Own This Image\n");
-                            output.flush();
+                        } else if(parts[2].contains(message) && parts[1].equals(username) && parts[2].startsWith("<p><img src='")) {
+                            // output.write("You Dont Own This Image\n");
+                            // output.flush();
                             condition = true;
                             System.out.println("User Doesn't own that image");
                             break;
                         }
                     }
                     if (!condition) {
-                        output.write("This Messages Does Not Exist\n");
-                        output.flush();
+                        // output.write("This Messages Does Not Exist\n");
+                        // output.flush();
                         System.out.println("Message Does Not Exist");
                     }
 
@@ -355,6 +355,14 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
                     }
                     output.write("Invalid Image\n");
                     output.flush();
+                } else if(choice.equals("quit messaging")) {
+                    t.interrupt();
+                    output.write("quit messaging\n");
+                    output.flush();
+                } else if(choice.startsWith("SEND CHAT LOG: ")) {
+                    File f = new File(choice.substring(15));
+                    t = new Thread(new ReadMessageThreadGraphical(choice.substring(15), output));
+                    t.start();
                 } else {
                     System.out.println("None of the commands");
                 }
