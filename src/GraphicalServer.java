@@ -1,6 +1,8 @@
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.*;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -17,7 +19,7 @@ import javax.swing.*;
 public class GraphicalServer implements GraphicalServerInterface, Runnable {
     private static int portNumber = 4243;
     private final Socket cs;
-    private Thread t; 
+    private Thread t;
 
     public GraphicalServer(Socket clientSocket) {
         this.cs = clientSocket;
@@ -31,6 +33,7 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
         try (BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
              BufferedWriter output = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()))) {
             String choice = "";
+
             //user should never be null (outside declaration) since were either forcing the user to create or log in
             //and if its unsuccessful, it should kick them out
             User user = null;
@@ -50,7 +53,6 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
             while (true) {
                 choice = input.readLine();
                 System.out.println(choice);
-
                 if (choice.startsWith("Username Create: ")) {
                     username = choice.substring("Username Create: ".length());
                     File f = new File("files/" + username + ".txt");
@@ -141,7 +143,6 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
                     //change to be a ImageIcon with the GUI
                 } else if (choice.startsWith("Check Block/Friends: ")) {
                     String receiver = choice.substring("Check Block/Friends: ".length());
-                    System.out.println(receiver);
                     if(!user.checkUserExists(receiver)) {
                         output.write("This user doesnt exist\n");
                         output.flush();
@@ -159,14 +160,12 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
                         output.flush();
                     } else {
                         output.write("Can message\n");
-                        System.out.println("Said theyre clear");
                         output.flush();
                     }
 
                 } else if (choice.startsWith("Check Profile of: ")) {
                     String otherUsername = choice.substring("Check Profile of: ".length());
                     String[] parts = User.otherUserProfile(otherUsername);
-                    System.out.println(parts.length);
                     if (parts.length <= 1) {
                         output.write("This User Doesnt Exist\n");
                         output.flush();
@@ -179,22 +178,17 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
 
                 } else if (choice.startsWith("Message: ")) {
                     String otherUser = choice.substring("Message: ".length(), choice.indexOf("-"));
-                    System.out.println(otherUser);
                     choice = choice.substring(choice.indexOf("-") + 1);
 
                     String thisMessage = choice.substring(0, choice.indexOf("-"));
-                    System.out.println(thisMessage);
                     choice = choice.substring(choice.indexOf("-") + 1);
 
                     String type = choice;
-                    System.out.println(type);
 
                     String first = (user.getUsername().compareTo(otherUser) > 0 ? otherUser : user.getUsername());
                     String second = (user.getUsername().equals(first) ? otherUser : user.getUsername());
 
-                    System.out.println("before we send message");
                     boolean messageSent = user.sendMessage(new Message(user, type, thisMessage), otherUser);
-                    System.out.println("we just sent a message: " + messageSent);
                 } else if (choice.startsWith("Block User: ")) {
                     blockUser = choice.substring("Block User: ".length());
                     boolean check = user.blockUser(blockUser);
@@ -275,32 +269,17 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
                         String[] parts = line.split("-");
                         if (parts[2].equals(message) && parts[0].equals(username)) {
                             user.deleteMessage(receiver, new Message(user, type, message));
-                            // output.write("Successful Delete Message\n");
-                            // output.flush();
                             condition = true;
-                            System.out.println("Message Found");
                             break;
                         } else if(parts[2].contains(message.replaceAll(" ", "%20")) && parts[2].startsWith("<p><img src='")) {
                             user.deleteMessage(receiver, new Message(user, type, parts[2]));
-                            // output.write("Successful Delete Message\n");
-                            // output.flush();
                             condition = true;
-                            System.out.println("Image Message Found");
                             break;
                         } else if(parts[2].contains(message) && parts[1].equals(username) && parts[2].startsWith("<p><img src='")) {
-                            // output.write("You Dont Own This Image\n");
-                            // output.flush();
                             condition = true;
-                            System.out.println("User Doesn't own that image");
                             break;
                         }
                     }
-                    if (!condition) {
-                        // output.write("This Messages Does Not Exist\n");
-                        // output.flush();
-                        System.out.println("Message Does Not Exist");
-                    }
-
 
                 } else if (choice.equals("Give username")) {
                     output.write(username + "\n");
@@ -309,22 +288,23 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
                     choice = choice.substring("In The Thread: ".length());
                     output.write(choice + "\n");
                     output.flush();
-                    System.out.println(choice);
-
                 } else if (choice.startsWith("Check Valid Image File ")) {
                     String check = choice.substring("Check Valid Image File ".length());
                     try {
                         File imageFile = new File(check);
                         BufferedImage image = ImageIO.read(imageFile);
-
+                        System.out.println("Image tried to load");
                         if (image == null) {
+                            System.out.println("Image was invalid");
                             output.write("Invalid Image\n");
                             output.flush();
                         } else {
+                            System.out.println("Image was valid");
                             output.write("Valid Image\n");
                             output.flush();
                         }
                     } catch (Exception e) {
+                        System.out.println("Image was invalid");
                         output.write("Invalid Image\n");
                         output.flush();
                     }
@@ -363,7 +343,23 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
                     File f = new File(choice.substring(15));
                     t = new Thread(new ReadMessageThreadGraphical(choice.substring(15), output));
                     t.start();
-                } else {
+                } else if(choice.startsWith("Valid Image")) {
+                    output.write("Valid Image\n");
+                    output.flush();
+                }
+//                else if(choice.startsWith("Build File: ")) {
+//                    String fileName = choice.substring("Build File: ".length(), choice.indexOf("-"));
+//                    choice = choice.substring(choice.indexOf("-") + 1);
+//                    String pfp = choice;
+//
+//                    File f1 = new File(pfp);
+//                    File f2 = new File("./files/" + "<text>" + fileName);
+//                    Files.copy(f1.toPath(), f2.toPath(), StandardCopyOption.COPY_ATTRIBUTES);
+//                    pfp = "files/" + "<text>" + fileName;
+//                    output.write("pfp: " + pfp + "\n");
+//                    output.flush();
+//                }
+                else {
                     System.out.println("None of the commands");
                 }
             }

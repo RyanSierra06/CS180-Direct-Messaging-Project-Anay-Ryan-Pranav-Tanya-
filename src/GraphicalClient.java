@@ -30,10 +30,6 @@ import java.util.Scanner;
  * @version Nov 17, 2024
  */
 
-//TODO check the login - create new user pipeline issue (i think i fixed it)
-
-//MERGE THE READ MESSAGE THREAD CLASS INTO THE GRAPHICAL SERVER, AND WHEN YOU INITIALIZE THE CONSTRUCTOR FOR THE SERVER
-// PASS IN THE VARIABLES FOR THE FRAME, JTEXTPANE, ETC. BASICALLY EVERYHTING THATS AN OBJECT AND NOT JUST TEXT.
 
 public class GraphicalClient extends JComponent implements GraphicalClientInterface {
     private static final int SERVER_PORT = 4241;
@@ -186,8 +182,6 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
             }
         }
         profileDescription = profileDescription + "</html>";
-        System.out.println(profileDescription);
-        System.out.println(size);
         JLabel descriptionLabel = new JLabel(profileDescription);
         descriptionLabel.setFont(new Font("Arial", Font.BOLD, size));
 
@@ -218,8 +212,6 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                         }
                     }
                     description = description + "</html>";
-                    System.out.println(description);
-                    System.out.println(size);
                     descriptionLabel.setText(description);
                     descriptionLabel.setFont(new Font("Arial", Font.BOLD, size));
                     descriptionButtonPanel.setBounds(400, 12 + size, 200, 150);
@@ -249,7 +241,6 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
         setProfilePictureButton = new JButton("Set Profile Picture");
         setProfilePictureButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-//                pauseThread();
                 String imagePath = JOptionPane.showInputDialog(null, "Please enter the file path to the image you want to set as your profile picture", "Set Profile Picture", JOptionPane.PLAIN_MESSAGE);
                 //to test, go copy the absolute path from any of the images
                 if (imagePath == null || imagePath.trim().isEmpty()) {
@@ -289,10 +280,8 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                         JOptionPane.showMessageDialog(null, choice, "Set Profile Picture", JOptionPane.ERROR_MESSAGE, icon);
                     }
                 } catch (IOException e1) {
-                    System.out.println("");
+                    System.out.println(e1.getMessage());
                 }
-                System.out.println("Profile picture updated.");
-//                continueThread(br, bw, socket, frame, textPane);
             }
         });
 
@@ -309,7 +298,6 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
         addFriendButton = new JButton("Add Friend");
         addFriendButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-//                pauseThread();
                 String username = "";
                 String newFriend = JOptionPane.showInputDialog(null, "Enter username to add as friend: ", "Add Friend", JOptionPane.PLAIN_MESSAGE);
                 if (newFriend != null && !newFriend.trim().isEmpty()) {
@@ -323,7 +311,6 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                             bw.write("Add Friend: " + newFriend + "\n");
                             bw.flush();
                             String check = br.readLine();
-                            System.out.println(check);
                             if (check.equals("Successful")) {
                                 bw.write("Unblock User: " + newFriend + "\n");
                                 bw.flush();
@@ -337,7 +324,6 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                         throw new RuntimeException(e1);
                     }
                 }
-//                continueThread(br, bw, socket, frame, textPane);
             }
         });
         removeFriendButton = new JButton("Remove Friend");
@@ -366,7 +352,6 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                         throw new RuntimeException(e1);
                     }
                 }
-//                continueThread(br, bw, socket, frame, textPane);
             }
         });
 
@@ -434,7 +419,6 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
         canReceiveFromButton = new JButton("Change Receiving Options");
         canReceiveFromButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-//                pauseThread();
                 int num = JOptionPane.showConfirmDialog(null, "Do you want to receive messages from anyone (yes/no)", "Change Receiving Options", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, icon);
                 if (num != JOptionPane.CLOSED_OPTION) {
                     int choice = Integer.parseInt(String.valueOf(num));
@@ -451,7 +435,6 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                         JOptionPane.showMessageDialog(null, "You can now receive messages from only friends", "Change Receiving Options", JOptionPane.INFORMATION_MESSAGE, icon);
                     }
                 }
-//                continueThread(br, bw, socket, frame, textPane);
             }
         });
 
@@ -473,7 +456,6 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
         blockUserButton = new JButton("Block User");
         blockUserButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-//                pauseThread();
                 String blockUser = JOptionPane.showInputDialog(null, "Enter username to block: ", "Block User", JOptionPane.PLAIN_MESSAGE);
                 if (blockUser != null && !blockUser.trim().isEmpty()) {
                     try {
@@ -492,11 +474,9 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                             bw.flush();
                             String check = br.readLine();
                             if (check.equals("Successful")) {
-                                System.out.println("Removeing Friend");
                                 bw.write("Remove Friend: " + blockUser + "\n");
                                 bw.flush();
                                 readLine = br.readLine();
-                                System.out.println("Finished Removeing Friend");
                                 JOptionPane.showMessageDialog(null, blockUser + " has been blocked", "Block User", JOptionPane.INFORMATION_MESSAGE, icon);
                             } else if (check.equals("Failed")) {
                                 JOptionPane.showMessageDialog(null, blockUser + " doesnt exist", "Block User", JOptionPane.INFORMATION_MESSAGE, icon);
@@ -506,16 +486,11 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                         System.out.println(e1.getMessage());
                     }
                 }
-                if (blockUser != receiver[0]) {
-//                    continueThread(br, bw, socket, frame, textPane);
-                }
-
             }
         });
         unblockUserButton = new JButton("Unblock User");
         unblockUserButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-//                pauseThread();
                 String username = "";
                 String unblockUser = JOptionPane.showInputDialog(null, "Enter username to unblock: ", "Block User", JOptionPane.PLAIN_MESSAGE);
                 if (unblockUser != null && !unblockUser.trim().isEmpty()) {
@@ -525,7 +500,7 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                             bw.flush();
                             username = br.readLine();
                         } catch (IOException e1) {
-                            System.out.println("");
+                            System.out.println(e1.getMessage());
                         }
 
                         if (username.equals(unblockUser)) {
@@ -545,7 +520,6 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                         throw new RuntimeException(e1);
                     }
                 }
-//                continueThread(br, bw, socket, frame, textPane);
             }
         });
         viewBlockedUsersButton = new JButton("View Blocked Users");
@@ -644,23 +618,14 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                             bw.flush();
                             String choice = br.readLine();
                             if (choice.equals("Can message")) {
-//                                messagesLabel.setText("Current Chat: " + receiverInput);
-//                                textField.setText("");
                                 JOptionPane.showMessageDialog(null, "Entered DM", "Select User", JOptionPane.INFORMATION_MESSAGE, icon);
-                                client.actionsWithinDM(bw, br, socket, receiverInput, client, userNAME);
                                 receiver[0] = receiverInput;
-                                System.out.println("here");
-                                textPane.setText("");
-                                //Run Thread: username-receiver
-                                //read = new Thread(new ReadMessageThread(receiverInput, username, socket, textPane, frame));
-                                //read.start();
-                                bw.write("Run Thread: " + username + "-" + receiverInput + "\n");
-                                bw.flush();
-
+//                                textPane.setText("");
+////                                bw.write("Run Thread: " + username + "-" + receiverInput + "\n");
+////                                bw.flush();
+                                client.actionsWithinDM(bw, br, socket, receiverInput, client, userNAME);
                             } else {
-                                //cant message
                                 JOptionPane.showMessageDialog(null, choice, "Select User", JOptionPane.ERROR_MESSAGE, icon);
-                                //goes back to the larger frame71
                             }
                         }
                     } catch (IOException e1) {
@@ -852,12 +817,70 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                 } else {
                     Object[] options = {"Text", "Image"};
                     int typeInt = JOptionPane.showOptionDialog(null, "What Message Type Is This (Image/Text)?", "Send Message", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, icon, options, options[0]);
+                    System.out.println(typeInt);
                     if (typeInt != -1) {
                         try {
-                            message[0] = textField.getText();
-                            System.out.println("Message: " + receiver[0] + "-" + message[0] + "-" + "Text" + "\n");
-                            bw.write("Message: " + receiver[0] + "-" + message[0] + "-" + "Text" + "\n");
-                            bw.flush();
+                            if (typeInt == 1) {
+                                System.out.println("Starting to write to server");
+                                System.out.println("Check Valid Image File " + textField.getText() + "\n");
+                                bw.write("Check Valid Image File " + textField.getText() + "\n");
+                                bw.flush();
+                                String valid = br.readLine();
+                                System.out.println(valid == null);
+                                System.out.println("Read back from server");
+                                if (valid.equals("Valid Image")) {
+                                    System.out.println("Valid Image");
+                                    if (textField.getText().contains("file://")) {
+                                        String field = textField.getText();
+                                        String og = field;
+                                        String profilePicture = field.substring(8);
+                                        try {
+                                            String fileName = profilePicture.substring(profilePicture.lastIndexOf("/") + 1);
+                                            File f1 = new File(profilePicture);
+                                            File f2 = new File("./files/" + "<text>" + fileName);
+
+                                            Files.copy(f1.toPath(), f2.toPath(), StandardCopyOption.COPY_ATTRIBUTES);
+                                            profilePicture = "files/" + "<text>" + fileName;
+                                            field = field.substring(0, 8) + profilePicture;
+                                            System.out.println(field);
+                                        } catch (Exception e2) {
+                                            e2.printStackTrace();
+                                            field = og;
+                                        }
+                                        message[0] = "<p><img src='" + field.replaceAll(" ", "%20") + "' alt='' width='300' height='200'>" + "</p>";
+                                    } else {
+                                        System.out.println("Valid Image in the else");
+                                        String field = textField.getText();
+                                        String og = field;
+                                        String profilePicture = field;
+                                        System.out.println(profilePicture);
+                                        try {
+                                            String fileName = profilePicture.substring(profilePicture.lastIndexOf("/") + 1);
+                                            File f1 = new File(profilePicture);
+                                            File f2 = new File("./files/" + "<text>" + fileName);
+
+                                            profilePicture = "files/" + "<text>" + fileName;
+                                            field = profilePicture;
+                                            Files.copy(f1.toPath(), f2.toPath(), StandardCopyOption.COPY_ATTRIBUTES);
+                                        } catch (FileAlreadyExistsException e1) {
+                                            e1.printStackTrace();
+                                        } catch (Exception e2) {
+                                            e2.printStackTrace();
+                                            field = og;
+                                        }
+                                        message[0] = "<p><img src='" + field.replaceAll(" ", "%20") + "' alt='' width='300' height='200'>" + "</p>";
+                                    }
+                                    bw.write("Message: " + receiver[0] + "-" + message[0] + "-" + "Image" + "\n");
+                                    bw.flush();
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "The File Path You Entered Was Invalid", "Send Message", JOptionPane.ERROR_MESSAGE, icon);
+                                }
+                            } else {
+                                message[0] = textField.getText();
+                                System.out.println("Message: " + receiver[0] + "-" + message[0] + "-" + "Text" + "\n");
+                                bw.write("Message: " + receiver[0] + "-" + message[0] + "-" + "Text" + "\n");
+                                bw.flush();
+                            }
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }
@@ -888,7 +911,6 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                             }
                             bw.write("DELETE: " + receiver[0] + "-" + message[0] + "-" + typeStr + "\n");
                             bw.flush();
-                            System.out.println("LOOK HERE: " + result);
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }
@@ -926,7 +948,7 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
         try {
             bw.write("SEND CHAT LOG: " + first + "-" + second + ".txt\n");
             bw.flush();
-            Thread t = new Thread(new GraphicalClientReader(br, textPane, frame));
+            Thread t = new Thread(new GraphicalClientReader(br, bw, textPane, frame));
             t.start();
         } catch (Exception e) {
             e.printStackTrace();
