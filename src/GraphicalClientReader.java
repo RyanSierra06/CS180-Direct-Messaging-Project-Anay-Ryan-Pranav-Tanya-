@@ -40,20 +40,6 @@ public class GraphicalClientReader implements Runnable {
             String line = br.readLine();
             System.out.println(line);
             while(!line.equals("quit messaging")) {
-                textPane.setContentType("text/html");
-                textPane.setCaretColor(Color.black);
-                textPane.setText(line);
-                textPane.setCaretPosition(textPane.getDocument().getLength());
-                textPane.repaint();
-                frame.repaint();
-                line = br.readLine();
-                System.out.println("HERE " + line);
-                // Remove?
-                // if(line.equals("Valid Image")) {
-                //     bw.write(line + "\n");
-                //     bw.flush();
-                //     line = br.readLine();
-                // }
 
                 if(line.startsWith("read file: ")) {
                     String profilePicture = line.substring(11);
@@ -78,7 +64,24 @@ public class GraphicalClientReader implements Runnable {
                     } catch(FileAlreadyExistsException e) {
                         e.printStackTrace();
                     }
+                    line = br.readLine();
+                    // System.out.println("ITS IS CLIENT SIDE ISSUE");
                 }
+
+                textPane.setContentType("text/html");
+                textPane.setCaretColor(Color.black);
+                textPane.setText(line);
+                textPane.setCaretPosition(textPane.getDocument().getLength());
+                textPane.repaint();
+                frame.repaint();
+                line = br.readLine();
+                System.out.println("HERE " + line);
+                // Remove?
+                // if(line.equals("Valid Image")) {
+                //     bw.write(line + "\n");
+                //     bw.flush();
+                //     line = br.readLine();
+                // }
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());

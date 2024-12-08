@@ -267,9 +267,12 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
                         String[] parts = line.split("-");
                         if(type.equals("Image") && parts[2].startsWith("<p><img src='")) {
                             String fileName = message.substring(message.lastIndexOf("/") + 1);
+                            System.out.println("THATS THE FILE NAME");
                             if(parts[2].contains(fileName) && parts[0].equals(username)) {
+                                message = "<p><img src='files/<text>" + fileName + "' alt='' width='300' height='200'></p>";
                                 System.out.println(user.deleteMessage(receiver, new Message(user, type, message)));
-                                user.deleteMessage(receiver, new Message(user, type, message));
+                                System.out.println("the message " + message);
+                                // user.deleteMessage(receiver, new Message(user, type, message));
                                 System.out.println("properly deleted?");
                                 condition = true;
                                 break;

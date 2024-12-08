@@ -53,6 +53,9 @@ public class ReadMessageThreadGraphical implements Runnable {
                             br = new BufferedReader(new FileReader(f));
                             String message;
                             while ((message = br.readLine()) != null) {
+                                if(message.contains("read file: ")) {
+                                    continue;
+                                }
                                 if(!message.isEmpty()) {
                                     String[] parts = message.split("-");
                                     if(!parts[2].equals(" ") && !parts[2].isEmpty()) {
@@ -81,10 +84,11 @@ public class ReadMessageThreadGraphical implements Runnable {
                                                 String path = file.getAbsolutePath();
                                                 parts[2] = "<p><img src='file://" + path + "' alt='' width='300' height='200'></p>";
                                                 messageHistory = messageHistory + "<p>" + parts[0] + ":</p>" + parts[2];
-                                                output.write("read file: " + profilePicture);
+                                                output.write("read file: " + profilePicture  + "\n");
+                                                output.flush();
                                             }
 
-                                        } if(parts[2].startsWith("<p><img src='") && parts[0].equals(userName)) {
+                                        } else if(parts[2].startsWith("<p><img src='") && parts[0].equals(userName)) {
                                             String profilePicture = parts[2].substring(13, parts[2].lastIndexOf("alt") - 2);
                                             File file = new File(profilePicture);
 
@@ -120,7 +124,7 @@ public class ReadMessageThreadGraphical implements Runnable {
                                             String path = file.getAbsolutePath();
                                             parts[2] = "<p><img src='file://" + path + "' alt='' width='300' height='200'></p>";
                                             messageHistory = messageHistory + "<p>" + parts[0] + ":</p>" + parts[2];
-                                        } else {
+                                        } else if(!parts[2].startsWith("<p><img src='")) {
                                             messageHistory = messageHistory + "<p>" + parts[0] + ": " + parts[2] + "</p>";
                                         }
                                     }
