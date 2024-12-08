@@ -174,7 +174,7 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
         int size = 20;
         String[] breakProfileDescription = profileDescription.split(" ");
         profileDescription = "<html>";
-        for (int i = 1; i < breakProfileDescription.length; i++) {
+        for (int i = 0; i < breakProfileDescription.length; i++) {
             profileDescription = profileDescription + breakProfileDescription[i] + " ";
             if (i % 5 == 0) {
                 size -= 4;
@@ -204,7 +204,7 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                     int size = 20;
                     String[] breakProfileDescription = description.split(" ");
                     description = "<html>";
-                    for (int i = 1; i < breakProfileDescription.length; i++) {
+                    for (int i = 0; i < breakProfileDescription.length; i++) {
                         description = description + breakProfileDescription[i] + " ";
                         if (i % 5 == 0 && i != 0) {
                             size -= 4;
@@ -214,7 +214,7 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                     description = description + "</html>";
                     descriptionLabel.setText(description);
                     descriptionLabel.setFont(new Font("Arial", Font.BOLD, size));
-                    descriptionButtonPanel.setBounds(400, 12 + size, 200, 150);
+                    descriptionButtonPanel.setBounds(400, 12 + size, 220, 150);
                     frame.repaint();
                 } else {
                     JOptionPane.showMessageDialog(null, "Profile descriptions either contained a \"-\" or was empty", "Set Profile Description", JOptionPane.ERROR_MESSAGE, icon);
@@ -823,53 +823,101 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                             if (typeInt == 1) {
                                 System.out.println("Starting to write to server");
                                 System.out.println("Check Valid Image File " + textField.getText() + "\n");
-                                bw.write("Check Valid Image File " + textField.getText() + "\n");
-                                bw.flush();
-                                String valid = br.readLine();
-                                System.out.println(valid == null);
-                                System.out.println("Read back from server");
+                                String valid = "";
+                                File imageFile = new File(textField.getText());
+                                BufferedImage img = ImageIO.read(imageFile);
+                                System.out.println("Image tried to load");
+                                if (img == null) {
+                                    System.out.println("Image was invalid");
+                                    valid = "Invalid Image";
+                                } else {
+                                    System.out.println("Image was Valid");
+                                    valid = "Valid Image";
+                                }
+                                
                                 if (valid.equals("Valid Image")) {
                                     System.out.println("Valid Image");
-                                    if (textField.getText().contains("file://")) {
-                                        String field = textField.getText();
-                                        String og = field;
-                                        String profilePicture = field.substring(8);
-                                        try {
-                                            String fileName = profilePicture.substring(profilePicture.lastIndexOf("/") + 1);
-                                            File f1 = new File(profilePicture);
-                                            File f2 = new File("./files/" + "<text>" + fileName);
+                                    // if (textField.getText().contains("file://")) {
+                                    //     String field = textField.getText();
+                                    //     String og = field;
+                                    //     String profilePicture = field.substring(8);
+                                    //     try {
+                                    //         String fileName = profilePicture.substring(profilePicture.lastIndexOf("/") + 1);
+                                    //         File f1 = new File(profilePicture);
+                                    //         File f2 = new File("./files/" + "<text>" + fileName);
 
-                                            Files.copy(f1.toPath(), f2.toPath(), StandardCopyOption.COPY_ATTRIBUTES);
-                                            profilePicture = "files/" + "<text>" + fileName;
-                                            field = field.substring(0, 8) + profilePicture;
-                                            System.out.println(field);
-                                        } catch (Exception e2) {
-                                            e2.printStackTrace();
-                                            field = og;
-                                        }
-                                        message[0] = "<p><img src='" + field.replaceAll(" ", "%20") + "' alt='' width='300' height='200'>" + "</p>";
-                                    } else {
-                                        System.out.println("Valid Image in the else");
-                                        String field = textField.getText();
-                                        String og = field;
-                                        String profilePicture = field;
-                                        System.out.println(profilePicture);
-                                        try {
-                                            String fileName = profilePicture.substring(profilePicture.lastIndexOf("/") + 1);
-                                            File f1 = new File(profilePicture);
-                                            File f2 = new File("./files/" + "<text>" + fileName);
+                                    //         Files.copy(f1.toPath(), f2.toPath(), StandardCopyOption.COPY_ATTRIBUTES);
+                                    //         profilePicture = "files/" + "<text>" + fileName;
+                                    //         field = field.substring(0, 8) + profilePicture;
+                                    //         System.out.println(field);
+                                    //     } catch (Exception e2) {
+                                    //         e2.printStackTrace();
+                                    //         field = og;
+                                    //     }
+                                    //     message[0] = "<p><img src='" + field.replaceAll(" ", "%20") + "' alt='' width='300' height='200'>" + "</p>";
+                                    // } else {
+                                    //     System.out.println("Valid Image in the else");
+                                    //     String field = textField.getText();
+                                    //     String og = field;
+                                    //     String profilePicture = field;
+                                    //     System.out.println(profilePicture);
+                                    //     try {
+                                    //         String fileName = profilePicture.substring(profilePicture.lastIndexOf("/") + 1);
+                                    //         File f1 = new File(profilePicture);
+                                    //         File f2 = new File("./files/" + "<text>" + fileName);
+                                    //         DataOutputStream ds = new DataOutputStream(socket.getOutputStream());
 
-                                            profilePicture = "files/" + "<text>" + fileName;
-                                            field = profilePicture;
-                                            Files.copy(f1.toPath(), f2.toPath(), StandardCopyOption.COPY_ATTRIBUTES);
-                                        } catch (FileAlreadyExistsException e1) {
-                                            e1.printStackTrace();
-                                        } catch (Exception e2) {
-                                            e2.printStackTrace();
-                                            field = og;
-                                        }
-                                        message[0] = "<p><img src='" + field.replaceAll(" ", "%20") + "' alt='' width='300' height='200'>" + "</p>";
+                                    //         profilePicture = "files/" + "<text>" + fileName;
+                                    //         field = profilePicture;
+                                    //         Files.copy(f1.toPath(), f2.toPath(), StandardCopyOption.COPY_ATTRIBUTES);
+                                    //     } catch (FileAlreadyExistsException e1) {
+                                    //         e1.printStackTrace();
+                                    //     } catch (Exception e2) {
+                                    //         e2.printStackTrace();
+                                    //         field = og;
+                                    //     }
+                                    //     message[0] = "<p><img src='" + field.replaceAll(" ", "%20") + "' alt='' width='300' height='200'>" + "</p>";
+                                    // }
+
+                                    String field = textField.getText();
+                                    String og = field;
+                                    if(field.startsWith("file://")) {
+                                        field = field.substring(7);
                                     }
+
+                                    String fileName = field.substring(field.lastIndexOf("/") + 1);
+                                    File f1 = new File(field);
+                                    File f2 = new File("./files/" + "<text>" + fileName);
+
+                                    field = "files/" + "<text>" + fileName;
+                                    try {
+                                        Files.copy(f1.toPath(), f2.toPath(), StandardCopyOption.COPY_ATTRIBUTES);
+                                    } catch(FileAlreadyExistsException e1) {
+                                        e1.printStackTrace();
+                                    }
+                                    
+                                    message[0] = "<p><img src='" + field.replaceAll(" ", "%20") + "' alt='' width='300' height='200'>" + "</p>";
+
+
+                                    DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+                                    BufferedImage image = ImageIO.read(f1);
+                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                    byte[] imageBytes = baos.toByteArray();
+                                    dos.writeInt(imageBytes.length);
+                                    dos.flush();
+                                    if(f1.getAbsolutePath().endsWith("jpg") || f1.getAbsolutePath().endsWith("JPG")) {
+                                        ImageIO.write(image, "jpg", baos);
+                                    } else if(f1.getAbsolutePath().endsWith("png") || f1.getAbsolutePath().endsWith("PNG")) {
+                                        ImageIO.write(image, "png", baos);
+                                    }
+                                    
+                                    baos.flush();
+                                    dos.write(imageBytes);
+                                    dos.flush();
+
+                                    System.out.println("Image sent successfully!");
+
+
                                     bw.write("Message: " + receiver[0] + "-" + message[0] + "-" + "Image" + "\n");
                                     bw.flush();
                                 } else {
@@ -910,6 +958,7 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                                 typeStr = "Text";
                             }
                             bw.write("DELETE: " + receiver[0] + "-" + message[0] + "-" + typeStr + "\n");
+                            System.out.println("DELETE: " + receiver[0] + "-" + message[0] + "-" + typeStr + "\n");
                             bw.flush();
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
@@ -948,7 +997,7 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
         try {
             bw.write("SEND CHAT LOG: " + first + "-" + second + ".txt\n");
             bw.flush();
-            Thread t = new Thread(new GraphicalClientReader(br, bw, textPane, frame));
+            Thread t = new Thread(new GraphicalClientReader(br, bw, textPane, frame, socket));
             t.start();
         } catch (Exception e) {
             e.printStackTrace();

@@ -273,19 +273,23 @@ public class User implements UserInterface {
     public boolean sendMessage(Message message, String reciver) {
         synchronized (mainLock) {
             if (!checkUserExists(reciver)) {
+                System.out.println("returned false since user dne");
+                System.out.println(reciver);
                 return false;
             }
             if (this.canReceiveFrom(reciver)) {
-                System.out.print("We are writing");
+                System.out.println("We are writing");
                 String first = (this.username.compareTo(reciver) > 0 ? reciver : this.username);
                 String second = (this.username.equals(first) ? reciver : this.username);
                 try (PrintWriter pw = new PrintWriter(new FileWriter(new File("files/"
                         + first + "-" + second + ".txt"), true))) {
                     pw.println(this.username + "-" + reciver + "-" + message.getMessageText());
                 } catch (IOException e) {
-                    // e.printStackTrace();
+                    e.printStackTrace();
                 }
             } else {
+                System.out.println("returned false since cnat recieve");
+                System.out.println(reciver);
                 return false;
             }
 
@@ -375,6 +379,7 @@ public class User implements UserInterface {
                 }
                 BufferedWriter bw = new BufferedWriter(new FileWriter(inputFile));
                 bw.write(finalString);
+                bw.flush();
                 bw.close();
 
                 return true;
