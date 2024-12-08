@@ -898,7 +898,6 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                                     
                                     message[0] = "<p><img src='" + field.replaceAll(" ", "%20") + "' alt='' width='300' height='200'>" + "</p>";
 
-
                                     DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
                                     BufferedImage image = ImageIO.read(f1);
                                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -916,7 +915,6 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                                     dos.flush();
 
                                     System.out.println("Image sent successfully!");
-
 
                                     bw.write("Message: " + receiver[0] + "-" + message[0] + "-" + "Image" + "\n");
                                     bw.flush();
