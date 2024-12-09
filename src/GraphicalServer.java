@@ -33,7 +33,6 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
         try (BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
              BufferedWriter output = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()))) {
             String choice = "";
-
             //user should never be null (outside declaration) since were either forcing the user to create or log in
             //and if its unsuccessful, it should kick them out
             User user = null;
@@ -52,7 +51,6 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
             StringBuilder messages = new StringBuilder();
             while (true) {
                 choice = input.readLine();
-                System.out.println(choice);
                 if (choice.startsWith("Username Create: ")) {
                     username = choice.substring("Username Create: ".length());
                     File f = new File("files/" + username + ".txt");
@@ -93,11 +91,9 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
                         }
                         passwordsFile.close();
                     } else {
-//                        if (input.readLine().equals("yes"))  {
-                            passed = true;
-                            output.write("Created New User!\n");
-                            output.flush();
-//                        }
+                        passed = true;
+                        output.write("Created New User!\n");
+                        output.flush();
                     }
 
                     if (passed) {
@@ -242,7 +238,6 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
                     output.write("quit+\n");
                     output.flush();
                 } else if (choice.startsWith("DELETE: ")) {
-                    System.out.println("DELETE EHRE");
                     String receiver = choice.substring("DELETE: ".length(), choice.indexOf("-"));
 
                     choice = choice.substring(choice.indexOf("-") + 1);
@@ -267,13 +262,10 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
                         String[] parts = line.split("-");
                         if(type.equals("Image") && parts[2].startsWith("<p><img src='")) {
                             String fileName = message.substring(message.lastIndexOf("/") + 1);
-                            System.out.println("THATS THE FILE NAME");
                             if(parts[2].contains(fileName) && parts[0].equals(username)) {
-                                message = "<p><img src='files/<text>" + fileName + "' alt='' width='300' height='200'></p>";
-                                System.out.println(user.deleteMessage(receiver, new Message(user, type, message)));
-                                System.out.println("the message " + message);
-                                // user.deleteMessage(receiver, new Message(user, type, message));
-                                System.out.println("properly deleted?");
+                                message = "<p><img src='files/<text>" + fileName +
+                                        "' alt='' width='300' height='200'></p>";
+                                user.deleteMessage(receiver, new Message(user, type, message));
                                 condition = true;
                                 break;
                             }
@@ -281,16 +273,17 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
                             user.deleteMessage(receiver, new Message(user, type, message));
                             condition = true;
                             break;
-                        } else if(parts[2].contains(message.replaceAll(" ", "%20")) && parts[2].startsWith("<p><img src='")) {
+                        } else if(parts[2].contains(message.replaceAll(" ", "%20"))
+                                && parts[2].startsWith("<p><img src='")) {
                             user.deleteMessage(receiver, new Message(user, type, parts[2]));
                             condition = true;
                             break;
-                        } else if(parts[2].contains(message) && parts[1].equals(username) && parts[2].startsWith("<p><img src='")) {
+                        } else if(parts[2].contains(message) && parts[1].equals(username)
+                                && parts[2].startsWith("<p><img src='")) {
                             condition = true;
                             break;
                         }
                     }
-
                 } else if (choice.equals("Give username")) {
                     output.write(username + "\n");
                     output.flush();
@@ -298,27 +291,6 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
                     choice = choice.substring("In The Thread: ".length());
                     output.write(choice + "\n");
                     output.flush();
-                // } else if (choice.startsWith("Check Valid Image File ")) {
-                //     String check = choice.substring("Check Valid Image File ".length());
-                //     try {
-                //         File imageFile = new File(check);
-                //         BufferedImage image = ImageIO.read(imageFile);
-                //         System.out.println("Image tried to load");
-                //         if (image == null) {
-                //             System.out.println("Image was invalid");
-                //             output.write("Invalid Image\n");
-                //             output.flush();
-                //         } else {
-                //             System.out.println("Image was valid");
-                //             output.write("Valid Image\n");
-                //             output.flush();
-                //         }
-                //     } catch (Exception e) {
-                //         System.out.println("Image was invalid");
-                //         output.write("Invalid Image\n");
-                //         output.flush();
-                //     }
-
                 } else if(choice.startsWith("Check Valid Image Link ")) {
                     String check = choice.substring("Check Valid Image Link ".length());
                     try {
@@ -351,13 +323,14 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
                     output.flush();
                 } else if(choice.startsWith("SEND CHAT LOG: ")) {
                     File f = new File(choice.substring(15));
-                    t = new Thread(new ReadMessageThreadGraphical(choice.substring(15), output, clientSocket, username));
+                    t = new Thread(new ReadMessageThreadGraphical(
+                            choice.substring(15), output, clientSocket, username));
                     t.start();
                 } else if(choice.startsWith("Valid Image")) {
                     output.write("Valid Image\n");
                     output.flush();
                 } else if(choice.equals("View All Users")) {
-                    BufferedReader fileReader = new BufferedReader(new FileReader(new File("files/usernamesAndPasswords.txt")));
+                    BufferedReader fileReader = new BufferedReader(new FileReader("files/usernamesAndPasswords.txt"));
                     String users = "";
                     String line = fileReader.readLine();
                     while(line != null) {
@@ -379,25 +352,9 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
                     String type = choice;
 
                     boolean messageSent = user.sendMessage(new Message(user, type, thisMessage), otherUser);
-                    System.out.println("sending message to databse: " + messageSent);
                 }
-//                else if(choice.startsWith("Build File: ")) {
-//                    String fileName = choice.substring("Build File: ".length(), choice.indexOf("-"));
-//                    choice = choice.substring(choice.indexOf("-") + 1);
-//                    String pfp = choice;
-//
-//                    File f1 = new File(pfp);
-//                    File f2 = new File("./files/" + "<text>" + fileName);
-//                    Files.copy(f1.toPath(), f2.toPath(), StandardCopyOption.COPY_ATTRIBUTES);
-//                    pfp = "files/" + "<text>" + fileName;
-//                    output.write("pfp: " + pfp + "\n");
-//                    output.flush();
-//                }
                 else {
                     System.out.println("None of the commands");
-                    // System.out.println(choice.length());
-                    System.out.println(choice);
-                    // System.out.println(choice.endsWith("Image"));
                 }
             }
 

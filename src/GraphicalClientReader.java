@@ -38,7 +38,6 @@ public class GraphicalClientReader implements Runnable {
     public void run() {
         try {
             String line = br.readLine();
-            System.out.println(line);
             while(!line.equals("quit messaging")) {
 
                 if(line.startsWith("read file: ")) {
@@ -65,7 +64,6 @@ public class GraphicalClientReader implements Runnable {
                         e.printStackTrace();
                     }
                     line = br.readLine();
-                    // System.out.println("ITS IS CLIENT SIDE ISSUE");
                 }
 
                 textPane.setContentType("text/html");
@@ -75,13 +73,6 @@ public class GraphicalClientReader implements Runnable {
                 textPane.repaint();
                 frame.repaint();
                 line = br.readLine();
-                System.out.println("HERE " + line);
-                // Remove?
-                // if(line.equals("Valid Image")) {
-                //     bw.write(line + "\n");
-                //     bw.flush();
-                //     line = br.readLine();
-                // }
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());

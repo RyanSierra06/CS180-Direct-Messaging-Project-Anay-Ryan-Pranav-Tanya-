@@ -145,7 +145,6 @@ public class ApplicationClient implements ApplicationClientInterface {
                         e.printStackTrace();
                     }
 
-                    //TODO WORKING HERE
                     Thread read = new Thread(new ReadMessageThreadApplication(receiver, username));
                     read.start();
 

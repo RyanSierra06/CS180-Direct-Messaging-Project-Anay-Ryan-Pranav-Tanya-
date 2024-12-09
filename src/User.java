@@ -197,12 +197,12 @@ public class User implements UserInterface {
                 profilePicture = "./files/" + username + "<>" + fileName;
 
 
-            } catch(FileAlreadyExistsException e) {
+            } catch (FileAlreadyExistsException e) {
                 profilePicture = og;
                 e.printStackTrace();
-            } catch(Exception e) {
+            } catch (Exception e) {
                 profilePicture = og;
-            }           
+            }
 
             String[] params = line1.split("-");
             params[3] = profilePicture;
@@ -273,12 +273,9 @@ public class User implements UserInterface {
     public boolean sendMessage(Message message, String reciver) {
         synchronized (mainLock) {
             if (!checkUserExists(reciver)) {
-                System.out.println("returned false since user dne");
-                System.out.println(reciver);
                 return false;
             }
             if (this.canReceiveFrom(reciver)) {
-                System.out.println("We are writing");
                 String first = (this.username.compareTo(reciver) > 0 ? reciver : this.username);
                 String second = (this.username.equals(first) ? reciver : this.username);
                 try (PrintWriter pw = new PrintWriter(new FileWriter(new File("files/"
@@ -288,8 +285,6 @@ public class User implements UserInterface {
                     e.printStackTrace();
                 }
             } else {
-                System.out.println("returned false since cnat recieve");
-                System.out.println(reciver);
                 return false;
             }
 
@@ -338,7 +333,7 @@ public class User implements UserInterface {
             String thisLine2 = thisUsernameBR.readLine();
             otherUsernameBR.readLine();
             String otherLine2 = otherUsernameBR.readLine();
-            
+
             return (thisLine2.contains(otherUsername) || otherLine2.contains(thisUsername));
 
         } catch (IOException e) {
@@ -430,13 +425,13 @@ public class User implements UserInterface {
         if (!checkUserExists(previouslyBlockedUser)) {
             return false;
         }
-        if(previouslyBlockedUser.equals(username)) {
+        if (previouslyBlockedUser.equals(username)) {
             return false;
         }
         try (BufferedReader br = new BufferedReader(new FileReader("files/" + this.userFileName))) {
             String line1 = br.readLine();
             String line2 = br.readLine();
-            if(line2.contains(previouslyBlockedUser)) {
+            if (line2.contains(previouslyBlockedUser)) {
                 int startInd = line2.indexOf(previouslyBlockedUser);
                 int endInd = line2.indexOf(previouslyBlockedUser) + previouslyBlockedUser.length();
                 if (startInd == 0 && endInd == line2.length()) {
@@ -553,7 +548,7 @@ public class User implements UserInterface {
             String line1 = br.readLine();
             String line2 = br.readLine();
             String line3 = br.readLine();
-            if(!line3.contains(oldFriend)) {
+            if (!line3.contains(oldFriend)) {
                 return false;
             } else {
                 String newLine3 = "";
@@ -581,12 +576,12 @@ public class User implements UserInterface {
 
     public boolean checkUserExists(String username1) {
         File f = new File("files/" + username1 + ".txt");
-        if(f.exists()) {
+        if (f.exists()) {
             try {
-                if(f.getCanonicalPath().contains("files/" + username1 + ".txt")) {
+                if (f.getCanonicalPath().contains("files/" + username1 + ".txt")) {
                     return true;
-                }            
-            } catch(Exception e) {
+                }
+            } catch (Exception e) {
                 return false;
             }
         }
