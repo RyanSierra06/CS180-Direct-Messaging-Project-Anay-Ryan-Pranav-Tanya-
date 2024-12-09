@@ -61,10 +61,12 @@ public class GraphicalClientReader implements Runnable {
                             ImageIO.write(receivedImage, "jpg", file);
                         }
                     } catch(FileAlreadyExistsException e) {
-                        e.printStackTrace();
+                        // e.printStackTrace();
                     }
                     line = br.readLine();
                 }
+
+                System.out.println(line);
 
                 textPane.setContentType("text/html");
                 textPane.setCaretColor(Color.black);

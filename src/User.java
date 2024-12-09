@@ -367,7 +367,7 @@ public class User implements UserInterface {
 
                 while ((line = br.readLine()) != null) {
                     String[] parts = line.split("-");
-                    if (parts[2].equals(message.getMessageText())) {
+                    if (parts[2].equals(message.getMessageText()) && parts[0].equals(this.username)) {
                         continue;
                     }
                     finalString += line + "\n";

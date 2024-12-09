@@ -122,7 +122,7 @@ public class ReadMessageThreadGraphical implements Runnable {
                                                         ImageIO.write(receivedImage, "jpg", file);
                                                     }
                                                 } catch (FileAlreadyExistsException e) {
-                                                    e.printStackTrace();
+                                                    // e.printStackTrace();
                                                 }
 
                                             }

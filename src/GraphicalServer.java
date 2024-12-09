@@ -274,15 +274,15 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
                             condition = true;
                             break;
                         } else if(parts[2].contains(message.replaceAll(" ", "%20"))
-                                && parts[2].startsWith("<p><img src='")) {
+                                && parts[2].startsWith("<p><img src='") && parts[0].equals(username)) {
                             user.deleteMessage(receiver, new Message(user, type, parts[2]));
                             condition = true;
                             break;
-                        } else if(parts[2].contains(message) && parts[1].equals(username)
-                                && parts[2].startsWith("<p><img src='")) {
-                            condition = true;
-                            break;
-                        }
+                        } // } else if(parts[2].contains(message) && parts[1].equals(username)
+                        //         && parts[2].startsWith("<p><img src='")) {
+                        //     condition = true;
+                        //     break;
+                        // }
                     }
                 } else if (choice.equals("Give username")) {
                     output.write(username + "\n");
@@ -342,7 +342,7 @@ public class GraphicalServer implements GraphicalServerInterface, Runnable {
                     System.out.print(users);
                     output.write(users + "\n");
                     output.flush();
-                } else if(choice.endsWith("Image")) {
+                } else if(choice.endsWith("-Image")) {
                     String otherUser = choice.substring(choice.indexOf(":") + 2, choice.indexOf("-"));
                     choice = choice.substring(choice.indexOf("-") + 1);
 

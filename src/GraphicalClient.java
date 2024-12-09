@@ -892,7 +892,7 @@ public class GraphicalClient extends JComponent implements GraphicalClientInterf
                                     try {
                                         Files.copy(f1.toPath(), f2.toPath(), StandardCopyOption.COPY_ATTRIBUTES);
                                     } catch (FileAlreadyExistsException e1) {
-                                        e1.printStackTrace();
+                                        // e1.printStackTrace();
                                     }
 
                                     message[0] = "<p><img src='" + field.replaceAll(" ", "%20") +
