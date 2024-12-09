@@ -1,7 +1,7 @@
 # CS180-Direct-Messaging-Project-Anay-Ryan-Pranav-Tanya-
 
 ## How to Run?
-Use the UserTestCases and MessageTestCases files to run and test both classes. If you want to run the tests multiple times make sure to delete all the files within the files folder and make usernamesAndPasswords.txt empty. We need to do this since our program appends to some files and rewrites others and the test cases don't reset the workspace. There are multiple testcases that ensure our files are saved between programs properly.
+Use the UserTestCases and MessageTestCases files to run and test both classes. If you want to run the tests multiple times make sure to delete all the files within the files folder and make usernamesAndPasswords.txt empty. We need to do this since our program appends to some files and rewrites others and the test cases don't reset the workspace. There are multiple test cases that ensure our files are saved between programs properly.
 
 
 ## Who did what?
@@ -58,11 +58,11 @@ Basically, as 2 people are trying to message each other at the same time, it all
 This threaded class allows for the same file to be updated concurrently by the server, and continuously checks to find the new messages as they're being added, printing them back out to both users.
 
 GraphicalClientReader.java:
-- This is a thread that is created by the client, for reading and displaying messages sent from the server's ReadMessageThreadGraphical(RMTG) thread. Whenever a user has a chat open it continuously looks for input from the RMTG thread. The input it receives in a string of HTML commands that display the entire chat history between the 2 users. Upon receiving the input it modifies the text within the JTextPane, set's its content type to HTML text, and then repaints the pane so the user can see the updated messages.
+- This is a thread that is created by the client, for reading and displaying messages sent from the server's ReadMessageThreadGraphical(RMTG) thread. Whenever a user has a chat open it continuously looks for input from the RMTG thread. The input it receives in a string of HTML commands that display the entire chat history between the 2 users. Upon receiving the input it modifies the text within the JTextPane, sets its content type to HTML text, and then repaints the pane so the user can see the updated messages.
 
 
 ## How to Run 
-Start by running the ApplicationServerRunner.java in your first terminal. Then, in your other terminals, run as many ApplicationClient.java clients as you want. Within each of those clients, you can start DMing whoever you want, and editing each of your individual user profiles, friends, and blocked users. See the other java file explanations above for more specificity on what each of the commands can do, and how to fully use the client.
+Start by running the GraphicalServerRunner.java in your first terminal. Then, in your other terminals, run as many GraphicalClient.java clients as you want. Within each of those clients, you can start DMing whoever you want, and editing each of your individual user profiles, friends, and blocked users. See the other java file explanations above for more specificity on what each of the commands can do, and how to fully use the client.
 
 
 
