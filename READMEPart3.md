@@ -1,9 +1,5 @@
 # CS180-Direct-Messaging-Project-Anay-Ryan-Pranav-Tanya-
 
-## How to Run?
-Use the UserTestCases and MessageTestCases files to run and test both classes. If you want to run the tests multiple times make sure to delete all the files within the files folder and make usernamesAndPasswords.txt empty. We need to do this since our program appends to some files and rewrites others and the test cases don't reset the workspace. There are multiple test cases that ensure our files are saved between programs properly.
-
-
 ## Who did what?
 - Submitted on Vocareum - Pranav
 - GraphicalServer.java - Pranav & Ryan & Tanya
