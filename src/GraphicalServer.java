@@ -8,12 +8,12 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 /**
- * Project 4 -- ApplicationServer
+ * Group Project -- ApplicationServer
  * <p>
  * This is the ApplicationServer class which starts the server to house each of the threads of the different clients
  *
  * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
- * @version Nov 17, 2024
+ * @version Dec 8, 2024
  */
 
 public class GraphicalServer implements GraphicalServerInterface, Runnable {

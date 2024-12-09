@@ -22,7 +22,7 @@ import java.nio.*;
 // Change password = password in user for existing file to check if the passwords r equal and follow through
 
 /**
- * Group PJ -- User
+ * Group Project -- User
  * <p>
  * This is the User class
  * (See the ReadMe for more details)

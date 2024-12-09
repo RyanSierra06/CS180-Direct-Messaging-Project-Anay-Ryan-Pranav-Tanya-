@@ -3,12 +3,12 @@ import java.io.BufferedWriter;
 import java.net.Socket;
 
 /**
- * Project 4 -- ApplicationClientInterface
+ * Group Project -- ApplicationClientInterface
  * <p>
  * This is the ApplicationClientInterface which is used for ApplicationClient
  *
  * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
- * @version Nov 17, 2024
+ * @version Dec 8, 2024
  */
 
 public interface GraphicalClientInterface {

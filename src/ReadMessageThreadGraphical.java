@@ -10,13 +10,13 @@ import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 
 /**
- * Group PJ -- ReadMessageThread.java
+ * Group Project -- ReadMessageThreadGraphical.java
  * <p>
  * This is the ReadMessageThread
  * (see more in the ReadMe)
  *
  * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
- * @version Nov 17, 2024
+ * @version Dec 8, 2024
  */
 
 public class ReadMessageThreadGraphical implements Runnable {

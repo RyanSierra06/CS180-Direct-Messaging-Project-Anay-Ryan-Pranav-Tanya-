@@ -7,7 +7,7 @@ import java.io.*;
 //message3
 
 /**
- * Group PJ -- Message
+ * Group Project -- Message
  * <p>
  * This is the Message class
  * (See the ReadMe for more details)

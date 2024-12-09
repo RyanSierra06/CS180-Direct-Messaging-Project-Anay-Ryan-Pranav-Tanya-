@@ -20,14 +20,14 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 /**
- * Project 4 -- ApplicationClient
+ * Group Project -- ApplicationClient
  * <p>
  * Runs a client for each user, asking them to log-in and then do further actions for direct
  * messaging and their account modification
  * (See the ReadMe for more details)
  *
  * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
- * @version Nov 17, 2024
+ * @version Dec 8, 2024
  */
 
 

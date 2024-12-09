@@ -1,5 +1,5 @@
 /**
- * Group PJ -- MessageInterface
+ * Group Project -- MessageInterface
  * <p>
  * This is the Message interface
  *

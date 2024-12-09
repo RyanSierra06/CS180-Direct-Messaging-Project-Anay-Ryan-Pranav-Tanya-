@@ -8,13 +8,13 @@ import java.net.Socket;
 import java.nio.file.FileAlreadyExistsException;
 
 /**
- * Group PJ -- ReadMessageThread.java
+ * Group Project -- ReadMessageThread.java
  * <p>
  * This is the ReadMessageThread
  * (see more in the ReadMe)
  *
  * @author Pranav Neti, Ryan Sierra, Tanya Jain, Anay Misra - Lab Section 12
- * @version Nov 17, 2024
+ * @version Dec 8, 2024
  */
 
 public class GraphicalClientReader implements Runnable {

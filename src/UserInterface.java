@@ -1,5 +1,5 @@
 /**
- * Group PJ -- UserInterface
+ * Group Project -- UserInterface
  * <p>
  * This is the User interface
  *

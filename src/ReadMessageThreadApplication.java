@@ -4,7 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 /**
- * Group PJ -- ReadMessageThread.java
+ * Group Project -- ReadMessageThread.java
  * <p>
  * This is the ReadMessageThread
  * (see more in the ReadMe)
